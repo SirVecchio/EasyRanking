@@ -1,0 +1,6 @@
+name: Easyranking
+version: 0.0.1
+main: me.kaotich00.easyranking.Easyranking
+api-version: 1.13
+authors: [Kaotich00]
+description: A simple and lightweight plugin for custom Ranking Systems
