@@ -22,7 +22,7 @@ public final class Easyranking extends JavaPlugin {
         defaultConfig = getConfig();
 
         storage = StorageFactory.getDefaultStorage();
-        storage.initConnection();
+        storage.initDatabase();
     }
 
     @Override
@@ -31,7 +31,6 @@ public final class Easyranking extends JavaPlugin {
     }
 
     public void disablePlugin() {
-        Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[EasyRanking] Disabilitato");
         this.getPluginLoader().disablePlugin(this);
     }
 

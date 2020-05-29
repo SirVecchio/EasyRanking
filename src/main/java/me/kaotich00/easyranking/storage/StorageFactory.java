@@ -1,7 +1,7 @@
 package me.kaotich00.easyranking.storage;
 
 import me.kaotich00.easyranking.Easyranking;
-import me.kaotich00.easyranking.storage.sql.ERMySQLStorage;
+import me.kaotich00.easyranking.storage.sql.mysql.ERMySQLStorage;
 import org.bukkit.configuration.file.FileConfiguration;
 
 public class StorageFactory {
@@ -20,6 +20,6 @@ public class StorageFactory {
         return null;
     }
 
-    public void initConnection() {}
+    public void initDatabase() {}
 
 }

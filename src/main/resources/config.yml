@@ -20,12 +20,12 @@
 # +----------------------------------------------------------------------------------------------+ #
 
 # Define the address and port for the database.
-address: localhost
+address: 'localhost:3306'
 
 # The name of the database to store EasyRanking data in.
-database: database
+database: 'easyranking'
 
 # Admin Credentials for the database.
-username: master
+username: 'username'
 password: 'password'
 
