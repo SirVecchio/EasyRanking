@@ -22,7 +22,6 @@ public class ERUserData implements UserData {
         this.score = score;
     }
 
-
     @Override
     public UUID getUniqueId() {
         return this.uuid;

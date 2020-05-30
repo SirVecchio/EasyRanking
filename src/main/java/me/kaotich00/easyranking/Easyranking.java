@@ -1,5 +1,6 @@
 package me.kaotich00.easyranking;
 
+import me.kaotich00.easyranking.command.EasyRankingCommand;
 import me.kaotich00.easyranking.storage.StorageFactory;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -16,13 +17,14 @@ public final class Easyranking extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[EasyRanking]" + ChatColor.RESET + " Loading configuration...");
         loadConfiguration();
-        Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[EasyRanking]" + ChatColor.RESET + " Successfully loaded configuration");
 
-        defaultConfig = getConfig();
+        Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[EasyRanking]" + ChatColor.RESET + " Registering commands...");
+        registerCommands();
 
-        storage = StorageFactory.getDefaultStorage();
-        storage.initDatabase();
+        Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[EasyRanking]" + ChatColor.RESET + " Initializing database...");
+        initStorage();
     }
 
     @Override
@@ -34,9 +36,19 @@ public final class Easyranking extends JavaPlugin {
         this.getPluginLoader().disablePlugin(this);
     }
 
+    public void registerCommands() {
+        getCommand("er").setExecutor(new EasyRankingCommand());
+    }
+
+    public void initStorage() {
+        storage = StorageFactory.getDefaultStorage();
+        storage.initDatabase();
+    }
+
     private void loadConfiguration() {
         getConfig().options().copyDefaults(true);
         saveDefaultConfig();
+        defaultConfig = getConfig();
     }
 
     public static FileConfiguration getDefaultConfig() {
