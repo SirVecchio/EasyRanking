@@ -1,6 +1,7 @@
-package me.kaotich00.easyranking.reward;
+package me.kaotich00.easyranking.service;
 
 import me.kaotich00.easyranking.api.service.RewardService;
+import me.kaotich00.easyranking.reward.ERReward;
 import me.kaotich00.easyranking.reward.types.ERItemReward;
 import me.kaotich00.easyranking.reward.types.ERMoneyReward;
 import me.kaotich00.easyranking.reward.types.ERTitleReward;

@@ -6,7 +6,7 @@ public class ChatFormatter {
 
     public static String pluginPrefix() {
         return  ChatColor.DARK_GRAY + "[" +
-                ChatColor.GREEN + "EasyRanking" +
+                ChatColor.DARK_GREEN + ChatColor.BOLD + "E" + ChatColor.GREEN + ChatColor.BOLD + "R" +
                 ChatColor.DARK_GRAY + "] " +
                 ChatColor.RESET;
     }
@@ -17,13 +17,13 @@ public class ChatFormatter {
                 ChatColor.GREEN + " ]-------------------";
     }
 
-    public static String formatCommandMessage(String message) {
-
+    public static String formatSuccessMessage(String message) {
+        message = pluginPrefix() + ChatColor.GREEN + message;
         return message;
     }
 
     public static String formatErrorMessage(String message) {
-
+        message = pluginPrefix() + ChatColor.RED + message;
         return message;
     }
 

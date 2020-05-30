@@ -1,6 +1,9 @@
 package me.kaotich00.easyranking;
 
+import me.kaotich00.easyranking.api.service.BoardService;
+import me.kaotich00.easyranking.api.service.RewardService;
 import me.kaotich00.easyranking.command.EasyRankingCommand;
+import me.kaotich00.easyranking.service.ERBoardService;
 import me.kaotich00.easyranking.storage.StorageFactory;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -14,6 +17,8 @@ public final class Easyranking extends JavaPlugin {
     public StorageFactory storage;
     static FileConfiguration defaultConfig;
     private Connection connection;
+    public static BoardService boardService;
+    public static RewardService rewardService;
 
     @Override
     public void onEnable() {
@@ -25,6 +30,9 @@ public final class Easyranking extends JavaPlugin {
 
         Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[EasyRanking]" + ChatColor.RESET + " Initializing database...");
         initStorage();
+
+        Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[EasyRanking]" + ChatColor.RESET + " Registering services...");
+        registerServices();
     }
 
     @Override
@@ -36,6 +44,12 @@ public final class Easyranking extends JavaPlugin {
         this.getPluginLoader().disablePlugin(this);
     }
 
+    private void loadConfiguration() {
+        getConfig().options().copyDefaults(true);
+        saveDefaultConfig();
+        defaultConfig = getConfig();
+    }
+
     public void registerCommands() {
         getCommand("er").setExecutor(new EasyRankingCommand());
     }
@@ -45,14 +59,16 @@ public final class Easyranking extends JavaPlugin {
         storage.initDatabase();
     }
 
-    private void loadConfiguration() {
-        getConfig().options().copyDefaults(true);
-        saveDefaultConfig();
-        defaultConfig = getConfig();
+    public void registerServices() {
+        boardService = new ERBoardService();
     }
 
     public static FileConfiguration getDefaultConfig() {
         return defaultConfig;
+    }
+
+    public static BoardService getBoardService() {
+        return boardService;
     }
 
     public Connection getConnection() {
