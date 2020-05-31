@@ -5,6 +5,7 @@ import me.kaotich00.easyranking.api.service.RewardService;
 import me.kaotich00.easyranking.command.EasyRankingCommand;
 import me.kaotich00.easyranking.listener.gui.reward.GUIRewardListener;
 import me.kaotich00.easyranking.service.ERBoardService;
+import me.kaotich00.easyranking.service.ERRewardService;
 import me.kaotich00.easyranking.storage.StorageFactory;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -66,6 +67,7 @@ public final class Easyranking extends JavaPlugin {
 
     public void registerServices() {
         boardService = new ERBoardService();
+        rewardService = new ERRewardService();
     }
 
     public void registerListeners(){ getServer().getPluginManager().registerEvents(new GUIRewardListener(),this); };
@@ -76,6 +78,10 @@ public final class Easyranking extends JavaPlugin {
 
     public static BoardService getBoardService() {
         return boardService;
+    }
+
+    public static RewardService getRewardService() {
+        return rewardService;
     }
 
     public Connection getConnection() {

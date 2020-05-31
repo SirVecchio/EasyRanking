@@ -10,6 +10,8 @@ public interface BoardService {
 
     Set<Board> getBoards();
 
+    Board getBoardByName(String name);
+
     boolean isNameAlreadyUsed(String name);
 
 }

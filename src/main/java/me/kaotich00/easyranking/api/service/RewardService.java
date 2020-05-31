@@ -1,14 +1,21 @@
 package me.kaotich00.easyranking.api.service;
 
-import me.kaotich00.easyranking.reward.ERReward;
+import me.kaotich00.easyranking.api.board.Board;
+import me.kaotich00.easyranking.api.reward.Reward;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.Set;
 
 public interface RewardService {
 
-    ERReward newReward(ItemStack itemStack);
+    void registerBoard(Board board);
 
-    ERReward newReward(Double money);
+    void newItemReward(ItemStack itemStack, Board board, int position);
 
-    ERReward newReward(String title);
+    void newMoneyReward(Double money, Board board, int position);
+
+    void newTitleReward(String title, Board board, int position);
+
+    Set<Reward> getRewardsByPosition(Board board, int position);
 
 }

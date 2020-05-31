@@ -4,7 +4,7 @@ import me.kaotich00.easyranking.api.reward.Reward;
 
 public class ERReward implements Reward{
 
-    private int rankingPosition;
+    protected int rankingPosition;
 
     @Override
     public int getRankingPosition() {
@@ -15,5 +15,11 @@ public class ERReward implements Reward{
     public void setRankingPosition(int rankingPosition) {
         this.rankingPosition = rankingPosition;
     }
+
+    @Override
+    public Object getReward() {
+        return null;
+    }
+
 
 }

@@ -1,30 +1,28 @@
 package me.kaotich00.easyranking.gui.reward;
 
+import me.kaotich00.easyranking.api.board.Board;
 import me.kaotich00.easyranking.utils.GUIUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class RewardGUI implements Listener {
+public class RewardGUI {
 
     private Player player;
+    private Board board;
 
-    public RewardGUI(Player player) {
+    public RewardGUI(Player player, Board board) {
         this.player = player;
+        this.board = board;
     }
 
-    public void openRewardGUI(int step) {
+    public void openGUI(int step) {
         switch( step ) {
             case GUIUtil.REWARD_PS_STEP:
-                openRewardRankPositionGUI();
+                openRankPositionGUI();
                 break;
             case GUIUtil.REWARD_TS_STEP:
                 openRewardTypeGUI();
@@ -32,8 +30,8 @@ public class RewardGUI implements Listener {
         }
     }
 
-    private void openRewardRankPositionGUI() {
-        Inventory GUI = Bukkit.createInventory(player, GUIUtil.REWARD_PS_INVENTORY_SIZE, GUIUtil.REWARD_TS_INVENTORY_TITLE);
+    private void openRankPositionGUI() {
+        Inventory GUI = Bukkit.createInventory(player, GUIUtil.REWARD_PS_INVENTORY_SIZE, GUIUtil.REWARD_PS_INVENTORY_TITLE);
 
         GUI.setItem(GUIUtil.REWARD_PS_INFO_SLOT, rpInfoMenu());
         GUI.setItem(GUIUtil.REWARD_PS_TITLE_SLOT, rpTitleMenu());

@@ -7,8 +7,13 @@ public class ERItemReward extends ERReward {
 
     private ItemStack reward;
 
-    public ERItemReward(ItemStack reward) {
+    public ERItemReward(ItemStack reward, int position) {
+        this.rankingPosition = position;
         this.reward = reward;
     }
 
+    @Override
+    public ItemStack getReward() {
+        return reward;
+    }
 }

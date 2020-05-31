@@ -16,7 +16,7 @@ public class GUIUtil {
     /* Reward GUI - Position selection phase */
     /*****************************************/
     public static final int REWARD_PS_STEP = 1;
-    public static String REWARD_PS_INVENTORY_TITLE = "Select rank position";
+    public static final String REWARD_PS_INVENTORY_TITLE = "Select rank position";
     public static int REWARD_PS_INVENTORY_SIZE = 36;
 
     public static final int REWARD_PS_INFO_SLOT = 0;
@@ -37,7 +37,7 @@ public class GUIUtil {
     /* Reward GUI - Reward type selection phase */
     /********************************************/
     public static final int REWARD_TS_STEP = 2;
-    public static String REWARD_TS_INVENTORY_TITLE = "Select reward type";
+    public static final String REWARD_TS_INVENTORY_TITLE = "Select reward type";
     public static int REWARD_TS_INVENTORY_SIZE = 45;
 
     public static final int REWARD_TS_ITEM_REWARD_SLOT = 11;

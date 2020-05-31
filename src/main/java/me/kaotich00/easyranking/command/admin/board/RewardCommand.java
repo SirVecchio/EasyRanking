@@ -1,10 +1,12 @@
 package me.kaotich00.easyranking.command.admin.board;
 
 import me.kaotich00.easyranking.Easyranking;
+import me.kaotich00.easyranking.api.board.Board;
 import me.kaotich00.easyranking.api.service.BoardService;
 import me.kaotich00.easyranking.gui.reward.RewardGUI;
 import me.kaotich00.easyranking.utils.ChatFormatter;
 import me.kaotich00.easyranking.utils.CommandTypes;
+import me.kaotich00.easyranking.utils.GUIUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -31,8 +33,9 @@ public class RewardCommand {
             return CommandTypes.COMMAND_SUCCESS;
         }
 
-        RewardGUI gui = new RewardGUI((Player)sender);
-        gui.openRewardGUI(1);
+        Board board = boardService.getBoardByName(boardName);
+        RewardGUI gui = new RewardGUI((Player)sender, board);
+        gui.openGUI(GUIUtil.REWARD_PS_STEP);
 
         return CommandTypes.COMMAND_SUCCESS;
     }

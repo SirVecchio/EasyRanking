@@ -1,5 +1,6 @@
 package me.kaotich00.easyranking.service;
 
+import me.kaotich00.easyranking.Easyranking;
 import me.kaotich00.easyranking.api.board.Board;
 import me.kaotich00.easyranking.api.data.UserData;
 import me.kaotich00.easyranking.api.reward.Reward;
@@ -15,12 +16,10 @@ public class ERBoardService implements BoardService {
 
     private Set<Board> boardsList;
     private Map<Board, Set<UserData>> boardData;
-    private Map<Board, Set<Reward>> rewardData;
 
     public ERBoardService() {
         this.boardsList = new HashSet<>();
         this.boardData = new HashMap<>();
-        this.rewardData = new HashMap<>();
     }
 
     @Override
@@ -28,14 +27,18 @@ public class ERBoardService implements BoardService {
         ERBoard board = new ERBoard(name, description, maxShownPlayers, userScoreName);
         boardsList.add(board);
         boardData.put(board, null);
-        rewardData.put(board, null);
-
+        Easyranking.getRewardService().registerBoard(board);
         return board;
     }
 
     @Override
     public Set<Board> getBoards() {
         return this.boardsList;
+    }
+
+    @Override
+    public Board getBoardByName(String name) {
+        return boardsList.stream().filter(board -> board.getName().equals(name)).findFirst().get();
     }
 
     @Override

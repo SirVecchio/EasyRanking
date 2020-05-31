@@ -6,8 +6,13 @@ public class ERTitleReward extends ERReward {
 
     private String reward;
 
-    public ERTitleReward(String reward) {
+    public ERTitleReward(String reward, int position) {
+        this.rankingPosition = position;
         this.reward = reward;
     }
 
+    @Override
+    public String getReward() {
+        return reward;
+    }
 }
