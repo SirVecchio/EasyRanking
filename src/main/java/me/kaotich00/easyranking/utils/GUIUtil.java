@@ -38,15 +38,22 @@ public class GUIUtil {
     /********************************************/
     public static final int REWARD_TS_STEP = 2;
     public static final String REWARD_TS_INVENTORY_TITLE = "Select reward type";
-    public static int REWARD_TS_INVENTORY_SIZE = 45;
+    public static int REWARD_TS_INVENTORY_SIZE = 36;
 
-    public static final int REWARD_TS_ITEM_REWARD_SLOT = 11;
-    public static final int REWARD_TS_MONEY_REWARD_SLOT = 13;
-    public static final int REWARD_TS_TITLE_REWARD_SLOT = 15;
+    public static final int REWARD_TS_ITEM_REWARD_SLOT = 20;
+    public static final int REWARD_TS_MONEY_REWARD_SLOT = 22;
+    public static final int REWARD_TS_TITLE_REWARD_SLOT = 24;
 
     public static final Material REWARD_TS_ITEM_REWARD_MATERIAL = Material.DIAMOND_SWORD;
     public static final Material REWARD_TS_MONEY_REWARD_MATERIAL = Material.GOLD_NUGGET;
     public static final Material REWARD_TS_TITLE_REWARD_MATERIAL = Material.NAME_TAG;
+
+    /***********************************/
+    /* Reward GUI - Select item reward */
+    /***********************************/
+    public static final int REWARD_SELECT_ITEMS_STEP = 3;
+    public static final String REWARD_SELECT_ITEMS_TITLE = "Select item rewards";
+    public static int REWARD_SELECT_ITEMS_INVENTORY_SIZE = 45;
 
     /**********************/
     /* Global GUI Methods */

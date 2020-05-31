@@ -1,5 +1,6 @@
 package me.kaotich00.easyranking.gui.reward;
 
+import me.kaotich00.easyranking.Easyranking;
 import me.kaotich00.easyranking.api.board.Board;
 import me.kaotich00.easyranking.utils.GUIUtil;
 import org.bukkit.Bukkit;
@@ -17,6 +18,7 @@ public class RewardGUI {
     public RewardGUI(Player player, Board board) {
         this.player = player;
         this.board = board;
+        Easyranking.getRewardService().addModifyingPlayer(player.getUniqueId(), board);
     }
 
     public void openGUI(int step) {
@@ -44,8 +46,11 @@ public class RewardGUI {
     }
 
     private void openRewardTypeGUI() {
-        Inventory GUI = Bukkit.createInventory(player, GUIUtil.REWARD_TS_INVENTORY_SIZE, GUIUtil.REWARD_TS_INVENTORY_TITLE);
+        Inventory GUI = Bukkit.createInventory(player, GUIUtil.REWARD_TS_INVENTORY_SIZE, GUIUtil.REWARD_PS_INVENTORY_TITLE);
 
+        GUI.setItem(GUIUtil.REWARD_PS_INFO_SLOT, rtInfoMenu());
+        GUI.setItem(GUIUtil.REWARD_PS_TITLE_SLOT, rpTitleMenu());
+        GUI.setItem(GUIUtil.REWARD_PS_CLOSE_SLOT, rpCloseMenu());
         GUI.setItem(GUIUtil.REWARD_TS_ITEM_REWARD_SLOT, rewardItemTypeMenu());
         GUI.setItem(GUIUtil.REWARD_TS_MONEY_REWARD_SLOT, rewardMoneyTypeMenu());
         GUI.setItem(GUIUtil.REWARD_TS_TITLE_REWARD_SLOT, rewardTitleTypeMenu());
@@ -53,9 +58,17 @@ public class RewardGUI {
         player.openInventory(GUI);
     }
 
+    private void openItemTypeRewardGUI() {
+        Inventory GUI = Bukkit.createInventory(player, GUIUtil.REWARD_TS_INVENTORY_SIZE, GUIUtil.REWARD_TS_INVENTORY_TITLE);
+
+
+
+        player.openInventory(GUI);
+    }
+
     private ItemStack rpTitleMenu(){
         String[] lores = new String[] {};
-        return GUIUtil.prepareMenuPoint(GUIUtil.REWARD_PS_TITLE_MATERIAL,ChatColor.GOLD + "Position selection GUI", lores );
+        return GUIUtil.prepareMenuPoint(GUIUtil.REWARD_PS_TITLE_MATERIAL,ChatColor.GOLD + "Board: " + board.getName(), lores );
     }
 
     private ItemStack rpInfoMenu(){
@@ -106,6 +119,15 @@ public class RewardGUI {
     private ItemStack rewardTitleTypeMenu() {
         String[] lores = new String[] {ChatColor.GOLD + "Set title rewards"};
         return GUIUtil.prepareMenuPoint(GUIUtil.REWARD_TS_TITLE_REWARD_MATERIAL,ChatColor.GREEN + "Title reward", lores );
+    }
+
+    private ItemStack rtInfoMenu(){
+        String[] lores = new String[] {
+                ChatColor.GRAY + "Through this GUI you can modify",
+                ChatColor.GRAY + "each type of reward",
+                ChatColor.GRAY + "individually",
+        };
+        return GUIUtil.prepareMenuPoint(GUIUtil.REWARD_PS_INFO_MATERIAL,ChatColor.RED + "Info", lores );
     }
 
 }

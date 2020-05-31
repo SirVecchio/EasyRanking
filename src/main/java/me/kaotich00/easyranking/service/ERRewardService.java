@@ -9,17 +9,16 @@ import me.kaotich00.easyranking.reward.types.ERMoneyReward;
 import me.kaotich00.easyranking.reward.types.ERTitleReward;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class ERRewardService implements RewardService {
 
     private Map<Board, Set<Reward>> rewardData;
+    private Map<UUID, Board> isModyifingBoard;
 
     public ERRewardService() {
         this.rewardData = new HashMap<>();
+        this.isModyifingBoard = new HashMap<>();
     }
 
     @Override
@@ -29,16 +28,19 @@ public class ERRewardService implements RewardService {
         }
     }
 
+    @Override
     public void newItemReward(ItemStack itemStack, Board board, int position) {
         ERReward reward = new ERItemReward(itemStack, position);
         rewardData.get(board).add(reward);
     }
 
+    @Override
     public void newMoneyReward(Double money, Board board, int position) {
         ERReward reward = new ERMoneyReward(money, position);
         rewardData.get(board).add(reward);
     }
 
+    @Override
     public void newTitleReward(String title, Board board, int position) {
         ERReward reward = new ERTitleReward(title, position);
         rewardData.get(board).add(reward);
@@ -48,6 +50,21 @@ public class ERRewardService implements RewardService {
     @Override
     public Set<Reward> getRewardsByPosition(Board board, int position) {
         return rewardData.get(board);
+    }
+
+    @Override
+    public void addModifyingPlayer(UUID player, Board board) {
+        isModyifingBoard.put(player,board);
+    }
+
+    @Override
+    public void removeModifyingPlayer(UUID player, Board board) {
+        isModyifingBoard.remove(player);
+    }
+
+    @Override
+    public Board getBoardFromModifyingPlayer(UUID playerUniqueId) {
+        return isModyifingBoard.containsKey(playerUniqueId) ? isModyifingBoard.get(playerUniqueId) : null;
     }
 
 
