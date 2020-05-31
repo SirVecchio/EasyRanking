@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS `easyranking_board` (
   `is_visible` int(11) NOT NULL,
   `is_deleted` int(11) NOT NULL,
   `user_score_name` varchar(100) NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS `easyranking_board` (
 CREATE TABLE IF NOT EXISTS `easyranking_user` (
   `uuid` varchar(36) NOT NULL,
   `nickname` varchar(50) NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`uuid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS `easyranking_user_score` (
   `id_user` varchar(36) NOT NULL,
   `id_board` int(11) NOT NULL,
   `amount` float NOT NULL DEFAULT '0',
-  `created_at` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `user_score_fk_board` (`id_board`),
@@ -37,8 +37,8 @@ CREATE TABLE IF NOT EXISTS `easyranking_score_history` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `id_user_score` int(11) NOT NULL,
   `amount` float NOT NULL DEFAULT '0',
-  `board_reset_time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
-  `created_at` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `board_reset_time` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `score_history_fk_user_score` (`id_user_score`),
