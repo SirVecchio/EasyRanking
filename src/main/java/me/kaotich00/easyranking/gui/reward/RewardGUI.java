@@ -1,12 +1,10 @@
 package me.kaotich00.easyranking.gui.reward;
 
+import me.kaotich00.easyranking.utils.GUIUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -17,96 +15,99 @@ import java.util.List;
 
 public class RewardGUI implements Listener {
 
-    private final int ITEM_REWARD_SLOT = 11;
-    private final int MONEY_REWARD_SLOT = 13;
-    private final int TITLE_REWARD_SLOT = 15;
-
-    private final Material ITEM_REWARD_MATERIAL = Material.DIAMOND_SWORD;
-    private final Material MONEY_REWARD_MATERIAL = Material.GOLD_NUGGET;
-    private final Material TITLE_REWARD_MATERIAL = Material.NAME_TAG;
-
-    private String INVENTORY_TITLE = "Reward selection";
-
     private Player player;
 
     public RewardGUI(Player player) {
         this.player = player;
     }
 
-    public void openRewardGUI() {
-        Inventory GUI = Bukkit.createInventory(player, 27, INVENTORY_TITLE);
+    public void openRewardGUI(int step) {
+        switch( step ) {
+            case GUIUtil.REWARD_PS_STEP:
+                openRewardRankPositionGUI();
+                break;
+            case GUIUtil.REWARD_TS_STEP:
+                openRewardTypeGUI();
+                break;
+        }
+    }
 
-        GUI.setItem(ITEM_REWARD_SLOT, itemRewardMenu());
-        GUI.setItem(MONEY_REWARD_SLOT, moneyRewardMenu());
-        GUI.setItem(TITLE_REWARD_SLOT, titleRewardMenu());
+    private void openRewardRankPositionGUI() {
+        Inventory GUI = Bukkit.createInventory(player, GUIUtil.REWARD_PS_INVENTORY_SIZE, GUIUtil.REWARD_TS_INVENTORY_TITLE);
+
+        GUI.setItem(GUIUtil.REWARD_PS_INFO_SLOT, rpInfoMenu());
+        GUI.setItem(GUIUtil.REWARD_PS_TITLE_SLOT, rpTitleMenu());
+        GUI.setItem(GUIUtil.REWARD_PS_CLOSE_SLOT, rpCloseMenu());
+        GUI.setItem(GUIUtil.REWARD_PS_POSITION_FIRST_SLOT, rpPositionFirstMenu());
+        GUI.setItem(GUIUtil.REWARD_PS_POSITION_SECOND_SLOT, rpPositionSecondMenu());
+        GUI.setItem(GUIUtil.REWARD_PS_POSITION_THIRD_SLOT, rpPositionThirdMenu());
 
         player.openInventory(GUI);
     }
 
-    private ItemStack itemRewardMenu() {
-        /* Menu point for Item Reward Management */
-        ItemStack itemReward = new ItemStack(ITEM_REWARD_MATERIAL);
-        ItemMeta itemRewardMeta = itemReward.getItemMeta();
-        itemRewardMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-        itemRewardMeta.setDisplayName(ChatColor.GREEN + "Item reward");
-        List<String> itemRewardLore = new ArrayList<>();
-        itemRewardLore.add(ChatColor.GOLD + "Set item rewards");
-        itemRewardMeta.setLore(itemRewardLore);
-        itemReward.setItemMeta(itemRewardMeta);
+    private void openRewardTypeGUI() {
+        Inventory GUI = Bukkit.createInventory(player, GUIUtil.REWARD_TS_INVENTORY_SIZE, GUIUtil.REWARD_TS_INVENTORY_TITLE);
 
-        return itemReward;
+        GUI.setItem(GUIUtil.REWARD_TS_ITEM_REWARD_SLOT, rewardItemTypeMenu());
+        GUI.setItem(GUIUtil.REWARD_TS_MONEY_REWARD_SLOT, rewardMoneyTypeMenu());
+        GUI.setItem(GUIUtil.REWARD_TS_TITLE_REWARD_SLOT, rewardTitleTypeMenu());
+
+        player.openInventory(GUI);
     }
 
-    private ItemStack moneyRewardMenu() {
-        /* Menu point for Item Reward Management */
-        ItemStack itemReward = new ItemStack(MONEY_REWARD_MATERIAL);
-        ItemMeta itemRewardMeta = itemReward.getItemMeta();
-        itemRewardMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-        itemRewardMeta.setDisplayName(ChatColor.GREEN + "Money reward");
-        List<String> itemRewardLore = new ArrayList<>();
-        itemRewardLore.add(ChatColor.GOLD + "Set money rewards");
-        itemRewardMeta.setLore(itemRewardLore);
-        itemReward.setItemMeta(itemRewardMeta);
-
-        return itemReward;
+    private ItemStack rpTitleMenu(){
+        String[] lores = new String[] {};
+        return GUIUtil.prepareMenuPoint(GUIUtil.REWARD_PS_TITLE_MATERIAL,ChatColor.GOLD + "Position selection GUI", lores );
     }
 
-    private ItemStack titleRewardMenu() {
-        /* Menu point for Item Reward Management */
-        ItemStack itemReward = new ItemStack(TITLE_REWARD_MATERIAL);
-        ItemMeta itemRewardMeta = itemReward.getItemMeta();
-        itemRewardMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-        itemRewardMeta.setDisplayName(ChatColor.GREEN + "Title reward");
-        List<String> itemRewardLore = new ArrayList<>();
-        itemRewardLore.add(ChatColor.GOLD + "Set title rewards");
-        itemRewardMeta.setLore(itemRewardLore);
-        itemReward.setItemMeta(itemRewardMeta);
-
-        return itemReward;
+    private ItemStack rpInfoMenu(){
+        String[] lores = new String[] {
+            ChatColor.GRAY + "Through this GUI you can select",
+            ChatColor.GRAY + "which position in the board to",
+            ChatColor.GRAY + "give the rewards",
+        };
+        return GUIUtil.prepareMenuPoint(GUIUtil.REWARD_PS_INFO_MATERIAL,ChatColor.RED + "Info", lores );
     }
 
-    @EventHandler
-    public void onClick(InventoryClickEvent event) {
-        if( !event.getView().getTitle().equalsIgnoreCase(INVENTORY_TITLE) ) {
-            return;
-        }
+    private ItemStack rpCloseMenu(){
+        String[] lores = new String[] {};
+        return GUIUtil.prepareMenuPoint(GUIUtil.REWARD_PS_CLOSE_MATERIAL,ChatColor.RED + "Close menu", lores );
+    }
 
-        event.setCancelled(true);
+    private ItemStack rpPositionFirstMenu(){
+        String[] lores = new String[] {
+                ChatColor.GOLD + "Set the rewards for the player",
+                ChatColor.GOLD + "in first position"};
+        return GUIUtil.prepareMenuPoint(GUIUtil.REWARD_PS_POSITION_FIRST_MATERIAL,ChatColor.GREEN + "First position", lores );
+    }
 
-        switch( event.getCurrentItem().getType() ) {
-            /* Item reward */
-            case DIAMOND_SWORD:
-                player.sendMessage( "Item reward" );
-                break;
-            /* Title reward */
-            case NAME_TAG:
-                player.sendMessage( "Title reward" );
-                break;
-            /* Money reward */
-            case GOLD_NUGGET:
-                player.sendMessage( "Money reward" );
-                break;
-        }
+    private ItemStack rpPositionSecondMenu(){
+        String[] lores = new String[] {
+                ChatColor.GOLD + "Set the rewards for the player",
+                ChatColor.GOLD + "in second position"};
+        return GUIUtil.prepareMenuPoint(GUIUtil.REWARD_PS_POSITION_SECOND_MATERIAL,ChatColor.GREEN + "Second position", lores );
+    }
+
+    private ItemStack rpPositionThirdMenu(){
+        String[] lores = new String[] {
+                ChatColor.GOLD + "Set the rewards for the player",
+                ChatColor.GOLD + "in third position"};
+        return GUIUtil.prepareMenuPoint(GUIUtil.REWARD_PS_POSITION_THIRD_MATERIAL,ChatColor.GREEN + "Third position", lores );
+    }
+
+    private ItemStack rewardItemTypeMenu() {
+        String[] lores = new String[] {ChatColor.GOLD + "Item reward"};
+        return GUIUtil.prepareMenuPoint(GUIUtil.REWARD_TS_ITEM_REWARD_MATERIAL,ChatColor.GREEN + "Set item rewards", lores );
+    }
+
+    private ItemStack rewardMoneyTypeMenu() {
+        String[] lores = new String[] {ChatColor.GOLD + "Set money rewards"};
+        return GUIUtil.prepareMenuPoint(GUIUtil.REWARD_TS_MONEY_REWARD_MATERIAL,ChatColor.GREEN + "Money reward", lores );
+    }
+
+    private ItemStack rewardTitleTypeMenu() {
+        String[] lores = new String[] {ChatColor.GOLD + "Set title rewards"};
+        return GUIUtil.prepareMenuPoint(GUIUtil.REWARD_TS_TITLE_REWARD_MATERIAL,ChatColor.GREEN + "Title reward", lores );
     }
 
 }

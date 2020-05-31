@@ -32,7 +32,7 @@ public class RewardCommand {
         }
 
         RewardGUI gui = new RewardGUI((Player)sender);
-        gui.openRewardGUI();
+        gui.openRewardGUI(1);
 
         return CommandTypes.COMMAND_SUCCESS;
     }

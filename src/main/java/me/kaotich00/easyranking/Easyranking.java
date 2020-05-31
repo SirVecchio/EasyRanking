@@ -3,6 +3,7 @@ package me.kaotich00.easyranking;
 import me.kaotich00.easyranking.api.service.BoardService;
 import me.kaotich00.easyranking.api.service.RewardService;
 import me.kaotich00.easyranking.command.EasyRankingCommand;
+import me.kaotich00.easyranking.listener.gui.reward.GUIRewardListener;
 import me.kaotich00.easyranking.service.ERBoardService;
 import me.kaotich00.easyranking.storage.StorageFactory;
 import org.bukkit.Bukkit;
@@ -25,14 +26,18 @@ public final class Easyranking extends JavaPlugin {
         Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[EasyRanking]" + ChatColor.RESET + " Loading configuration...");
         loadConfiguration();
 
-        Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[EasyRanking]" + ChatColor.RESET + " Registering commands...");
-        registerCommands();
-
         Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[EasyRanking]" + ChatColor.RESET + " Initializing database...");
         initStorage();
 
+        Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[EasyRanking]" + ChatColor.RESET + " Registering commands...");
+        registerCommands();
+
         Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[EasyRanking]" + ChatColor.RESET + " Registering services...");
         registerServices();
+
+        Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[EasyRanking]" + ChatColor.RESET + " Registering listeners...");
+        registerListeners();
+
     }
 
     @Override
@@ -62,6 +67,8 @@ public final class Easyranking extends JavaPlugin {
     public void registerServices() {
         boardService = new ERBoardService();
     }
+
+    public void registerListeners(){ getServer().getPluginManager().registerEvents(new GUIRewardListener(),this); };
 
     public static FileConfiguration getDefaultConfig() {
         return defaultConfig;
