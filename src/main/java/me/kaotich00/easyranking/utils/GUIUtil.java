@@ -1,6 +1,5 @@
 package me.kaotich00.easyranking.utils;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -11,6 +10,13 @@ import java.util.Arrays;
 import java.util.List;
 
 public class GUIUtil {
+
+    /*****************/
+    /* Miscellaneous */
+    /*****************/
+    public static final int FIRST_PLACE = 1;
+    public static final int SECOND_PLACE = 2;
+    public static final int THIRD_PLACE = 3;
 
     /*****************************************/
     /* Reward GUI - Position selection phase */

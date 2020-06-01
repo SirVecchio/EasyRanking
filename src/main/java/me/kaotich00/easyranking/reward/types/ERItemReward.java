@@ -14,6 +14,6 @@ public class ERItemReward extends ERReward {
 
     @Override
     public ItemStack getReward() {
-        return reward;
+        return this.reward;
     }
 }

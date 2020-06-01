@@ -2,6 +2,10 @@ package me.kaotich00.easyranking.gui.reward;
 
 import me.kaotich00.easyranking.Easyranking;
 import me.kaotich00.easyranking.api.board.Board;
+import me.kaotich00.easyranking.api.reward.Reward;
+import me.kaotich00.easyranking.api.service.RewardService;
+import me.kaotich00.easyranking.reward.ERReward;
+import me.kaotich00.easyranking.reward.types.ERItemReward;
 import me.kaotich00.easyranking.utils.GUIUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -10,14 +14,25 @@ import org.bukkit.event.Listener;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.List;
+import java.util.Set;
+
 public class RewardGUI {
 
     private Player player;
     private Board board;
+    private int rankPlace;
 
     public RewardGUI(Player player, Board board) {
         this.player = player;
         this.board = board;
+        Easyranking.getRewardService().addModifyingPlayer(player.getUniqueId(), board);
+    }
+
+    public RewardGUI(Player player, Board board, int rankPlace) {
+        this.player = player;
+        this.board = board;
+        this.rankPlace = rankPlace;
         Easyranking.getRewardService().addModifyingPlayer(player.getUniqueId(), board);
     }
 
@@ -28,6 +43,9 @@ public class RewardGUI {
                 break;
             case GUIUtil.REWARD_TS_STEP:
                 openRewardTypeGUI();
+                break;
+            case GUIUtil.REWARD_SELECT_ITEMS_STEP:
+                openItemTypeRewardGUI();
                 break;
         }
     }
@@ -46,11 +64,11 @@ public class RewardGUI {
     }
 
     private void openRewardTypeGUI() {
-        Inventory GUI = Bukkit.createInventory(player, GUIUtil.REWARD_TS_INVENTORY_SIZE, GUIUtil.REWARD_PS_INVENTORY_TITLE);
+        Inventory GUI = Bukkit.createInventory(player, GUIUtil.REWARD_TS_INVENTORY_SIZE, GUIUtil.REWARD_TS_INVENTORY_TITLE);
 
         GUI.setItem(GUIUtil.REWARD_PS_INFO_SLOT, rtInfoMenu());
         GUI.setItem(GUIUtil.REWARD_PS_TITLE_SLOT, rpTitleMenu());
-        GUI.setItem(GUIUtil.REWARD_PS_CLOSE_SLOT, rpCloseMenu());
+        GUI.setItem(GUIUtil.REWARD_PS_CLOSE_SLOT, rtCloseMenu());
         GUI.setItem(GUIUtil.REWARD_TS_ITEM_REWARD_SLOT, rewardItemTypeMenu());
         GUI.setItem(GUIUtil.REWARD_TS_MONEY_REWARD_SLOT, rewardMoneyTypeMenu());
         GUI.setItem(GUIUtil.REWARD_TS_TITLE_REWARD_SLOT, rewardTitleTypeMenu());
@@ -59,9 +77,19 @@ public class RewardGUI {
     }
 
     private void openItemTypeRewardGUI() {
-        Inventory GUI = Bukkit.createInventory(player, GUIUtil.REWARD_TS_INVENTORY_SIZE, GUIUtil.REWARD_TS_INVENTORY_TITLE);
+        Inventory GUI = Bukkit.createInventory(player, GUIUtil.REWARD_SELECT_ITEMS_INVENTORY_SIZE, GUIUtil.REWARD_SELECT_ITEMS_TITLE);
+        List<Reward> rewardsList = Easyranking.getRewardService().getRewardsByPosition( board, this.rankPlace );
 
+        if( rewardsList != null ) {
+            int currentSlot = 0;
+            for( Reward reward : rewardsList ) {
+                if( !(reward instanceof ERItemReward) )
+                    continue;
 
+                GUI.setItem(currentSlot, ((ERItemReward) reward).getReward());
+                currentSlot++;
+            }
+        }
 
         player.openInventory(GUI);
     }
@@ -128,6 +156,11 @@ public class RewardGUI {
                 ChatColor.GRAY + "individually",
         };
         return GUIUtil.prepareMenuPoint(GUIUtil.REWARD_PS_INFO_MATERIAL,ChatColor.RED + "Info", lores );
+    }
+
+    private ItemStack rtCloseMenu(){
+        String[] lores = new String[] {};
+        return GUIUtil.prepareMenuPoint(GUIUtil.REWARD_PS_CLOSE_MATERIAL,ChatColor.RED + "Back", lores );
     }
 
 }
