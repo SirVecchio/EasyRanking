@@ -5,14 +5,18 @@ import me.kaotich00.easyranking.api.board.Board;
 import me.kaotich00.easyranking.api.service.BoardService;
 import me.kaotich00.easyranking.command.admin.board.CreateCommand;
 import me.kaotich00.easyranking.command.admin.board.RewardCommand;
+import me.kaotich00.easyranking.command.admin.board.ScoreCommand;
 import me.kaotich00.easyranking.utils.ChatFormatter;
 import me.kaotich00.easyranking.utils.CommandTypes;
 import me.kaotich00.easyranking.utils.NameUtil;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
+import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -38,6 +42,10 @@ public class EasyRankingCommand implements TabExecutor {
 
             case CommandTypes.REWARD_COMMAND:
                 result = RewardCommand.executeCommand(sender, command, label, args);
+                break;
+
+            case CommandTypes.SCORE_COMMAND:
+                result = ScoreCommand.executeCommand(sender, command, label, args);
                 break;
         }
         return result;
@@ -67,6 +75,22 @@ public class EasyRankingCommand implements TabExecutor {
                 for (Board board : boardsList) {
                     suggestions.add(board.getName());
                 }
+            }
+        }
+
+        /* Suggest add/subtract for score command */
+        if(args.length == 3 && args[0].equals(CommandTypes.SCORE_COMMAND)) {
+            argsIndex = args[2];
+            suggestions.add("add");
+            suggestions.add("subtract");
+            suggestions.add("set");
+        }
+
+        /* Suggest player name for score command */
+        if(args.length == 4 && args[0].equals(CommandTypes.SCORE_COMMAND)) {
+            argsIndex = args[3];
+            for( Player p : Bukkit.getOnlinePlayers() ) {
+                suggestions.add(p.getDisplayName());
             }
         }
 

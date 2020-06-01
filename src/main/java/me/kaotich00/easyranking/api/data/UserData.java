@@ -8,6 +8,12 @@ public interface UserData {
 
     String getNickname();
 
-    int getScore();
+    float getScore();
+
+    void setScore(float score);
+
+    void addScore(float score);
+
+    void subtractScore(float score);
 
 }

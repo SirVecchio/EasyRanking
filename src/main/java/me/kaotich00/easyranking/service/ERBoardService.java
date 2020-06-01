@@ -5,11 +5,10 @@ import me.kaotich00.easyranking.api.board.Board;
 import me.kaotich00.easyranking.api.data.UserData;
 import me.kaotich00.easyranking.api.service.BoardService;
 import me.kaotich00.easyranking.board.ERBoard;
+import me.kaotich00.easyranking.data.ERUserData;
+import org.bukkit.entity.Player;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class ERBoardService implements BoardService {
 
@@ -25,7 +24,7 @@ public class ERBoardService implements BoardService {
     public Board createBoard(String name, String description, int maxShownPlayers, String userScoreName) {
         ERBoard board = new ERBoard(name, description, maxShownPlayers, userScoreName);
         boardsList.add(board);
-        boardData.put(board, null);
+        boardData.put(board, new HashSet<>());
         Easyranking.getRewardService().registerBoard(board);
         return board;
     }
@@ -43,5 +42,37 @@ public class ERBoardService implements BoardService {
     @Override
     public boolean isNameAlreadyUsed(String name) {
         return boardsList.stream().filter(board -> board.getName().equals(name)).findFirst().isPresent();
+    }
+
+    @Override
+    public Optional<UserData> getUserData(Board board, Player player) {
+        return boardData.get(board).stream().filter(userData -> userData.getUniqueId() == player.getUniqueId()).findFirst();
+    }
+
+    @Override
+    public void createUserData(Board board, Player player) {
+        UserData userData = new ERUserData(player);
+        boardData.get(board).add(userData);
+    }
+
+    @Override
+    public float addScoreToPlayer(Board board, Player player, float score) {
+        UserData userData = getUserData(board,player).get();
+        userData.addScore(score);
+        return userData.getScore();
+    }
+
+    @Override
+    public float subtractScoreFromPlayer(Board board, Player player, float score) {
+        UserData userData = getUserData(board,player).get();
+        userData.subtractScore(score);
+        return userData.getScore();
+    }
+
+    @Override
+    public float setScoreOfPlayer(Board board, Player player, float score) {
+        UserData userData = getUserData(board,player).get();
+        userData.setScore(score);
+        return userData.getScore();
     }
 }

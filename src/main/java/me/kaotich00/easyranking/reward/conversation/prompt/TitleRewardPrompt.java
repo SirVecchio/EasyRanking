@@ -40,7 +40,7 @@ public class TitleRewardPrompt extends StringPrompt {
         rewardSelectionGUI.openGUI(GUIUtil.REWARD_TS_STEP);
 
         player.playSound( player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 10, 1 );
-        player.sendMessage(ChatFormatter.formatSuccessMessage(ChatColor.GRAY + "Successfully set " + ChatColor.translateAlternateColorCodes('&',input) + " as title reward"));
+        player.sendMessage(ChatFormatter.formatSuccessMessage(ChatColor.GRAY + "Successfully set " + ChatColor.translateAlternateColorCodes('&',input) + ChatColor.GRAY + " as title reward"));
 
         return Prompt.END_OF_CONVERSATION;
     }
