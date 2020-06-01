@@ -6,6 +6,8 @@ public interface Reward {
 
     void setRankingPosition(int rankingPosition);
 
+    int getRewardType();
+
     Object getReward();
 
 }
