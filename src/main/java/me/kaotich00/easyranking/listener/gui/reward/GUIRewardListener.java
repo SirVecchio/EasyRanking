@@ -101,7 +101,7 @@ public class GUIRewardListener implements Listener {
     private void handleItemRewardSelection(Player player, ItemStack itemReward) {
         RewardService rewardService = Easyranking.getRewardService();
         Board board = rewardService.getBoardFromModifyingPlayer(player.getUniqueId());
-        rewardService.newItemReward(itemReward,board,GUIUtil.FIRST_PLACE);
+        rewardService.newItemReward(itemReward.clone(),board,GUIUtil.FIRST_PLACE);
     }
 
 }
