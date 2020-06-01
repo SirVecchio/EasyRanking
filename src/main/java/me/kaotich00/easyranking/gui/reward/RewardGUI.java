@@ -34,6 +34,7 @@ public class RewardGUI {
         this.board = board;
         this.rankPlace = rankPlace;
         Easyranking.getRewardService().addModifyingPlayer(player.getUniqueId(), board);
+        Easyranking.getRewardService().addItemSelectionRank(player.getUniqueId(), rankPlace);
     }
 
     public void openGUI(int step) {

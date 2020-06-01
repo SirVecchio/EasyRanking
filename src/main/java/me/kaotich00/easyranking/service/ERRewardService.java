@@ -9,15 +9,18 @@ import me.kaotich00.easyranking.reward.types.ERTitleReward;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class ERRewardService implements RewardService {
 
     private Map<Board, List<Reward>> rewardData;
     private Map<UUID, Board> isModifyingBoard;
+    private Map<UUID, Integer> isSelectingItems;
 
     public ERRewardService() {
         this.rewardData = new HashMap<>();
         this.isModifyingBoard = new HashMap<>();
+        this.isSelectingItems = new HashMap<>();
     }
 
     @Override
@@ -47,8 +50,8 @@ public class ERRewardService implements RewardService {
     }
 
     @Override
-    public void clearItemReward(Board board) {
-        List<Reward> rewardsList = rewardData.get(board);
+    public void clearItemReward(Board board, int rankPosition) {
+        List<Reward> rewardsList = rewardData.get(board).stream().filter(r -> r.getRankingPosition() == rankPosition).collect(Collectors.toList());
         List<Reward> toRemove = new ArrayList<Reward>();
         for( Reward reward : rewardsList ) {
             if( reward instanceof ERItemReward ) {
@@ -59,8 +62,8 @@ public class ERRewardService implements RewardService {
     }
 
     @Override
-    public void clearMoneyReward(Board board) {
-        List<Reward> rewardsList = rewardData.get(board);
+    public void clearMoneyReward(Board board, int rankPosition) {
+        List<Reward> rewardsList = rewardData.get(board).stream().filter(r -> r.getRankingPosition() == rankPosition).collect(Collectors.toList());
         List<Reward> toRemove = new ArrayList<Reward>();
         for( Reward reward : rewardsList ) {
             if( reward instanceof ERMoneyReward ) {
@@ -71,8 +74,8 @@ public class ERRewardService implements RewardService {
     }
 
     @Override
-    public void clearTitleReward(Board board) {
-        List<Reward> rewardsList = rewardData.get(board);
+    public void clearTitleReward(Board board, int rankPosition) {
+        List<Reward> rewardsList = rewardData.get(board).stream().filter(r -> r.getRankingPosition() == rankPosition).collect(Collectors.toList());
         List<Reward> toRemove = new ArrayList<Reward>();
         for( Reward reward : rewardsList ) {
             if( reward instanceof ERTitleReward ) {
@@ -84,7 +87,7 @@ public class ERRewardService implements RewardService {
 
     @Override
     public List<Reward> getRewardsByPosition(Board board, int position) {
-        return rewardData.get(board);
+        return rewardData.get(board).stream().filter(r -> r.getRankingPosition() == position).collect(Collectors.toList());
     }
 
     @Override
@@ -93,13 +96,28 @@ public class ERRewardService implements RewardService {
     }
 
     @Override
-    public void removeModifyingPlayer(UUID player, Board board) {
+    public void removeModifyingPlayer(UUID player) {
         isModifyingBoard.remove(player);
+    }
+
+    @Override
+    public void addItemSelectionRank(UUID player, int rankPlace) {
+        isSelectingItems.put(player,rankPlace);
+    }
+
+    @Override
+    public void removeItemSelectionRank(UUID player) {
+        isSelectingItems.remove(player);
     }
 
     @Override
     public Board getBoardFromModifyingPlayer(UUID playerUniqueId) {
         return isModifyingBoard.containsKey(playerUniqueId) ? isModifyingBoard.get(playerUniqueId) : null;
+    }
+
+    @Override
+    public int getItemSelectionRankFromModifyingPlayer(UUID playerUniqueId) {
+        return isSelectingItems.containsKey(playerUniqueId) ? isSelectingItems.get(playerUniqueId) : 0;
     }
 
 

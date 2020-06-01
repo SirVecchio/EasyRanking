@@ -4,7 +4,9 @@ import me.kaotich00.easyranking.Easyranking;
 import me.kaotich00.easyranking.api.board.Board;
 import me.kaotich00.easyranking.api.service.RewardService;
 import me.kaotich00.easyranking.gui.reward.RewardGUI;
+import me.kaotich00.easyranking.utils.ChatFormatter;
 import me.kaotich00.easyranking.utils.GUIUtil;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -84,16 +86,18 @@ public class GUIRewardListener implements Listener {
 
     private void handleTypeSelectionGUI(Player player, Material clickedMenu) {
         RewardService rewardService = Easyranking.getRewardService();
+        int rewardRank = rewardService.getItemSelectionRankFromModifyingPlayer(player.getUniqueId());
+
         switch( clickedMenu ) {
             /* Back arrow */
             case BARRIER:
-                RewardGUI prevGui = new RewardGUI(player, rewardService.getBoardFromModifyingPlayer(player.getUniqueId()));
+                RewardGUI prevGui = new RewardGUI(player, rewardService.getBoardFromModifyingPlayer(player.getUniqueId()), rewardRank);
                 prevGui.openGUI(GUIUtil.REWARD_PS_STEP);
                 player.playSound(player.getLocation(), Sound.ENTITY_ITEM_FRAME_REMOVE_ITEM, 10, 1);
                 break;
             /* Item reward */
             case DIAMOND_SWORD:
-                RewardGUI selectItemReward = new RewardGUI(player, rewardService.getBoardFromModifyingPlayer(player.getUniqueId()));
+                RewardGUI selectItemReward = new RewardGUI(player, rewardService.getBoardFromModifyingPlayer(player.getUniqueId()), rewardRank);
                 selectItemReward.openGUI(GUIUtil.REWARD_SELECT_ITEMS_STEP);
                 player.playSound(player.getLocation(), Sound.BLOCK_LEVER_CLICK, 10, 1);
                 break;
@@ -111,13 +115,18 @@ public class GUIRewardListener implements Listener {
     private void handleItemRewardSelection(Player player, Inventory inventory) {
         RewardService rewardService = Easyranking.getRewardService();
         Board board = rewardService.getBoardFromModifyingPlayer(player.getUniqueId());
-        rewardService.clearItemReward(board);
+        int rewardRank = rewardService.getItemSelectionRankFromModifyingPlayer(player.getUniqueId());
+        rewardService.clearItemReward(board, rewardRank);
 
-        Iterator i = inventory.iterator();
-        while( i.hasNext() ) {
-            ItemStack itemReward = (ItemStack) i.next();
-            rewardService.newItemReward(itemReward.clone(),board,GUIUtil.FIRST_PLACE);
+        for( ItemStack reward : inventory.getContents() ) {
+            if( reward != null ) {
+                rewardService.newItemReward(reward.clone(), board, rewardRank);
+                player.sendMessage(ChatFormatter.formatSuccessMessage("Successfully added " + ChatColor.GOLD + reward.toString()));
+            }
         }
+
+        rewardService.removeItemSelectionRank(player.getUniqueId());
+        rewardService.removeModifyingPlayer(player.getUniqueId());
     }
 
 }

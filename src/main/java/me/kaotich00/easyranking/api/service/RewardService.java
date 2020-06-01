@@ -5,7 +5,6 @@ import me.kaotich00.easyranking.api.reward.Reward;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 public interface RewardService {
@@ -18,18 +17,24 @@ public interface RewardService {
 
     void newTitleReward(String title, Board board, int position);
 
-    void clearItemReward(Board board);
+    void clearItemReward(Board board, int position);
 
-    void clearMoneyReward(Board board);
+    void clearMoneyReward(Board board, int position);
 
-    void clearTitleReward(Board board);
+    void clearTitleReward(Board board, int position);
 
     List<Reward> getRewardsByPosition(Board board, int position);
 
     void addModifyingPlayer(UUID player, Board board);
 
-    void removeModifyingPlayer(UUID player, Board board);
+    void removeModifyingPlayer(UUID player);
+
+    void addItemSelectionRank(UUID player, int rankPlace);
+
+    void removeItemSelectionRank(UUID player);
 
     Board getBoardFromModifyingPlayer(UUID playerUniqueId);
+
+    int getItemSelectionRankFromModifyingPlayer(UUID playerUniqueId);
 
 }
