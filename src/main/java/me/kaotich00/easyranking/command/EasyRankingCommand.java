@@ -90,7 +90,7 @@ public class EasyRankingCommand implements TabExecutor {
         if(args.length == 4 && args[0].equals(CommandTypes.SCORE_COMMAND)) {
             argsIndex = args[3];
             for( Player p : Bukkit.getOnlinePlayers() ) {
-                suggestions.add(p.getDisplayName());
+                suggestions.add(p.getPlayerListName());
             }
         }
 

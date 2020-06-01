@@ -17,6 +17,7 @@ public class GUIUtil {
     public static final int FIRST_PLACE = 1;
     public static final int SECOND_PLACE = 2;
     public static final int THIRD_PLACE = 3;
+
     public static final int ITEM_TYPE = 1;
     public static final int MONEY_TYPE = 2;
     public static final int TITLE_TYPE = 3;

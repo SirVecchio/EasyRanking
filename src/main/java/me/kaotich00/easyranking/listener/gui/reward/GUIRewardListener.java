@@ -15,13 +15,10 @@ import org.bukkit.conversations.ConversationFactory;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-
-import java.util.Iterator;
 
 public class GUIRewardListener implements Listener {
 
@@ -36,6 +33,10 @@ public class GUIRewardListener implements Listener {
     }
 
     private void dispatchClickEvent(InventoryClickEvent event ) {
+        if( event.getCurrentItem() == null ) {
+            return;
+        }
+
         switch(event.getView().getTitle()) {
             case GUIUtil.REWARD_TS_INVENTORY_TITLE:
                 handleTypeSelectionGUI((Player)event.getWhoClicked(), event.getCurrentItem().getType());

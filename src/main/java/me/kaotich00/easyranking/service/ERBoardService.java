@@ -6,6 +6,7 @@ import me.kaotich00.easyranking.api.data.UserData;
 import me.kaotich00.easyranking.api.service.BoardService;
 import me.kaotich00.easyranking.board.ERBoard;
 import me.kaotich00.easyranking.data.ERUserData;
+import me.kaotich00.easyranking.utils.BoardUtil;
 import org.bukkit.entity.Player;
 
 import java.util.*;
@@ -18,6 +19,12 @@ public class ERBoardService implements BoardService {
     public ERBoardService() {
         this.boardsList = new HashSet<>();
         this.boardData = new HashMap<>();
+        initDefaultBoards();
+    }
+
+    @Override
+    public void initDefaultBoards() {
+        createBoard(BoardUtil.MOB_KILLED_BOARD_NAME, BoardUtil.MOB_KILLED_BOARD_DESCRIPTION, 100, "points");
     }
 
     @Override

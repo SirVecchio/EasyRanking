@@ -9,6 +9,8 @@ import java.util.Set;
 
 public interface BoardService {
 
+    void initDefaultBoards();
+
     Board createBoard(String name, String description, int maxShownPlayers, String userScoreName);
 
     Set<Board> getBoards();

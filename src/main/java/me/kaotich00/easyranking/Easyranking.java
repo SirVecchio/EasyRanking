@@ -3,6 +3,7 @@ package me.kaotich00.easyranking;
 import me.kaotich00.easyranking.api.service.BoardService;
 import me.kaotich00.easyranking.api.service.RewardService;
 import me.kaotich00.easyranking.command.EasyRankingCommand;
+import me.kaotich00.easyranking.listener.board.KilledMobsListener;
 import me.kaotich00.easyranking.listener.gui.reward.GUIRewardListener;
 import me.kaotich00.easyranking.service.ERBoardService;
 import me.kaotich00.easyranking.service.ERRewardService;
@@ -66,11 +67,14 @@ public final class Easyranking extends JavaPlugin {
     }
 
     public void registerServices() {
-        boardService = new ERBoardService();
         rewardService = new ERRewardService();
+        boardService = new ERBoardService();
     }
 
-    public void registerListeners(){ getServer().getPluginManager().registerEvents(new GUIRewardListener(),this); };
+    public void registerListeners(){
+        getServer().getPluginManager().registerEvents(new GUIRewardListener(),this);
+        getServer().getPluginManager().registerEvents(new KilledMobsListener(),this);
+    };
 
     public static FileConfiguration getDefaultConfig() {
         return defaultConfig;

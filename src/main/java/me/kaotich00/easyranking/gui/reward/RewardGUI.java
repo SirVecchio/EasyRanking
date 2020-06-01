@@ -54,7 +54,7 @@ public class RewardGUI {
     }
 
     private void openRankPositionGUI() {
-        Inventory GUI = Bukkit.createInventory(player, GUIUtil.REWARD_PS_INVENTORY_SIZE, GUIUtil.REWARD_PS_INVENTORY_TITLE);
+        Inventory GUI = Bukkit.createInventory(null, GUIUtil.REWARD_PS_INVENTORY_SIZE, GUIUtil.REWARD_PS_INVENTORY_TITLE);
 
         GUI.setItem(GUIUtil.REWARD_PS_INFO_SLOT, rpInfoMenu());
         GUI.setItem(GUIUtil.REWARD_PS_TITLE_SLOT, rpTitleMenu());
@@ -67,7 +67,7 @@ public class RewardGUI {
     }
 
     private void openRewardTypeGUI() {
-        Inventory GUI = Bukkit.createInventory(player, GUIUtil.REWARD_TS_INVENTORY_SIZE, GUIUtil.REWARD_TS_INVENTORY_TITLE);
+        Inventory GUI = Bukkit.createInventory(null, GUIUtil.REWARD_TS_INVENTORY_SIZE, GUIUtil.REWARD_TS_INVENTORY_TITLE);
 
         GUI.setItem(GUIUtil.REWARD_PS_INFO_SLOT, rtInfoMenu());
         GUI.setItem(GUIUtil.REWARD_PS_TITLE_SLOT, rpTitleMenu());
@@ -80,7 +80,7 @@ public class RewardGUI {
     }
 
     private void openItemTypeRewardGUI() {
-        Inventory GUI = Bukkit.createInventory(player, GUIUtil.REWARD_SELECT_ITEMS_INVENTORY_SIZE, GUIUtil.REWARD_SELECT_ITEMS_TITLE);
+        Inventory GUI = Bukkit.createInventory(null, GUIUtil.REWARD_SELECT_ITEMS_INVENTORY_SIZE, GUIUtil.REWARD_SELECT_ITEMS_TITLE);
         List<Reward> rewardsList = Easyranking.getRewardService().getItemRewardsByPosition( board, this.rankPlace );
 
         if( rewardsList != null ) {
