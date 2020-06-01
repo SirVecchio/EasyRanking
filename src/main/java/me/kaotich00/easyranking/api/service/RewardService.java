@@ -18,6 +18,12 @@ public interface RewardService {
 
     void newTitleReward(String title, Board board, int position);
 
+    void clearItemReward(Board board);
+
+    void clearMoneyReward(Board board);
+
+    void clearTitleReward(Board board);
+
     List<Reward> getRewardsByPosition(Board board, int position);
 
     void addModifyingPlayer(UUID player, Board board);

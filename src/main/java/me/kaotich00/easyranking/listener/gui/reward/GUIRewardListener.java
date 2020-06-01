@@ -12,13 +12,22 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.Iterator;
 
 public class GUIRewardListener implements Listener {
 
     @EventHandler
     public void onClick(InventoryClickEvent event) {
         dispatchClickEvent(event);
+    }
+
+    @EventHandler
+    public void onItemSelectInventoryClose(InventoryCloseEvent event) {
+        dispatchCloseEvent(event);
     }
 
     private void dispatchClickEvent(InventoryClickEvent event ) {
@@ -31,15 +40,16 @@ public class GUIRewardListener implements Listener {
                 handlePositionSelectionGUI((Player)event.getWhoClicked(), event.getCurrentItem().getType());
                 event.setCancelled(true);
                 break;
-            case GUIUtil.REWARD_SELECT_ITEMS_TITLE:
-                if( event.getAction().equals(InventoryAction.MOVE_TO_OTHER_INVENTORY) ) {
-                    handleItemRewardSelection((Player) event.getWhoClicked(), event.getCurrentItem());
-                } else {
-                    event.setCancelled(true);
-                }
-                break;
             default:
                 return;
+        }
+    }
+
+    private void dispatchCloseEvent(InventoryCloseEvent event) {
+        switch(event.getView().getTitle()) {
+            case GUIUtil.REWARD_SELECT_ITEMS_TITLE:
+                handleItemRewardSelection((Player) event.getPlayer(), event.getInventory());
+                break;
         }
     }
 
@@ -98,10 +108,16 @@ public class GUIRewardListener implements Listener {
         }
     }
 
-    private void handleItemRewardSelection(Player player, ItemStack itemReward) {
+    private void handleItemRewardSelection(Player player, Inventory inventory) {
         RewardService rewardService = Easyranking.getRewardService();
         Board board = rewardService.getBoardFromModifyingPlayer(player.getUniqueId());
-        rewardService.newItemReward(itemReward.clone(),board,GUIUtil.FIRST_PLACE);
+        rewardService.clearItemReward(board);
+
+        Iterator i = inventory.iterator();
+        while( i.hasNext() ) {
+            ItemStack itemReward = (ItemStack) i.next();
+            rewardService.newItemReward(itemReward.clone(),board,GUIUtil.FIRST_PLACE);
+        }
     }
 
 }

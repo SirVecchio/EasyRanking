@@ -47,6 +47,42 @@ public class ERRewardService implements RewardService {
     }
 
     @Override
+    public void clearItemReward(Board board) {
+        List<Reward> rewardsList = rewardData.get(board);
+        List<Reward> toRemove = new ArrayList<Reward>();
+        for( Reward reward : rewardsList ) {
+            if( reward instanceof ERItemReward ) {
+                toRemove.add(reward);
+            }
+        }
+        rewardsList.removeAll(toRemove);
+    }
+
+    @Override
+    public void clearMoneyReward(Board board) {
+        List<Reward> rewardsList = rewardData.get(board);
+        List<Reward> toRemove = new ArrayList<Reward>();
+        for( Reward reward : rewardsList ) {
+            if( reward instanceof ERMoneyReward ) {
+                toRemove.add(reward);
+            }
+        }
+        rewardsList.removeAll(toRemove);
+    }
+
+    @Override
+    public void clearTitleReward(Board board) {
+        List<Reward> rewardsList = rewardData.get(board);
+        List<Reward> toRemove = new ArrayList<Reward>();
+        for( Reward reward : rewardsList ) {
+            if( reward instanceof ERTitleReward ) {
+                toRemove.add(reward);
+            }
+        }
+        rewardsList.removeAll(toRemove);
+    }
+
+    @Override
     public List<Reward> getRewardsByPosition(Board board, int position) {
         return rewardData.get(board);
     }
