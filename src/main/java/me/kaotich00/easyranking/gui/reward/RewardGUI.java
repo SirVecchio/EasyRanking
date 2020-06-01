@@ -6,6 +6,7 @@ import me.kaotich00.easyranking.api.reward.Reward;
 import me.kaotich00.easyranking.api.service.RewardService;
 import me.kaotich00.easyranking.reward.ERReward;
 import me.kaotich00.easyranking.reward.types.ERItemReward;
+import me.kaotich00.easyranking.reward.types.ERMoneyReward;
 import me.kaotich00.easyranking.utils.GUIUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -15,6 +16,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 public class RewardGUI {
@@ -79,14 +81,11 @@ public class RewardGUI {
 
     private void openItemTypeRewardGUI() {
         Inventory GUI = Bukkit.createInventory(player, GUIUtil.REWARD_SELECT_ITEMS_INVENTORY_SIZE, GUIUtil.REWARD_SELECT_ITEMS_TITLE);
-        List<Reward> rewardsList = Easyranking.getRewardService().getRewardsByPosition( board, this.rankPlace );
+        List<Reward> rewardsList = Easyranking.getRewardService().getItemRewardsByPosition( board, this.rankPlace );
 
         if( rewardsList != null ) {
             int currentSlot = 0;
             for( Reward reward : rewardsList ) {
-                if( !(reward instanceof ERItemReward) )
-                    continue;
-
                 GUI.setItem(currentSlot, ((ERItemReward) reward).getReward());
                 currentSlot++;
             }
@@ -141,12 +140,22 @@ public class RewardGUI {
     }
 
     private ItemStack rewardMoneyTypeMenu() {
-        String[] lores = new String[] {ChatColor.GOLD + "Set money rewards"};
+        Optional<Reward> reward = Easyranking.getRewardService().getMoneyRewardByPosition(this.board, this.rankPlace);
+        Double currentValue = reward.isPresent() ? (Double)reward.get().getReward() : 0.0;
+        String[] lores = new String[] {
+                ChatColor.GOLD + "Set money rewards",
+                ChatColor.GOLD + "Current value: " + ChatColor.GREEN + currentValue
+        };
         return GUIUtil.prepareMenuPoint(GUIUtil.REWARD_TS_MONEY_REWARD_MATERIAL,ChatColor.GREEN + "Money reward", lores );
     }
 
     private ItemStack rewardTitleTypeMenu() {
-        String[] lores = new String[] {ChatColor.GOLD + "Set title rewards"};
+        Optional<Reward> reward = Easyranking.getRewardService().getTitleRewardByPosition(this.board, this.rankPlace);
+        String currentValue = reward.isPresent() ? (String)reward.get().getReward() : ChatColor.GRAY + "unset";
+        String[] lores = new String[] {
+                ChatColor.GOLD + "Set title rewards",
+                ChatColor.GOLD + "Current value: " + ChatColor.RESET + ChatColor.translateAlternateColorCodes('&', currentValue)
+        };
         return GUIUtil.prepareMenuPoint(GUIUtil.REWARD_TS_TITLE_REWARD_MATERIAL,ChatColor.GREEN + "Title reward", lores );
     }
 

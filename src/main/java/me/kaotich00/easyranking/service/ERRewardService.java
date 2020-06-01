@@ -6,6 +6,7 @@ import me.kaotich00.easyranking.api.service.RewardService;
 import me.kaotich00.easyranking.reward.types.ERItemReward;
 import me.kaotich00.easyranking.reward.types.ERMoneyReward;
 import me.kaotich00.easyranking.reward.types.ERTitleReward;
+import me.kaotich00.easyranking.utils.GUIUtil;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
@@ -51,44 +52,42 @@ public class ERRewardService implements RewardService {
 
     @Override
     public void clearItemReward(Board board, int rankPosition) {
-        List<Reward> rewardsList = rewardData.get(board).stream().filter(r -> r.getRankingPosition() == rankPosition).collect(Collectors.toList());
-        List<Reward> toRemove = new ArrayList<Reward>();
-        for( Reward reward : rewardsList ) {
-            if( reward instanceof ERItemReward ) {
-                toRemove.add(reward);
-            }
-        }
-        rewardsList.removeAll(toRemove);
+        List<Reward> rewardsList = rewardData.get(board).stream().filter(r -> (r.getRankingPosition() == rankPosition && r.getRewardType() == GUIUtil.ITEM_TYPE)).collect(Collectors.toList());
+        rewardData.get(board).removeAll(rewardsList);
     }
 
     @Override
     public void clearMoneyReward(Board board, int rankPosition) {
-        List<Reward> rewardsList = rewardData.get(board).stream().filter(r -> r.getRankingPosition() == rankPosition).collect(Collectors.toList());
-        List<Reward> toRemove = new ArrayList<Reward>();
-        for( Reward reward : rewardsList ) {
-            if( reward instanceof ERMoneyReward ) {
-                toRemove.add(reward);
-            }
-        }
-        rewardsList.removeAll(toRemove);
+        List<Reward> rewardsList = rewardData.get(board).stream().filter(r -> (r.getRankingPosition() == rankPosition && r.getRewardType() == GUIUtil.MONEY_TYPE)).collect(Collectors.toList());
+        rewardData.get(board).removeAll(rewardsList);
     }
 
     @Override
     public void clearTitleReward(Board board, int rankPosition) {
-        List<Reward> rewardsList = rewardData.get(board).stream().filter(r -> r.getRankingPosition() == rankPosition).collect(Collectors.toList());
-        List<Reward> toRemove = new ArrayList<Reward>();
-        for( Reward reward : rewardsList ) {
-            if( reward instanceof ERTitleReward ) {
-                toRemove.add(reward);
-            }
-        }
-        rewardsList.removeAll(toRemove);
+        List<Reward> rewardsList = rewardData.get(board).stream().filter(r -> (r.getRankingPosition() == rankPosition && r.getRewardType() == GUIUtil.TITLE_TYPE)).collect(Collectors.toList());
+        rewardData.get(board).removeAll(rewardsList);
     }
 
     @Override
     public List<Reward> getRewardsByPosition(Board board, int position) {
         return rewardData.get(board).stream().filter(r -> r.getRankingPosition() == position).collect(Collectors.toList());
     }
+
+    @Override
+    public List<Reward> getItemRewardsByPosition(Board board, int position) {
+        return rewardData.get(board).stream().filter(r -> (r.getRewardType() == GUIUtil.ITEM_TYPE && r.getRankingPosition() == position )).collect(Collectors.toList());
+    }
+
+    @Override
+    public Optional<Reward> getMoneyRewardByPosition(Board board, int position) {
+        return rewardData.get(board).stream().filter(r -> (r.getRewardType() == GUIUtil.MONEY_TYPE && r.getRankingPosition() == position )).findFirst();
+    }
+
+    @Override
+    public Optional<Reward> getTitleRewardByPosition(Board board, int position) {
+        return rewardData.get(board).stream().filter(r -> (r.getRewardType() == GUIUtil.TITLE_TYPE && r.getRankingPosition() == position )).findFirst();
+    }
+
 
     @Override
     public void addModifyingPlayer(UUID player, Board board) {
