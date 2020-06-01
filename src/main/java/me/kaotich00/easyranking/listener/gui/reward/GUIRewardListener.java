@@ -108,7 +108,7 @@ public class GUIRewardListener implements Listener {
             /* Money reward */
             case GOLD_NUGGET:
                 ConversationFactory moneyFactory = new ConversationFactory(Easyranking.getPlugin(Easyranking.class))
-                        .withModality(true)
+                        .withModality(false)
                         .withFirstPrompt(new MoneyAmountPrompt(board, rewardRank))
                         .withEscapeSequence("cancel")
                         .withTimeout(10)
@@ -120,7 +120,7 @@ public class GUIRewardListener implements Listener {
             /* Title reward */
             case NAME_TAG:
                 ConversationFactory titleFactory = new ConversationFactory(Easyranking.getPlugin(Easyranking.class))
-                        .withModality(true)
+                        .withModality(false)
                         .withFirstPrompt(new TitleRewardPrompt(board, rewardRank))
                         .withEscapeSequence("cancel")
                         .withTimeout(10)
@@ -144,6 +144,7 @@ public class GUIRewardListener implements Listener {
                     ChatFormatter.formatSuccessMessage(
                         "Board: " + ChatColor.GOLD + board.getName() +
                         ChatColor.GREEN + " - Successfully added " +
+                        ChatColor.GOLD + reward.getItemMeta().getLocalizedName() + " " +
                         ChatColor.GOLD + reward.getItemMeta().getDisplayName() +
                         ChatColor.GREEN + " x " +
                         ChatColor.GOLD + reward.getAmount() +
