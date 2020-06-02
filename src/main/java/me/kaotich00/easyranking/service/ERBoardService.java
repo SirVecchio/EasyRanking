@@ -24,7 +24,9 @@ public class ERBoardService implements BoardService {
 
     @Override
     public void initDefaultBoards() {
-        createBoard(BoardUtil.MOB_KILLED_BOARD_NAME, BoardUtil.MOB_KILLED_BOARD_DESCRIPTION, 100, "points");
+        createBoard(BoardUtil.MOB_KILLED_BOARD_NAME, BoardUtil.MOB_KILLED_BOARD_DESCRIPTION, 100, "kills");
+        createBoard(BoardUtil.PLAYER_KILLED_BOARD_NAME, BoardUtil.PLAYER_KILLED_BOARD_DESCRIPTION, 100, "kills");
+        createBoard(BoardUtil.ORES_MINED_BOARD_NAME, BoardUtil.ORES_MINED_BOARD_DESCRIPTION, 100, "ores");
     }
 
     @Override
@@ -53,7 +55,7 @@ public class ERBoardService implements BoardService {
 
     @Override
     public Optional<UserData> getUserData(Board board, Player player) {
-        return boardData.get(board).stream().filter(userData -> userData.getUniqueId() == player.getUniqueId()).findFirst();
+        return boardData.get(board).stream().filter(userData -> userData.getUniqueId().equals(player.getUniqueId())).findFirst();
     }
 
     @Override
