@@ -6,6 +6,7 @@ import me.kaotich00.easyranking.api.service.RewardService;
 import me.kaotich00.easyranking.gui.reward.RewardGUI;
 import me.kaotich00.easyranking.reward.conversation.prompt.MoneyAmountPrompt;
 import me.kaotich00.easyranking.reward.conversation.prompt.TitleRewardPrompt;
+import me.kaotich00.easyranking.service.ERRewardService;
 import me.kaotich00.easyranking.utils.ChatFormatter;
 import me.kaotich00.easyranking.utils.GUIUtil;
 import org.bukkit.ChatColor;
@@ -60,7 +61,7 @@ public class GUIRewardListener implements Listener {
     }
 
     private void handlePositionSelectionGUI(Player player, Material clickedMenu) {
-        RewardService rewardService = Easyranking.getRewardService();
+        RewardService rewardService = ERRewardService.getInstance();
         switch( clickedMenu ) {
             /* Close menu */
             case BARRIER:
@@ -89,7 +90,7 @@ public class GUIRewardListener implements Listener {
     }
 
     private void handleTypeSelectionGUI(Player player, Material clickedMenu) {
-        RewardService rewardService = Easyranking.getRewardService();
+        RewardService rewardService = ERRewardService.getInstance();
         Board board = rewardService.getBoardFromModifyingPlayer(player.getUniqueId());
         int rewardRank = rewardService.getItemSelectionRankFromModifyingPlayer(player.getUniqueId());
 
@@ -133,7 +134,7 @@ public class GUIRewardListener implements Listener {
     }
 
     private void handleItemRewardSelection(Player player, Inventory inventory) {
-        RewardService rewardService = Easyranking.getRewardService();
+        RewardService rewardService = ERRewardService.getInstance();
         Board board = rewardService.getBoardFromModifyingPlayer(player.getUniqueId());
         int rewardRank = rewardService.getItemSelectionRankFromModifyingPlayer(player.getUniqueId());
         rewardService.clearItemReward(board, rewardRank);

@@ -13,13 +13,24 @@ import java.util.*;
 
 public class ERBoardService implements BoardService {
 
+    private static volatile ERBoardService boardServiceInstance;
     private Set<Board> boardsList;
     private Map<Board, Set<UserData>> boardData;
 
-    public ERBoardService() {
+    private ERBoardService() {
+        if (boardServiceInstance != null){
+            throw new RuntimeException("Use getInstance() method to get the single instance of this class.");
+        }
         this.boardsList = new HashSet<>();
         this.boardData = new HashMap<>();
         initDefaultBoards();
+    }
+
+    public static ERBoardService getInstance() {
+        if(boardServiceInstance == null) {
+            boardServiceInstance = new ERBoardService();
+        }
+        return boardServiceInstance;
     }
 
     @Override
@@ -34,7 +45,7 @@ public class ERBoardService implements BoardService {
         ERBoard board = new ERBoard(name, description, maxShownPlayers, userScoreName);
         boardsList.add(board);
         boardData.put(board, new HashSet<>());
-        Easyranking.getRewardService().registerBoard(board);
+        ERRewardService.getInstance().registerBoard(board);
         return board;
     }
 

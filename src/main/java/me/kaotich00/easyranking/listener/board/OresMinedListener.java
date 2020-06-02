@@ -3,6 +3,7 @@ package me.kaotich00.easyranking.listener.board;
 import me.kaotich00.easyranking.Easyranking;
 import me.kaotich00.easyranking.api.board.Board;
 import me.kaotich00.easyranking.api.service.BoardService;
+import me.kaotich00.easyranking.service.ERBoardService;
 import me.kaotich00.easyranking.utils.BoardUtil;
 import me.kaotich00.easyranking.utils.ChatFormatter;
 import org.bukkit.Bukkit;
@@ -10,13 +11,11 @@ import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 
 import java.util.Arrays;
@@ -49,7 +48,7 @@ public class OresMinedListener implements Listener {
             return;
         }
 
-        BoardService boardService = Easyranking.getBoardService();
+        BoardService boardService = ERBoardService.getInstance();
         Player player = event.getPlayer();
         Board board = boardService.getBoardByName(BoardUtil.ORES_MINED_BOARD_NAME);
 

@@ -4,6 +4,7 @@ import me.kaotich00.easyranking.Easyranking;
 import me.kaotich00.easyranking.api.board.Board;
 import me.kaotich00.easyranking.api.service.BoardService;
 import me.kaotich00.easyranking.gui.reward.RewardGUI;
+import me.kaotich00.easyranking.service.ERBoardService;
 import me.kaotich00.easyranking.utils.ChatFormatter;
 import me.kaotich00.easyranking.utils.CommandTypes;
 import me.kaotich00.easyranking.utils.GUIUtil;
@@ -25,7 +26,7 @@ public class RewardCommand {
             return CommandTypes.COMMAND_SUCCESS;
         }
 
-        BoardService boardService = Easyranking.getBoardService();
+        BoardService boardService = ERBoardService.getInstance();
 
         String boardName = args[1];
         if( !boardService.isNameAlreadyUsed(boardName) ) {

@@ -1,14 +1,10 @@
 package me.kaotich00.easyranking;
 
-import me.kaotich00.easyranking.api.service.BoardService;
-import me.kaotich00.easyranking.api.service.RewardService;
 import me.kaotich00.easyranking.command.EasyRankingCommand;
 import me.kaotich00.easyranking.listener.board.KilledMobsListener;
 import me.kaotich00.easyranking.listener.board.KilledPlayersListener;
 import me.kaotich00.easyranking.listener.board.OresMinedListener;
 import me.kaotich00.easyranking.listener.gui.reward.GUIRewardListener;
-import me.kaotich00.easyranking.service.ERBoardService;
-import me.kaotich00.easyranking.service.ERRewardService;
 import me.kaotich00.easyranking.storage.StorageFactory;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -22,8 +18,6 @@ public final class Easyranking extends JavaPlugin {
     public StorageFactory storage;
     static FileConfiguration defaultConfig;
     private Connection connection;
-    public static BoardService boardService;
-    public static RewardService rewardService;
 
     @Override
     public void onEnable() {
@@ -35,9 +29,6 @@ public final class Easyranking extends JavaPlugin {
 
         Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[EasyRanking]" + ChatColor.RESET + " Registering commands...");
         registerCommands();
-
-        Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[EasyRanking]" + ChatColor.RESET + " Registering services...");
-        registerServices();
 
         Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[EasyRanking]" + ChatColor.RESET + " Registering listeners...");
         registerListeners();
@@ -68,11 +59,6 @@ public final class Easyranking extends JavaPlugin {
         storage.initDatabase();
     }
 
-    public void registerServices() {
-        rewardService = new ERRewardService();
-        boardService = new ERBoardService();
-    }
-
     public void registerListeners(){
         getServer().getPluginManager().registerEvents(new GUIRewardListener(),this);
         getServer().getPluginManager().registerEvents(new KilledMobsListener(),this);
@@ -82,14 +68,6 @@ public final class Easyranking extends JavaPlugin {
 
     public static FileConfiguration getDefaultConfig() {
         return defaultConfig;
-    }
-
-    public static BoardService getBoardService() {
-        return boardService;
-    }
-
-    public static RewardService getRewardService() {
-        return rewardService;
     }
 
     public Connection getConnection() {

@@ -1,11 +1,11 @@
 package me.kaotich00.easyranking.command;
 
-import me.kaotich00.easyranking.Easyranking;
 import me.kaotich00.easyranking.api.board.Board;
 import me.kaotich00.easyranking.api.service.BoardService;
 import me.kaotich00.easyranking.command.admin.board.CreateCommand;
 import me.kaotich00.easyranking.command.admin.board.RewardCommand;
 import me.kaotich00.easyranking.command.admin.board.ScoreCommand;
+import me.kaotich00.easyranking.service.ERBoardService;
 import me.kaotich00.easyranking.utils.ChatFormatter;
 import me.kaotich00.easyranking.utils.CommandTypes;
 import me.kaotich00.easyranking.utils.NameUtil;
@@ -16,7 +16,6 @@ import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -69,7 +68,7 @@ public class EasyRankingCommand implements TabExecutor {
         /* Suggest Boards names */
         if( args.length == 2 && !args[0].equals(CommandTypes.CREATE_COMMAND) ) {
             argsIndex = args[1];
-            BoardService boardService = Easyranking.getBoardService();
+            BoardService boardService = ERBoardService.getInstance();
             Set<Board> boardsList = boardService.getBoards();
             if( boardsList != null ) {
                 for (Board board : boardsList) {

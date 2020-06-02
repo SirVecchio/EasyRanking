@@ -1,9 +1,9 @@
 package me.kaotich00.easyranking.reward.conversation.prompt;
 
-import me.kaotich00.easyranking.Easyranking;
 import me.kaotich00.easyranking.api.board.Board;
 import me.kaotich00.easyranking.api.service.RewardService;
 import me.kaotich00.easyranking.gui.reward.RewardGUI;
+import me.kaotich00.easyranking.service.ERRewardService;
 import me.kaotich00.easyranking.utils.ChatFormatter;
 import me.kaotich00.easyranking.utils.GUIUtil;
 import org.bukkit.ChatColor;
@@ -31,7 +31,7 @@ public class TitleRewardPrompt extends StringPrompt {
     @Override
     public Prompt acceptInput(ConversationContext context, String input) {
         Player player = (Player) context.getForWhom();
-        RewardService rewardService = Easyranking.getRewardService();
+        RewardService rewardService = ERRewardService.getInstance();
 
         rewardService.clearTitleReward(this.board, this.rankPosition);
         rewardService.newTitleReward(input, this.board, this.rankPosition);

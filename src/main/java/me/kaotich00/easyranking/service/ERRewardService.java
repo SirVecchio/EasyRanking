@@ -14,14 +14,25 @@ import java.util.stream.Collectors;
 
 public class ERRewardService implements RewardService {
 
+    private static volatile ERRewardService rewardServiceInstance;
     private Map<Board, List<Reward>> rewardData;
     private Map<UUID, Board> isModifyingBoard;
     private Map<UUID, Integer> isSelectingItems;
 
-    public ERRewardService() {
+    private ERRewardService() {
+        if (rewardServiceInstance != null){
+            throw new RuntimeException("Use getInstance() method to get the single instance of this class.");
+        }
         this.rewardData = new HashMap<>();
         this.isModifyingBoard = new HashMap<>();
         this.isSelectingItems = new HashMap<>();
+    }
+
+    public static ERRewardService getInstance() {
+        if(rewardServiceInstance == null) {
+            rewardServiceInstance = new ERRewardService();
+        }
+        return rewardServiceInstance;
     }
 
     @Override

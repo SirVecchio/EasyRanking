@@ -3,6 +3,7 @@ package me.kaotich00.easyranking.command.admin.board;
 import me.kaotich00.easyranking.Easyranking;
 import me.kaotich00.easyranking.api.board.Board;
 import me.kaotich00.easyranking.api.service.BoardService;
+import me.kaotich00.easyranking.service.ERBoardService;
 import me.kaotich00.easyranking.utils.ChatFormatter;
 import me.kaotich00.easyranking.utils.CommandTypes;
 import org.apache.commons.lang.math.NumberUtils;
@@ -28,7 +29,7 @@ public class ScoreCommand {
             return CommandTypes.COMMAND_SUCCESS;
         }
 
-        BoardService boardService = Easyranking.getBoardService();
+        BoardService boardService = ERBoardService.getInstance();
 
         String boardName = args[1];
         if(!boardService.isNameAlreadyUsed(boardName)) {

@@ -3,6 +3,7 @@ package me.kaotich00.easyranking.listener.board;
 import me.kaotich00.easyranking.Easyranking;
 import me.kaotich00.easyranking.api.board.Board;
 import me.kaotich00.easyranking.api.service.BoardService;
+import me.kaotich00.easyranking.service.ERBoardService;
 import me.kaotich00.easyranking.utils.BoardUtil;
 import me.kaotich00.easyranking.utils.ChatFormatter;
 import org.bukkit.Bukkit;
@@ -15,12 +16,12 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 public class KilledPlayersListener implements Listener {
 
     @EventHandler
-    public void onMobKilled(PlayerDeathEvent event) {
+    public void onPlayerKilled(PlayerDeathEvent event) {
         if( !(event.getEntity().getKiller() instanceof Player) ) {
             return;
         }
 
-        BoardService boardService = Easyranking.getBoardService();
+        BoardService boardService = ERBoardService.getInstance();
         Player player = event.getEntity().getKiller();
         Board board = boardService.getBoardByName(BoardUtil.PLAYER_KILLED_BOARD_NAME);
 

@@ -1,8 +1,6 @@
 package me.kaotich00.easyranking.data;
 
-import me.kaotich00.easyranking.Easyranking;
 import me.kaotich00.easyranking.api.data.UserData;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.UUID;

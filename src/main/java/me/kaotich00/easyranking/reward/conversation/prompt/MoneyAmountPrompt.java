@@ -4,6 +4,7 @@ import me.kaotich00.easyranking.Easyranking;
 import me.kaotich00.easyranking.api.board.Board;
 import me.kaotich00.easyranking.api.service.RewardService;
 import me.kaotich00.easyranking.gui.reward.RewardGUI;
+import me.kaotich00.easyranking.service.ERRewardService;
 import me.kaotich00.easyranking.utils.ChatFormatter;
 import me.kaotich00.easyranking.utils.GUIUtil;
 import org.bukkit.ChatColor;
@@ -40,7 +41,7 @@ public class MoneyAmountPrompt extends NumericPrompt {
         }
 
         Player player = (Player) context.getForWhom();
-        RewardService rewardService = Easyranking.getRewardService();
+        RewardService rewardService = ERRewardService.getInstance();
 
         rewardService.clearMoneyReward(this.board, this.rankPosition);
         rewardService.newMoneyReward(input.doubleValue(), this.board, this.rankPosition);
