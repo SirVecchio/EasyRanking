@@ -25,6 +25,10 @@ public class KilledMobsListener implements Listener {
             return;
         }
 
+        if(!(event.getEntity().getKiller() instanceof Player)) {
+            return;
+        }
+
         BoardService boardService = ERBoardService.getInstance();
         Player player = event.getEntity().getKiller();
         Board board = boardService.getBoardByName(BoardUtil.MOB_KILLED_BOARD_NAME);

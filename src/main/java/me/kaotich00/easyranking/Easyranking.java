@@ -5,10 +5,14 @@ import me.kaotich00.easyranking.listener.board.KilledMobsListener;
 import me.kaotich00.easyranking.listener.board.KilledPlayersListener;
 import me.kaotich00.easyranking.listener.board.OresMinedListener;
 import me.kaotich00.easyranking.listener.gui.reward.GUIRewardListener;
+import me.kaotich00.easyranking.service.ERBoardService;
+import me.kaotich00.easyranking.service.ERRewardService;
 import me.kaotich00.easyranking.storage.StorageFactory;
+import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.sql.Connection;
@@ -18,6 +22,7 @@ public final class Easyranking extends JavaPlugin {
     public StorageFactory storage;
     static FileConfiguration defaultConfig;
     private Connection connection;
+    public static Economy economyService;
 
     @Override
     public void onEnable() {
@@ -32,6 +37,15 @@ public final class Easyranking extends JavaPlugin {
 
         Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[EasyRanking]" + ChatColor.RESET + " Registering listeners...");
         registerListeners();
+
+        Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[EasyRanking]" + ChatColor.RESET + " Registering services...");
+        registerServices();
+
+        Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[EasyRanking]" + ChatColor.RESET + " Registering economy...");
+        if (!setupEconomy()) {
+            this.getLogger().severe("This plugin needs Vault and an Economy plugin in order to function!");
+            Bukkit.getPluginManager().disablePlugin(this);
+        }
 
     }
 
@@ -54,6 +68,11 @@ public final class Easyranking extends JavaPlugin {
         getCommand("er").setExecutor(new EasyRankingCommand());
     }
 
+    public void registerServices() {
+        ERRewardService.getInstance();
+        ERBoardService.getInstance();
+    }
+
     public void initStorage() {
         storage = StorageFactory.getDefaultStorage();
         storage.initDatabase();
@@ -66,6 +85,19 @@ public final class Easyranking extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new OresMinedListener(),this);
     };
 
+    public boolean setupEconomy() {
+        if (Bukkit.getPluginManager().getPlugin("Vault") == null) {
+            return false;
+        }
+
+        RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
+        if (rsp == null) {
+            return false;
+        }
+        economyService = rsp.getProvider();
+        return economyService != null;
+    }
+
     public static FileConfiguration getDefaultConfig() {
         return defaultConfig;
     }
@@ -76,6 +108,10 @@ public final class Easyranking extends JavaPlugin {
 
     public void setConnection(Connection connection) {
         this.connection = connection;
+    }
+
+    public static Economy getEconomy() {
+        return economyService;
     }
 
 }

@@ -5,6 +5,7 @@ import me.kaotich00.easyranking.api.data.UserData;
 import me.kaotich00.easyranking.api.service.BoardService;
 import me.kaotich00.easyranking.board.ERBoard;
 import me.kaotich00.easyranking.data.ERUserData;
+import me.kaotich00.easyranking.task.EconomyBoardTask;
 import me.kaotich00.easyranking.utils.BoardUtil;
 import org.bukkit.entity.Player;
 
@@ -23,6 +24,7 @@ public class ERBoardService implements BoardService {
         this.boardsList = new HashSet<>();
         this.boardData = new HashMap<>();
         initDefaultBoards();
+        EconomyBoardTask.scheduleEconomy();
     }
 
     public static ERBoardService getInstance() {
@@ -37,6 +39,7 @@ public class ERBoardService implements BoardService {
         createBoard(BoardUtil.MOB_KILLED_BOARD_NAME, BoardUtil.MOB_KILLED_BOARD_DESCRIPTION, 100, "kills");
         createBoard(BoardUtil.PLAYER_KILLED_BOARD_NAME, BoardUtil.PLAYER_KILLED_BOARD_DESCRIPTION, 100, "kills");
         createBoard(BoardUtil.ORES_MINED_BOARD_NAME, BoardUtil.ORES_MINED_BOARD_DESCRIPTION, 100, "ores");
+        createBoard(BoardUtil.ECONOMY_BOARD_SERVICE_NAME, BoardUtil.ECONOMY_BOARD_SERVICE_DESCRIPTION, 100, "$");
     }
 
     @Override
