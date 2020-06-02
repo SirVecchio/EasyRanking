@@ -1,6 +1,5 @@
 package me.kaotich00.easyranking.service;
 
-import me.kaotich00.easyranking.Easyranking;
 import me.kaotich00.easyranking.api.board.Board;
 import me.kaotich00.easyranking.api.data.UserData;
 import me.kaotich00.easyranking.api.service.BoardService;
@@ -13,7 +12,7 @@ import java.util.*;
 
 public class ERBoardService implements BoardService {
 
-    private static volatile ERBoardService boardServiceInstance;
+    private static ERBoardService boardServiceInstance;
     private Set<Board> boardsList;
     private Map<Board, Set<UserData>> boardData;
 

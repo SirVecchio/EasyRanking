@@ -3,6 +3,7 @@ package me.kaotich00.easyranking.data;
 import me.kaotich00.easyranking.api.data.UserData;
 import org.bukkit.entity.Player;
 
+import java.util.Objects;
 import java.util.UUID;
 
 public class ERUserData implements UserData {
@@ -54,5 +55,20 @@ public class ERUserData implements UserData {
         this.score -= score;
         if(this.score < 0)
             this.score = 0;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ERUserData that = (ERUserData) o;
+        return Float.compare(that.getScore(), getScore()) == 0 &&
+                getUniqueId().equals(that.getUniqueId()) &&
+                getNickname().equals(that.getNickname());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getUniqueId(), getNickname(), getScore());
     }
 }

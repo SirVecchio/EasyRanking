@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 public class ERRewardService implements RewardService {
 
-    private static volatile ERRewardService rewardServiceInstance;
+    private static ERRewardService rewardServiceInstance;
     private Map<Board, List<Reward>> rewardData;
     private Map<UUID, Board> isModifyingBoard;
     private Map<UUID, Integer> isSelectingItems;
