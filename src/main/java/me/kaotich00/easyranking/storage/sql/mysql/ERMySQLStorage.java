@@ -2,36 +2,37 @@ package me.kaotich00.easyranking.storage.sql.mysql;
 
 import me.kaotich00.easyranking.Easyranking;
 import me.kaotich00.easyranking.api.storage.sql.MySQLStorage;
+import me.kaotich00.easyranking.storage.ConnectionFactory;
 import me.kaotich00.easyranking.storage.StorageCredentials;
 import me.kaotich00.easyranking.storage.StorageFactory;
 
+import me.kaotich00.easyranking.storage.hikari.HikariConnectionFactory;
 import me.kaotich00.easyranking.storage.sql.reader.SchemaReader;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.*;
-import java.sql.BatchUpdateException;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class ERMySQLStorage extends StorageFactory implements MySQLStorage {
 
+    private static final String BOARD_INSERT_OR_UPDATE = "INSERT INTO easyranking_board(id,name,description,max_players,user_score_name,is_visible,is_deleted) VALUES (?,?,?,?,?,true,false) ON DUPLICATE KEY UPDATE name = ?, description = ?, max_players = ?, user_score_name =?";
+
     private StorageCredentials credentials;
+    private ConnectionFactory connectionFactory;
     Easyranking plugin = Easyranking.getPlugin(Easyranking.class);
 
     public ERMySQLStorage(String host, String database, String username, String password) {
         credentials = new StorageCredentials(host, database, username, password);
+        this.connectionFactory = new HikariConnectionFactory(credentials);
     }
 
     @Override
     public void initDatabase() {
-        super.initDatabase();
-
-        try {
+        this.connectionFactory.init(Easyranking.getPlugin(Easyranking.class));
+        executeSchema();
+        /*try {
             synchronized (this) {
                 if( plugin.getConnection() != null && !plugin.getConnection().isClosed() ) {
                     return;
@@ -47,7 +48,7 @@ public class ERMySQLStorage extends StorageFactory implements MySQLStorage {
             Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[EasyRanking] Critical exception encountered while connecting to MySQL database. Make sure the database credentials are configured correctly.");
             throwables.printStackTrace();
             plugin.disablePlugin();
-        }
+        }*/
     }
 
     public void executeSchema() {
@@ -68,7 +69,7 @@ public class ERMySQLStorage extends StorageFactory implements MySQLStorage {
                     e.printStackTrace();
                 }
 
-                try (Connection connection = plugin.getConnection()) {
+                try (Connection connection = connectionFactory.getConnection()) {
                     boolean utf8mb4Unsupported = false;
 
                     try (Statement s = connection.createStatement()) {
@@ -104,6 +105,23 @@ public class ERMySQLStorage extends StorageFactory implements MySQLStorage {
             }
         };
         task.runTaskAsynchronously(plugin);
+    }
+
+
+
+    @Override
+    public ConnectionFactory getConnectionFactory() {
+        return this.connectionFactory;
+    }
+
+    @Override
+    public Connection getConnection() throws SQLException {
+        return this.connectionFactory.getConnection();
+    }
+
+    @Override
+    public void saveBoards() {
+
     }
 
 }
