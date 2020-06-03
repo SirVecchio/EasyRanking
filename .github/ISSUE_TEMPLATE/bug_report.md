@@ -7,8 +7,9 @@ assignees: ''
 
 ---
 
-**Minecraft version**
-Ex. 1.15.2
+**Spigot version / Paper version**
+Spigot ex. 1.15.2
+Paper ex. 333
 
 **Easyranking version**
 Ex. 0.0.1
