@@ -74,7 +74,7 @@ public final class Easyranking extends JavaPlugin {
     }
 
     public void initStorage() {
-        storage = StorageFactory.getDefaultStorage();
+        storage = StorageFactory.getStorage();
         storage.initDatabase();
     }
 

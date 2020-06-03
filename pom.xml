@@ -41,6 +41,8 @@
                         </goals>
                         <configuration>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
+                            <shadedArtifactAttached>true</shadedArtifactAttached>
+                            <outputDirectory>z:\Users\Simone R\Desktop\Spigot\plugins</outputDirectory>
                         </configuration>
                     </execution>
                 </executions>

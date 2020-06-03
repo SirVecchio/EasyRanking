@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS `easyranking_user_score` (
   CONSTRAINT `user_score_fk_user` FOREIGN KEY (`id_user`) REFERENCES `easyranking_user` (`uuid`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE `easyranking_item_reward` (
+CREATE TABLE IF NOT EXISTS `easyranking_item_reward` (
   `id_board` varchar(100) NOT NULL,
   `rank_position` int(11) NOT NULL,
   `item_type` text,
@@ -40,7 +40,7 @@ CREATE TABLE `easyranking_item_reward` (
   CONSTRAINT `easyranking_item_reward_fk_easyranking_board` FOREIGN KEY (`id_board`) REFERENCES `easyranking_board` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE `easyranking_money_reward` (
+CREATE TABLE IF NOT EXISTS `easyranking_money_reward` (
   `id_board` varchar(100) NOT NULL,
   `rank_position` int(11) NOT NULL,
   `amount` decimal(16,2) DEFAULT NULL,
@@ -49,7 +49,7 @@ CREATE TABLE `easyranking_money_reward` (
   CONSTRAINT `easyranking_money_reward_fk_easyranking_board` FOREIGN KEY (`id_board`) REFERENCES `easyranking_board` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE `easyranking_title_reward` (
+CREATE TABLE IF NOT EXISTS `easyranking_title_reward` (
   `id_board` varchar(100) NOT NULL,
   `rank_position` int(11) NOT NULL,
   `title` varchar(200) DEFAULT NULL,

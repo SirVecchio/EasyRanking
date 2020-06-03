@@ -28,6 +28,7 @@ public class HikariConnectionFactory implements ConnectionFactory {
         config.addDataSourceProperty("serverName", address);
         config.addDataSourceProperty("port", port);
         config.addDataSourceProperty("databaseName", this.configuration.getDatabase());
+        config.addDataSourceProperty("useSSL", false);
         config.setUsername(this.configuration.getUsername());
         config.setPassword(this.configuration.getPassword());
     }

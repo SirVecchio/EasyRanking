@@ -1,7 +1,9 @@
 package me.kaotich00.easyranking.storage.sql.mysql;
 
 import me.kaotich00.easyranking.Easyranking;
-import me.kaotich00.easyranking.api.storage.sql.MySQLStorage;
+import me.kaotich00.easyranking.api.board.Board;
+import me.kaotich00.easyranking.api.service.BoardService;
+import me.kaotich00.easyranking.service.ERBoardService;
 import me.kaotich00.easyranking.storage.ConnectionFactory;
 import me.kaotich00.easyranking.storage.StorageCredentials;
 import me.kaotich00.easyranking.storage.StorageFactory;
@@ -15,7 +17,7 @@ import java.sql.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ERMySQLStorage extends StorageFactory implements MySQLStorage {
+public class MySQLStorageFactory extends StorageFactory {
 
     private static final String BOARD_INSERT_OR_UPDATE = "INSERT INTO easyranking_board(id,name,description,max_players,user_score_name,is_visible,is_deleted) VALUES (?,?,?,?,?,true,false) ON DUPLICATE KEY UPDATE name = ?, description = ?, max_players = ?, user_score_name =?";
 
@@ -23,7 +25,7 @@ public class ERMySQLStorage extends StorageFactory implements MySQLStorage {
     private ConnectionFactory connectionFactory;
     Easyranking plugin = Easyranking.getPlugin(Easyranking.class);
 
-    public ERMySQLStorage(String host, String database, String username, String password) {
+    public MySQLStorageFactory(String host, String database, String username, String password) {
         credentials = new StorageCredentials(host, database, username, password);
         this.connectionFactory = new HikariConnectionFactory(credentials);
     }
@@ -32,23 +34,6 @@ public class ERMySQLStorage extends StorageFactory implements MySQLStorage {
     public void initDatabase() {
         this.connectionFactory.init(Easyranking.getPlugin(Easyranking.class));
         executeSchema();
-        /*try {
-            synchronized (this) {
-                if( plugin.getConnection() != null && !plugin.getConnection().isClosed() ) {
-                    return;
-                }
-
-                Class.forName("com.mysql.jdbc.Driver");
-                plugin.setConnection(credentials.toConnection());
-                Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[EasyRanking]" + ChatColor.RESET + " Successfully connected to MySQL database");
-
-                executeSchema();
-            }
-        } catch (SQLException | ClassNotFoundException throwables) {
-            Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[EasyRanking] Critical exception encountered while connecting to MySQL database. Make sure the database credentials are configured correctly.");
-            throwables.printStackTrace();
-            plugin.disablePlugin();
-        }*/
     }
 
     public void executeSchema() {
@@ -107,21 +92,30 @@ public class ERMySQLStorage extends StorageFactory implements MySQLStorage {
         task.runTaskAsynchronously(plugin);
     }
 
-
-
-    @Override
     public ConnectionFactory getConnectionFactory() {
         return this.connectionFactory;
     }
 
-    @Override
     public Connection getConnection() throws SQLException {
         return this.connectionFactory.getConnection();
     }
 
-    @Override
-    public void saveBoards() {
+    public void saveBoards() throws SQLException {
+        BoardService boardService = ERBoardService.getInstance();
 
+        PreparedStatement preparedStatement = getConnection().prepareStatement(BOARD_INSERT_OR_UPDATE);
+        for( Board b : boardService.getBoards() ) {
+            preparedStatement.setString(1, b.getName());
+            preparedStatement.setString(2, b.getName());
+            preparedStatement.setString(3, b.getDescription());
+            preparedStatement.setInt(4, b.getMaxShownPlayers());
+            preparedStatement.setString(5, b.getUserScoreName());
+            preparedStatement.setString(6, b.getName());
+            preparedStatement.setString(7, b.getDescription());
+            preparedStatement.setInt(8, b.getMaxShownPlayers());
+            preparedStatement.setString(9, b.getUserScoreName());
+            preparedStatement.executeUpdate();
+        }
     }
 
 }
