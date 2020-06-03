@@ -5,13 +5,10 @@ import me.kaotich00.easyranking.api.data.UserData;
 import me.kaotich00.easyranking.api.service.BoardService;
 import me.kaotich00.easyranking.board.ERBoard;
 import me.kaotich00.easyranking.data.ERUserData;
-import me.kaotich00.easyranking.storage.StorageFactory;
-import me.kaotich00.easyranking.storage.sql.mysql.MySQLStorageFactory;
 import me.kaotich00.easyranking.task.EconomyBoardTask;
 import me.kaotich00.easyranking.utils.BoardUtil;
 import org.bukkit.entity.Player;
 
-import java.sql.SQLException;
 import java.util.*;
 
 public class ERBoardService implements BoardService {
@@ -28,12 +25,6 @@ public class ERBoardService implements BoardService {
         this.boardData = new HashMap<>();
         initDefaultBoards();
         EconomyBoardTask.scheduleEconomy();
-        MySQLStorageFactory storageFactory = StorageFactory.getStorage();
-        try {
-            storageFactory.saveBoards();
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
     }
 
     public static ERBoardService getInstance() {
@@ -78,6 +69,11 @@ public class ERBoardService implements BoardService {
     @Override
     public Optional<UserData> getUserData(Board board, Player player) {
         return boardData.get(board).stream().filter(userData -> userData.getUniqueId().equals(player.getUniqueId())).findFirst();
+    }
+
+    @Override
+    public Map<Board, Set<UserData>> getBoardData() {
+        return this.boardData;
     }
 
     @Override

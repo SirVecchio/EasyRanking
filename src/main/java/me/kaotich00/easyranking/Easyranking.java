@@ -8,6 +8,7 @@ import me.kaotich00.easyranking.listener.gui.reward.GUIRewardListener;
 import me.kaotich00.easyranking.service.ERBoardService;
 import me.kaotich00.easyranking.service.ERRewardService;
 import me.kaotich00.easyranking.storage.StorageFactory;
+import me.kaotich00.easyranking.storage.sql.mysql.MySQLStorageFactory;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -16,6 +17,7 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 
 public final class Easyranking extends JavaPlugin {
 
@@ -51,7 +53,13 @@ public final class Easyranking extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        // Plugin shutdown logic
+        MySQLStorageFactory storageFactory = StorageFactory.getStorage();
+        try {
+            storageFactory.saveBoards();
+            storageFactory.saveUserData();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 
     public void disablePlugin() {
