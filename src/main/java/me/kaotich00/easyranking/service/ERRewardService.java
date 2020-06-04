@@ -99,6 +99,10 @@ public class ERRewardService implements RewardService {
         return rewardData.get(board).stream().filter(r -> (r.getRewardType() == GUIUtil.TITLE_TYPE && r.getRankingPosition() == position )).findFirst();
     }
 
+    @Override
+    public Map<Board, List<Reward>> getRewardsList() {
+        return this.rewardData;
+    }
 
     @Override
     public void addModifyingPlayer(UUID player, Board board) {

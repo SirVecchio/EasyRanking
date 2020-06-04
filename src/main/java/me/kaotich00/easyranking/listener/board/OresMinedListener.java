@@ -20,6 +20,7 @@ import org.bukkit.metadata.FixedMetadataValue;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 public class OresMinedListener implements Listener {
 
@@ -50,7 +51,13 @@ public class OresMinedListener implements Listener {
 
         BoardService boardService = ERBoardService.getInstance();
         Player player = event.getPlayer();
-        Board board = boardService.getBoardByName(BoardUtil.ORES_MINED_BOARD_NAME);
+        Optional<Board> optionalBoard = boardService.getBoardByName(BoardUtil.ORES_MINED_BOARD_NAME);
+
+        if( !optionalBoard.isPresent() ) {
+            return;
+        }
+
+        Board board = optionalBoard.get();
 
         // TODO - CUSTOM ORE VALUES FROM CONFIG
 

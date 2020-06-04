@@ -5,6 +5,7 @@ import me.kaotich00.easyranking.api.reward.Reward;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -31,6 +32,8 @@ public interface RewardService {
     Optional<Reward> getMoneyRewardByPosition(Board board, int position);
 
     Optional<Reward> getTitleRewardByPosition(Board board, int position);
+
+    Map<Board, List<Reward>> getRewardsList();
 
     void addModifyingPlayer(UUID player, Board board);
 

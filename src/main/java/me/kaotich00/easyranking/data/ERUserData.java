@@ -1,6 +1,7 @@
 package me.kaotich00.easyranking.data;
 
 import me.kaotich00.easyranking.api.data.UserData;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import java.util.Objects;
@@ -14,13 +15,13 @@ public class ERUserData implements UserData {
 
     public ERUserData(Player player) {
         this.uuid = player.getUniqueId();
-        this.nickname = player.getDisplayName();
+        this.nickname = player.getPlayerListName();
         this.score = 0;
     }
 
-    public ERUserData(UUID uuid, String nickname, int score) {
-        this.uuid = uuid;
-        this.nickname = nickname;
+    public ERUserData(OfflinePlayer player, Float score) {
+        this.uuid = player.getUniqueId();
+        this.nickname = player.getName();
         this.score = score;
     }
 

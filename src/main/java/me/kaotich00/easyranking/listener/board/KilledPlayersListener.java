@@ -13,6 +13,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 
+import java.util.Optional;
+
 public class KilledPlayersListener implements Listener {
 
     @EventHandler
@@ -23,7 +25,13 @@ public class KilledPlayersListener implements Listener {
 
         BoardService boardService = ERBoardService.getInstance();
         Player player = event.getEntity().getKiller();
-        Board board = boardService.getBoardByName(BoardUtil.PLAYER_KILLED_BOARD_NAME);
+        Optional<Board> optionalBoard = boardService.getBoardByName(BoardUtil.PLAYER_KILLED_BOARD_NAME);
+
+        if( !optionalBoard.isPresent() ) {
+            return;
+        }
+
+        Board board = optionalBoard.get();
 
         if(!boardService.getUserData(board,player).isPresent()) {
             boardService.createUserData(board,player);

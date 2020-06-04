@@ -10,12 +10,21 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
+import java.util.Optional;
+
 public class EconomyBoardTask {
 
     public static void scheduleEconomy() {
         Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Easyranking.getPlugin(Easyranking.class), () -> {
             BoardService boardService = ERBoardService.getInstance();
-            Board board = boardService.getBoardByName(BoardUtil.ECONOMY_BOARD_SERVICE_NAME);
+            Optional<Board> optionalBoard = boardService.getBoardByName(BoardUtil.ECONOMY_BOARD_SERVICE_NAME);
+
+            if( !optionalBoard.isPresent() ) {
+                return;
+            }
+
+            Board board = optionalBoard.get();
+
             for( Player player : Bukkit.getOnlinePlayers() ) {
                 Double balance = Easyranking.getEconomy().getBalance(player);
 

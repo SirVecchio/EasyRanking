@@ -27,6 +27,4 @@ public class ERReward implements Reward{
         return null;
     }
 
-
-
 }

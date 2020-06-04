@@ -14,6 +14,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.Arrays;
+import java.util.Optional;
 
 public class ScoreCommand {
 
@@ -36,7 +37,7 @@ public class ScoreCommand {
             sender.sendMessage(ChatFormatter.formatErrorMessage("No board found for the name " + ChatColor.GOLD + boardName + ChatColor.RED ));
             return CommandTypes.COMMAND_SUCCESS;
         }
-        Board board = boardService.getBoardByName(boardName);
+        Board board = boardService.getBoardByName(boardName).get();
 
         String scoreOperator = args[2];
         if(!isValidScoreOperator(scoreOperator)) {

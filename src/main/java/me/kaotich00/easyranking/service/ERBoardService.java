@@ -5,8 +5,8 @@ import me.kaotich00.easyranking.api.data.UserData;
 import me.kaotich00.easyranking.api.service.BoardService;
 import me.kaotich00.easyranking.board.ERBoard;
 import me.kaotich00.easyranking.data.ERUserData;
-import me.kaotich00.easyranking.task.EconomyBoardTask;
 import me.kaotich00.easyranking.utils.BoardUtil;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import java.util.*;
@@ -23,8 +23,6 @@ public class ERBoardService implements BoardService {
         }
         this.boardsList = new HashSet<>();
         this.boardData = new HashMap<>();
-        initDefaultBoards();
-        EconomyBoardTask.scheduleEconomy();
     }
 
     public static ERBoardService getInstance() {
@@ -57,8 +55,8 @@ public class ERBoardService implements BoardService {
     }
 
     @Override
-    public Board getBoardByName(String name) {
-        return boardsList.stream().filter(board -> board.getName().equals(name)).findFirst().get();
+    public Optional<Board> getBoardByName(String name) {
+        return boardsList.stream().filter(board -> board.getName().equals(name)).findFirst();
     }
 
     @Override
@@ -79,6 +77,12 @@ public class ERBoardService implements BoardService {
     @Override
     public void createUserData(Board board, Player player) {
         UserData userData = new ERUserData(player);
+        boardData.get(board).add(userData);
+    }
+
+    @Override
+    public void createUserData(Board board, OfflinePlayer player, Float amount) {
+        UserData userData = new ERUserData(player, amount);
         boardData.get(board).add(userData);
     }
 

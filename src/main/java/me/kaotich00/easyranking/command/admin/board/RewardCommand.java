@@ -13,6 +13,8 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.Optional;
+
 public class RewardCommand {
 
     public static boolean executeCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -34,9 +36,11 @@ public class RewardCommand {
             return CommandTypes.COMMAND_SUCCESS;
         }
 
-        Board board = boardService.getBoardByName(boardName);
-        RewardGUI gui = new RewardGUI((Player)sender, board);
-        gui.openGUI(GUIUtil.REWARD_PS_STEP);
+        Optional<Board> optionalBoard = boardService.getBoardByName(boardName);
+        if( optionalBoard.isPresent() ) {
+            RewardGUI gui = new RewardGUI((Player) sender, optionalBoard.get());
+            gui.openGUI(GUIUtil.REWARD_PS_STEP);
+        }
 
         return CommandTypes.COMMAND_SUCCESS;
     }

@@ -2,6 +2,7 @@ package me.kaotich00.easyranking.api.service;
 
 import me.kaotich00.easyranking.api.board.Board;
 import me.kaotich00.easyranking.api.data.UserData;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import java.util.Map;
@@ -16,7 +17,7 @@ public interface BoardService {
 
     Set<Board> getBoards();
 
-    Board getBoardByName(String name);
+    Optional<Board> getBoardByName(String name);
 
     boolean isNameAlreadyUsed(String name);
 
@@ -25,6 +26,8 @@ public interface BoardService {
     Map<Board, Set<UserData>> getBoardData();
 
     void createUserData(Board board, Player player);
+
+    void createUserData(Board board, OfflinePlayer player, Float amount);
 
     float addScoreToPlayer(Board board, Player player, float score);
 
