@@ -1,13 +1,14 @@
-package me.kaotich00.easyranking.storage.hikari;
+package me.kaotich00.easyranking.storage.sql.hikari;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import me.kaotich00.easyranking.Easyranking;
-import me.kaotich00.easyranking.storage.ConnectionFactory;
-import me.kaotich00.easyranking.storage.StorageCredentials;
+import me.kaotich00.easyranking.storage.sql.ConnectionFactory;
+import me.kaotich00.easyranking.storage.util.StorageCredentials;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Map;
 
 public class HikariConnectionFactory implements ConnectionFactory {
 
@@ -18,13 +19,23 @@ public class HikariConnectionFactory implements ConnectionFactory {
         this.configuration = configuration;
     }
 
-    protected void appendConfigurationInfo(HikariConfig config) {
+    protected String getDrivers() {
+        return null;
+    }
+
+    protected void addConnectionProperties(HikariConfig config, Map<String, String> properties) {
+        for (Map.Entry<String, String> property : properties.entrySet()) {
+            config.addDataSourceProperty(property.getKey(), property.getValue());
+        }
+    }
+
+    protected void addConnectionInfo(HikariConfig config) {
         String address = this.configuration.getHost();
         String[] addressSplit = address.split(":");
         address = addressSplit[0];
         String port = addressSplit.length > 1 ? addressSplit[1] : "3306";
 
-        config.setDataSourceClassName("com.mysql.jdbc.jdbc2.optional.MysqlDataSource");
+        config.setDataSourceClassName(getDrivers());
         config.addDataSourceProperty("serverName", address);
         config.addDataSourceProperty("port", port);
         config.addDataSourceProperty("databaseName", this.configuration.getDatabase());
@@ -43,9 +54,7 @@ public class HikariConnectionFactory implements ConnectionFactory {
         }
 
         config.setPoolName("easyranking-hikari");
-
-        appendConfigurationInfo(config);
-
+        addConnectionInfo(config);
         config.setInitializationFailTimeout(-1);
 
         this.hikari = new HikariDataSource(config);

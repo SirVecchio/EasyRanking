@@ -1,4 +1,4 @@
-package me.kaotich00.easyranking.storage.sql.mysql;
+package me.kaotich00.easyranking.storage.sql;
 
 import com.google.gson.Gson;
 import me.kaotich00.easyranking.Easyranking;
@@ -12,28 +12,20 @@ import me.kaotich00.easyranking.reward.types.ERMoneyReward;
 import me.kaotich00.easyranking.reward.types.ERTitleReward;
 import me.kaotich00.easyranking.service.ERBoardService;
 import me.kaotich00.easyranking.service.ERRewardService;
-import me.kaotich00.easyranking.storage.ConnectionFactory;
-import me.kaotich00.easyranking.storage.StorageCredentials;
-import me.kaotich00.easyranking.storage.StorageFactory;
-
-import me.kaotich00.easyranking.storage.hikari.HikariConnectionFactory;
-import me.kaotich00.easyranking.storage.sql.reader.SchemaReader;
-import me.kaotich00.easyranking.utils.JsonUtil;
-import me.kaotich00.easyranking.utils.SerializationUtil;
+import me.kaotich00.easyranking.storage.StorageMethod;
+import me.kaotich00.easyranking.storage.util.SchemaReader;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class MySQLStorageFactory extends StorageFactory {
+public class SqlStorage implements StorageMethod {
 
     private static final String BOARD_INSERT_OR_UPDATE = "INSERT INTO easyranking_board(`id`,`name`,`description`,`max_players`,`user_score_name`,`is_visible`,`is_deleted`) VALUES (?,?,?,?,?,true,false) ON DUPLICATE KEY UPDATE `id`=`id`";
     private static final String BOARD_SELECT = "SELECT * FROM easyranking_board WHERE is_deleted = false";
@@ -50,22 +42,36 @@ public class MySQLStorageFactory extends StorageFactory {
     private static final String USER_SCORE_INSERT_OR_UPDATE = "INSERT INTO easyranking_user_score(`id_user`,`id_board`,`amount`) VALUES (?,?,?) ON DUPLICATE KEY UPDATE `amount` = ?";
     private static final String USER_DATA_SELECT = "SELECT * FROM easyranking_user_score";
 
-    private StorageCredentials credentials;
     private ConnectionFactory connectionFactory;
-    Easyranking plugin = Easyranking.getPlugin(Easyranking.class);
+    private final Easyranking plugin;
 
-    public MySQLStorageFactory(String host, String database, String username, String password) {
-        credentials = new StorageCredentials(host, database, username, password);
-        this.connectionFactory = new HikariConnectionFactory(credentials);
+    public SqlStorage(Easyranking plugin, ConnectionFactory connectionFactory) {
+        this.connectionFactory = connectionFactory;
+        this.plugin = plugin;
     }
 
     @Override
-    public void initDatabase() {
-        this.connectionFactory.init(Easyranking.getPlugin(Easyranking.class));
-        executeSchema();
+    public Easyranking getPlugin() {
+        return this.plugin;
     }
 
-    public void executeSchema() {
+    @Override
+    public void init() {
+        this.connectionFactory.init(this.plugin);
+        prepareDatabaseAndLoadData();
+    }
+
+    @Override
+    public void shutdown() {
+        try {
+            this.connectionFactory.shutdown();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void prepareDatabaseAndLoadData() {
         BukkitRunnable task = new BukkitRunnable() {
             @Override
             public void run() {
@@ -116,20 +122,25 @@ public class MySQLStorageFactory extends StorageFactory {
                     throwables.printStackTrace();
                 }
 
+                Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[EasyRanking]" + ChatColor.RESET + " Loading boards from database...");
+                loadBoards();
+                Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[EasyRanking]" + ChatColor.RESET + " Loading user data from database...");
+                loadUserData();
+                Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[EasyRanking]" + ChatColor.RESET + " Loading rewards from database...");
+                loadBoardRewards();
+
             }
         };
         task.runTaskAsynchronously(plugin);
     }
 
-    public ConnectionFactory getConnectionFactory() {
-        return this.connectionFactory;
-    }
-
+    @Override
     public Connection getConnection() throws SQLException {
         return this.connectionFactory.getConnection();
     }
 
-    public void loadBoards() throws SQLException {
+    @Override
+    public void loadBoards() {
         try (Connection c = getConnection()) {
             try (PreparedStatement ps = c.prepareStatement(BOARD_SELECT)) {
                 BoardService boardService = ERBoardService.getInstance();
@@ -153,7 +164,8 @@ public class MySQLStorageFactory extends StorageFactory {
         }
     }
 
-    public void loadUserData() throws SQLException {
+    @Override
+    public void loadUserData() {
         try (Connection c = getConnection()) {
             try (PreparedStatement ps = c.prepareStatement(USER_DATA_SELECT)) {
                 BoardService boardService = ERBoardService.getInstance();
@@ -175,49 +187,60 @@ public class MySQLStorageFactory extends StorageFactory {
         }
     }
 
-    public void saveBoards() throws SQLException {
-        BoardService boardService = ERBoardService.getInstance();
+    @Override
+    public void saveBoards() {
+        try (Connection c = getConnection()) {
+            BoardService boardService = ERBoardService.getInstance();
 
-        PreparedStatement preparedStatement = getConnection().prepareStatement(BOARD_INSERT_OR_UPDATE);
-        for( Board b : boardService.getBoards() ) {
-            preparedStatement.setString(1, b.getName());
-            preparedStatement.setString(2, b.getName());
-            preparedStatement.setString(3, b.getDescription());
-            preparedStatement.setInt(4, b.getMaxShownPlayers());
-            preparedStatement.setString(5, b.getUserScoreName());
-            preparedStatement.executeUpdate();
-        }
-        preparedStatement.close();
-    }
-
-    public void saveUserData() throws SQLException {
-        BoardService boardService = ERBoardService.getInstance();
-
-        PreparedStatement userInsert = getConnection().prepareStatement(USER_INSERT_OR_UPDATE);
-        PreparedStatement userScoreInsert = getConnection().prepareStatement(USER_SCORE_INSERT_OR_UPDATE);
-        for(Map.Entry<Board, Set<UserData>> data : boardService.getBoardData().entrySet() ){
-            Board board = data.getKey();
-            Set<UserData> userData = data.getValue();
-            for (UserData ud : userData) {
-                String nickname = ud.getNickname();
-                UUID uuid = ud.getUniqueId();
-                float amount = ud.getScore();
-
-                userInsert.setString(1, uuid.toString());
-                userInsert.setString(2, nickname);
-                userInsert.executeUpdate();
-
-                userScoreInsert.setString(1, uuid.toString());
-                userScoreInsert.setString(2, board.getName());
-                userScoreInsert.setFloat(3,amount);
-                userScoreInsert.setFloat(4,amount);
-                userScoreInsert.executeUpdate();
+            PreparedStatement preparedStatement = c.prepareStatement(BOARD_INSERT_OR_UPDATE);
+            for( Board b : boardService.getBoards() ) {
+                preparedStatement.setString(1, b.getName());
+                preparedStatement.setString(2, b.getName());
+                preparedStatement.setString(3, b.getDescription());
+                preparedStatement.setInt(4, b.getMaxShownPlayers());
+                preparedStatement.setString(5, b.getUserScoreName());
+                preparedStatement.executeUpdate();
             }
+            preparedStatement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        userInsert.close();
-        userScoreInsert.close();
     }
 
+    @Override
+    public void saveUserData() {
+        try (Connection c = getConnection()) {
+            BoardService boardService = ERBoardService.getInstance();
+
+            PreparedStatement userInsert = c.prepareStatement(USER_INSERT_OR_UPDATE);
+            PreparedStatement userScoreInsert = c.prepareStatement(USER_SCORE_INSERT_OR_UPDATE);
+            for (Map.Entry<Board, Set<UserData>> data : boardService.getBoardData().entrySet()) {
+                Board board = data.getKey();
+                Set<UserData> userData = data.getValue();
+                for (UserData ud : userData) {
+                    String nickname = ud.getNickname();
+                    UUID uuid = ud.getUniqueId();
+                    float amount = ud.getScore();
+
+                    userInsert.setString(1, uuid.toString());
+                    userInsert.setString(2, nickname);
+                    userInsert.executeUpdate();
+
+                    userScoreInsert.setString(1, uuid.toString());
+                    userScoreInsert.setString(2, board.getName());
+                    userScoreInsert.setFloat(3, amount);
+                    userScoreInsert.setFloat(4, amount);
+                    userScoreInsert.executeUpdate();
+                }
+            }
+            userInsert.close();
+            userScoreInsert.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     public void saveBoardRewards() {
         RewardService rewardService = ERRewardService.getInstance();
 
@@ -274,7 +297,8 @@ public class MySQLStorageFactory extends StorageFactory {
         }
     }
 
-    public void loadBoardRewards() throws ParseException {
+    @Override
+    public void loadBoardRewards() {
         try (Connection c = getConnection()) {
             RewardService rewardService = ERRewardService.getInstance();
             BoardService boardService = ERBoardService.getInstance();

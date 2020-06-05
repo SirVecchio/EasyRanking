@@ -1,4 +1,4 @@
-package me.kaotich00.easyranking.storage;
+package me.kaotich00.easyranking.storage.sql;
 
 import me.kaotich00.easyranking.Easyranking;
 

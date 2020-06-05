@@ -23,6 +23,7 @@ public class ERBoardService implements BoardService {
         }
         this.boardsList = new HashSet<>();
         this.boardData = new HashMap<>();
+        initDefaultBoards();
     }
 
     public static ERBoardService getInstance() {

@@ -1,7 +1,5 @@
 package me.kaotich00.easyranking;
 
-import me.kaotich00.easyranking.api.service.BoardService;
-import me.kaotich00.easyranking.api.service.RewardService;
 import me.kaotich00.easyranking.command.EasyRankingCommand;
 import me.kaotich00.easyranking.listener.board.KilledMobsListener;
 import me.kaotich00.easyranking.listener.board.KilledPlayersListener;
@@ -9,22 +7,20 @@ import me.kaotich00.easyranking.listener.board.OresMinedListener;
 import me.kaotich00.easyranking.listener.gui.reward.GUIRewardListener;
 import me.kaotich00.easyranking.service.ERBoardService;
 import me.kaotich00.easyranking.service.ERRewardService;
+import me.kaotich00.easyranking.storage.Storage;
 import me.kaotich00.easyranking.storage.StorageFactory;
-import me.kaotich00.easyranking.storage.sql.mysql.MySQLStorageFactory;
+import me.kaotich00.easyranking.storage.sql.hikari.MySQLConnectionFactory;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.json.simple.parser.ParseException;
 
 import java.sql.Connection;
-import java.sql.SQLException;
 
 public final class Easyranking extends JavaPlugin {
 
-    public StorageFactory storage;
     static FileConfiguration defaultConfig;
     private Connection connection;
     public static Economy economyService;
@@ -56,17 +52,13 @@ public final class Easyranking extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        MySQLStorageFactory storageFactory = StorageFactory.getStorage();
-        try {
-            storageFactory.saveBoards();
-            Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[EasyRanking]" + ChatColor.RESET + " Saving boards to database...");
-            storageFactory.saveUserData();
-            Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[EasyRanking]" + ChatColor.RESET + " Saving user data to database...");
-            storageFactory.saveBoardRewards();
-            Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[EasyRanking]" + ChatColor.RESET + " Saving rewards to database...");
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
+        Storage storage = StorageFactory.getInstance();
+        storage.getStorageMethod().saveBoards();
+        Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[EasyRanking]" + ChatColor.RESET + " Saving boards to database...");
+        storage.getStorageMethod().saveUserData();
+        Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[EasyRanking]" + ChatColor.RESET + " Saving user data to database...");
+        storage.getStorageMethod().saveBoardRewards();
+        Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[EasyRanking]" + ChatColor.RESET + " Saving rewards to database...");
     }
 
     public void disablePlugin() {
@@ -85,26 +77,12 @@ public final class Easyranking extends JavaPlugin {
 
     public void registerServices() {
         ERRewardService.getInstance();
-        BoardService boardService = ERBoardService.getInstance();
-
-        boardService.initDefaultBoards();
-
-        MySQLStorageFactory storageFactory = StorageFactory.getStorage();
-        try {
-            storageFactory.loadBoards();
-            Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[EasyRanking]" + ChatColor.RESET + " Loading boards from database...");
-            storageFactory.loadUserData();
-            Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[EasyRanking]" + ChatColor.RESET + " Loading user data from database...");
-            storageFactory.loadBoardRewards();
-            Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[EasyRanking]" + ChatColor.RESET + " Loading rewards from database...");
-        } catch (SQLException | ParseException throwables) {
-            throwables.printStackTrace();
-        }
+        ERBoardService.getInstance();
     }
 
     public void initStorage() {
-        storage = StorageFactory.getStorage();
-        storage.initDatabase();
+        Storage storage = StorageFactory.getInstance();
+        storage.init();
     }
 
     public void registerListeners(){

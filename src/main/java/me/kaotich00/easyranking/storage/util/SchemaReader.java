@@ -1,4 +1,4 @@
-package me.kaotich00.easyranking.storage.sql.reader;
+package me.kaotich00.easyranking.storage.util;
 
 import java.io.BufferedReader;
 import java.io.IOException;

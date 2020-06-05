@@ -1,4 +1,4 @@
-package me.kaotich00.easyranking.storage;
+package me.kaotich00.easyranking.storage.util;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
