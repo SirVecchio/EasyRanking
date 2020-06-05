@@ -6,6 +6,8 @@ import me.kaotich00.easyranking.api.service.BoardService;
 import me.kaotich00.easyranking.board.ERBoard;
 import me.kaotich00.easyranking.data.ERUserData;
 import me.kaotich00.easyranking.utils.BoardUtil;
+import me.kaotich00.easyranking.utils.ChatFormatter;
+import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
@@ -91,6 +93,18 @@ public class ERBoardService implements BoardService {
     public float addScoreToPlayer(Board board, Player player, float score) {
         UserData userData = getUserData(board,player).get();
         userData.addScore(score);
+
+        player.sendMessage(
+                (ChatFormatter.formatSuccessMessage(
+                        ChatColor.DARK_GRAY +
+                        "[" + ChatColor.DARK_AQUA + board.getName() + ChatColor.DARK_GRAY + "] " +
+                        ChatColor.GRAY + "(" + ChatColor.GREEN + "+" + score + " " + board.getUserScoreName() + ChatColor.GRAY + ")" +
+                        ChatColor.DARK_GRAY + " |" +
+                        ChatColor.GRAY + " New score: " +
+                        ChatColor.GREEN + userData.getScore() + " " + board.getUserScoreName()
+                ))
+        );
+
         return userData.getScore();
     }
 

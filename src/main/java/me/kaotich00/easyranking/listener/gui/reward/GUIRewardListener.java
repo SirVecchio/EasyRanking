@@ -12,6 +12,8 @@ import me.kaotich00.easyranking.utils.GUIUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.conversations.ConversationAbandonedEvent;
+import org.bukkit.conversations.ConversationAbandonedListener;
 import org.bukkit.conversations.ConversationFactory;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -21,7 +23,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-public class GUIRewardListener implements Listener {
+public class GUIRewardListener implements Listener, ConversationAbandonedListener {
 
     @EventHandler
     public void onClick(InventoryClickEvent event) {
@@ -113,8 +115,9 @@ public class GUIRewardListener implements Listener {
                         .withModality(false)
                         .withFirstPrompt(new MoneyAmountPrompt(board, rewardRank))
                         .withEscapeSequence("cancel")
-                        .withTimeout(10)
-                        .thatExcludesNonPlayersWithMessage("This conversation can only be initiated by a player");
+                        .withTimeout(20)
+                        .thatExcludesNonPlayersWithMessage("This conversation can only be initiated by a player")
+                        .addConversationAbandonedListener(this);
                 moneyFactory.buildConversation(player).begin();
                 player.closeInventory();
 
@@ -125,8 +128,9 @@ public class GUIRewardListener implements Listener {
                         .withModality(false)
                         .withFirstPrompt(new TitleRewardPrompt(board, rewardRank))
                         .withEscapeSequence("cancel")
-                        .withTimeout(10)
-                        .thatExcludesNonPlayersWithMessage("This conversation can only be initiated by a player");
+                        .withTimeout(20)
+                        .thatExcludesNonPlayersWithMessage("This conversation can only be initiated by a player")
+                        .addConversationAbandonedListener(this);
                 titleFactory.buildConversation(player).begin();
                 player.closeInventory();
                 break;
@@ -161,4 +165,12 @@ public class GUIRewardListener implements Listener {
         rewardService.removeModifyingPlayer(player.getUniqueId());
     }
 
+    @Override
+    public void conversationAbandoned(ConversationAbandonedEvent abandonedEvent) {
+        if (abandonedEvent.gracefulExit()) {
+            abandonedEvent.getContext().getForWhom().sendRawMessage(ChatFormatter.formatSuccessMessage("Setup completed!"));
+        } else {
+            abandonedEvent.getContext().getForWhom().sendRawMessage(ChatFormatter.formatErrorMessage("Setup canceled!"));
+        }
+    }
 }

@@ -36,9 +36,7 @@ public class KilledPlayersListener implements Listener {
             boardService.createUserData(board,player);
         }
 
-        float totalScore = boardService.addScoreToPlayer(board, player, 1);
-        Bukkit.getServer().broadcastMessage(ChatFormatter.formatSuccessMessage("Successfully added " + ChatColor.GOLD + 1 + ChatColor.GREEN + " points to " + ChatColor.GOLD + player.getPlayerListName()));
-        Bukkit.getServer().broadcastMessage((ChatFormatter.formatSuccessMessage(ChatColor.GRAY + "New score for " + ChatColor.GOLD + player.getPlayerListName() + ChatColor.GRAY + ": " + ChatColor.GREEN + totalScore)));
+        boardService.addScoreToPlayer(board, player, 1);
     }
 
 }

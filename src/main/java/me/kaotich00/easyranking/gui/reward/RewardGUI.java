@@ -1,24 +1,18 @@
 package me.kaotich00.easyranking.gui.reward;
 
-import me.kaotich00.easyranking.Easyranking;
 import me.kaotich00.easyranking.api.board.Board;
 import me.kaotich00.easyranking.api.reward.Reward;
-import me.kaotich00.easyranking.api.service.RewardService;
-import me.kaotich00.easyranking.reward.ERReward;
 import me.kaotich00.easyranking.reward.types.ERItemReward;
-import me.kaotich00.easyranking.reward.types.ERMoneyReward;
 import me.kaotich00.easyranking.service.ERRewardService;
 import me.kaotich00.easyranking.utils.GUIUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Listener;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 public class RewardGUI {
 
