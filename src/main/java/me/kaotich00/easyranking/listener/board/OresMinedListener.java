@@ -51,7 +51,7 @@ public class OresMinedListener implements Listener {
 
         BoardService boardService = ERBoardService.getInstance();
         Player player = event.getPlayer();
-        Optional<Board> optionalBoard = boardService.getBoardByName(BoardUtil.ORES_MINED_BOARD_NAME);
+        Optional<Board> optionalBoard = boardService.getBoardById(BoardUtil.ORES_MINED_BOARD_ID);
 
         if( !optionalBoard.isPresent() ) {
             return;

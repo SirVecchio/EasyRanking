@@ -1,10 +1,8 @@
 package me.kaotich00.easyranking.listener.board;
 
-import me.kaotich00.easyranking.Easyranking;
 import me.kaotich00.easyranking.api.board.Board;
 import me.kaotich00.easyranking.api.service.BoardService;
 import me.kaotich00.easyranking.service.ERBoardService;
-import me.kaotich00.easyranking.service.ERRewardService;
 import me.kaotich00.easyranking.utils.BoardUtil;
 import me.kaotich00.easyranking.utils.ChatFormatter;
 import org.bukkit.Bukkit;
@@ -33,7 +31,7 @@ public class KilledMobsListener implements Listener {
 
         BoardService boardService = ERBoardService.getInstance();
         Player player = event.getEntity().getKiller();
-        Optional<Board> optionalBoard = boardService.getBoardByName(BoardUtil.MOB_KILLED_BOARD_NAME);
+        Optional<Board> optionalBoard = boardService.getBoardById(BoardUtil.MOB_KILLED_BOARD_ID);
 
         if( !optionalBoard.isPresent() ) {
             return;

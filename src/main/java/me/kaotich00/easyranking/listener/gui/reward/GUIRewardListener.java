@@ -144,7 +144,7 @@ public class GUIRewardListener implements Listener {
                 rewardService.newItemReward(reward.clone(), board, rewardRank);
                 player.sendMessage(
                     ChatFormatter.formatSuccessMessage(
-                        "Board: " + ChatColor.GOLD + board.getName() +
+                        "Board: " + ChatColor.GOLD + board.getId() +
                         ChatColor.GREEN + " - Successfully added " +
                         ChatColor.GOLD + reward.getItemMeta().getLocalizedName() + " " +
                         ChatColor.GOLD + reward.getItemMeta().getDisplayName() +

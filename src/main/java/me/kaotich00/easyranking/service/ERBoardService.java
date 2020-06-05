@@ -35,15 +35,15 @@ public class ERBoardService implements BoardService {
 
     @Override
     public void initDefaultBoards() {
-        createBoard(BoardUtil.MOB_KILLED_BOARD_NAME, BoardUtil.MOB_KILLED_BOARD_DESCRIPTION, 100, "kills");
-        createBoard(BoardUtil.PLAYER_KILLED_BOARD_NAME, BoardUtil.PLAYER_KILLED_BOARD_DESCRIPTION, 100, "kills");
-        createBoard(BoardUtil.ORES_MINED_BOARD_NAME, BoardUtil.ORES_MINED_BOARD_DESCRIPTION, 100, "ores");
-        createBoard(BoardUtil.ECONOMY_BOARD_SERVICE_NAME, BoardUtil.ECONOMY_BOARD_SERVICE_DESCRIPTION, 100, "$");
+        createBoard(BoardUtil.MOB_KILLED_BOARD_ID, BoardUtil.MOB_KILLED_BOARD_NAME, BoardUtil.MOB_KILLED_BOARD_DESCRIPTION, 100, "kills");
+        createBoard(BoardUtil.PLAYER_KILLED_BOARD_ID, BoardUtil.PLAYER_KILLED_BOARD_NAME, BoardUtil.PLAYER_KILLED_BOARD_DESCRIPTION, 100, "kills");
+        createBoard(BoardUtil.ORES_MINED_BOARD_ID, BoardUtil.ORES_MINED_BOARD_NAME, BoardUtil.ORES_MINED_BOARD_DESCRIPTION, 100, "ores");
+        createBoard(BoardUtil.ECONOMY_BOARD_SERVICE_ID, BoardUtil.ECONOMY_BOARD_SERVICE_NAME, BoardUtil.ECONOMY_BOARD_SERVICE_DESCRIPTION, 100, "$");
     }
 
     @Override
-    public Board createBoard(String name, String description, int maxShownPlayers, String userScoreName) {
-        ERBoard board = new ERBoard(name, description, maxShownPlayers, userScoreName);
+    public Board createBoard(String id, String name, String description, int maxShownPlayers, String userScoreName) {
+        ERBoard board = new ERBoard(id, name, description, maxShownPlayers, userScoreName);
         boardsList.add(board);
         boardData.put(board, new HashSet<>());
         ERRewardService.getInstance().registerBoard(board);
@@ -56,13 +56,13 @@ public class ERBoardService implements BoardService {
     }
 
     @Override
-    public Optional<Board> getBoardByName(String name) {
-        return boardsList.stream().filter(board -> board.getName().equals(name)).findFirst();
+    public Optional<Board> getBoardById(String id) {
+        return boardsList.stream().filter(board -> board.getId().equals(id)).findFirst();
     }
 
     @Override
-    public boolean isNameAlreadyUsed(String name) {
-        return boardsList.stream().filter(board -> board.getName().equals(name)).findFirst().isPresent();
+    public boolean isIdAlreadyUsed(String id) {
+        return boardsList.stream().filter(board -> board.getId().equals(id)).findFirst().isPresent();
     }
 
     @Override

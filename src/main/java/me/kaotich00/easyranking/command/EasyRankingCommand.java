@@ -72,7 +72,7 @@ public class EasyRankingCommand implements TabExecutor {
             Set<Board> boardsList = boardService.getBoards();
             if( boardsList != null ) {
                 for (Board board : boardsList) {
-                    suggestions.add(board.getName());
+                    suggestions.add(board.getId());
                 }
             }
         }

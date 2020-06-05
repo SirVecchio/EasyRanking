@@ -6,16 +6,23 @@ import java.util.Objects;
 
 public class ERBoard implements Board {
 
+    private String id;
     private String name;
     private String description;
     private int maxShownPlayers;
     private String userScoreName;
 
-    public ERBoard(String name, String description, int maxShownPlayers, String userScoreName) {
+    public ERBoard(String id, String name, String description, int maxShownPlayers, String userScoreName) {
+        this.id = id;
         this.name = name;
         this.description = description;
         this.maxShownPlayers = maxShownPlayers;
         this.userScoreName = userScoreName;
+    }
+
+    @Override
+    public String getId() {
+        return this.id;
     }
 
     @Override
@@ -64,6 +71,7 @@ public class ERBoard implements Board {
         if (o == null || getClass() != o.getClass()) return false;
         ERBoard erBoard = (ERBoard) o;
         return getMaxShownPlayers() == erBoard.getMaxShownPlayers() &&
+                getId().equals(erBoard.getId()) &&
                 getName().equals(erBoard.getName()) &&
                 getDescription().equals(erBoard.getDescription()) &&
                 getUserScoreName().equals(erBoard.getUserScoreName());
@@ -71,6 +79,6 @@ public class ERBoard implements Board {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getName(), getDescription(), getMaxShownPlayers(), getUserScoreName());
+        return Objects.hash(getId(), getName(), getDescription(), getMaxShownPlayers(), getUserScoreName());
     }
 }

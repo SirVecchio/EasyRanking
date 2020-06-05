@@ -2,6 +2,8 @@ package me.kaotich00.easyranking.api.board;
 
 public interface Board {
 
+    String getId();
+
     String getName();
 
     String getDescription();

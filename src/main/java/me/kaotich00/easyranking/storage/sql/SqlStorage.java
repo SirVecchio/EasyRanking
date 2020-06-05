@@ -152,9 +152,9 @@ public class SqlStorage implements StorageMethod {
                         int maxShownPlayers = rs.getInt("max_players");
                         String userScoreName = rs.getString("user_score_name");
 
-                        Optional<Board> board = boardService.getBoardByName(id);
+                        Optional<Board> board = boardService.getBoardById(id);
                         if( !board.isPresent() ) {
-                            boardService.createBoard(id,description,maxShownPlayers,userScoreName);
+                            boardService.createBoard(id,name,description,maxShownPlayers,userScoreName);
                         }
                     }
                 }
@@ -175,7 +175,7 @@ public class SqlStorage implements StorageMethod {
                         String boardId = rs.getString("id_board");
                         Float amount = rs.getFloat("amount");
 
-                        Optional<Board> boardOptional = boardService.getBoardByName(boardId);
+                        Optional<Board> boardOptional = boardService.getBoardById(boardId);
                         if( boardOptional.isPresent() ) {
                             boardService.createUserData(boardOptional.get(), Bukkit.getOfflinePlayer(uuid), amount);
                         }
@@ -194,7 +194,7 @@ public class SqlStorage implements StorageMethod {
 
             PreparedStatement preparedStatement = c.prepareStatement(BOARD_INSERT_OR_UPDATE);
             for( Board b : boardService.getBoards() ) {
-                preparedStatement.setString(1, b.getName());
+                preparedStatement.setString(1, b.getId());
                 preparedStatement.setString(2, b.getName());
                 preparedStatement.setString(3, b.getDescription());
                 preparedStatement.setInt(4, b.getMaxShownPlayers());
@@ -227,7 +227,7 @@ public class SqlStorage implements StorageMethod {
                     userInsert.executeUpdate();
 
                     userScoreInsert.setString(1, uuid.toString());
-                    userScoreInsert.setString(2, board.getName());
+                    userScoreInsert.setString(2, board.getId());
                     userScoreInsert.setFloat(3, amount);
                     userScoreInsert.setFloat(4, amount);
                     userScoreInsert.executeUpdate();
@@ -255,7 +255,7 @@ public class SqlStorage implements StorageMethod {
                 Board board = data.getKey();
                 List<Reward> rewards = data.getValue();
 
-                deletePreviousItemsReward.setString(1, board.getName());
+                deletePreviousItemsReward.setString(1, board.getId());
                 deletePreviousItemsReward.executeUpdate();
 
                 for (Reward reward : rewards) {
@@ -263,7 +263,7 @@ public class SqlStorage implements StorageMethod {
                     if (reward instanceof ERItemReward) {
                         String itemType = new Gson().toJson(((ERItemReward)reward).getReward().serialize());
 
-                        insertItemReward.setString(1, board.getName());
+                        insertItemReward.setString(1, board.getId());
                         insertItemReward.setInt(2, rankingPosition);
                         insertItemReward.setString(3, itemType);
                         insertItemReward.executeUpdate();
@@ -271,7 +271,7 @@ public class SqlStorage implements StorageMethod {
                     if (reward instanceof ERMoneyReward) {
                         Double amount = ((ERMoneyReward)reward).getReward();
 
-                        insertMoneyReward.setString(1, board.getName());
+                        insertMoneyReward.setString(1, board.getId());
                         insertMoneyReward.setInt(2, rankingPosition);
                         insertMoneyReward.setFloat(3, amount.floatValue());
                         insertMoneyReward.setFloat(4, amount.floatValue());
@@ -280,7 +280,7 @@ public class SqlStorage implements StorageMethod {
                     if (reward instanceof ERTitleReward) {
                         String title = ((ERTitleReward)reward).getReward();
 
-                        insertTitleReward.setString(1, board.getName());
+                        insertTitleReward.setString(1, board.getId());
                         insertTitleReward.setInt(2, rankingPosition);
                         insertTitleReward.setString(3, title);
                         insertTitleReward.setString(4, title);
@@ -313,7 +313,7 @@ public class SqlStorage implements StorageMethod {
                         /* Deserialize ItemStack */
                         Map<String,Object> itemStack = new Gson().fromJson(itemType,Map.class);
 
-                        Optional<Board> boardOptional = boardService.getBoardByName(boardId);
+                        Optional<Board> boardOptional = boardService.getBoardById(boardId);
                         if( boardOptional.isPresent() ) {
                             rewardService.newItemReward(ItemStack.deserialize(itemStack), boardOptional.get(), rankPosition);
                         }
@@ -328,7 +328,7 @@ public class SqlStorage implements StorageMethod {
                         Integer rankPosition = rs.getInt("rank_position");
                         Double amount = rs.getDouble("amount");
 
-                        Optional<Board> boardOptional = boardService.getBoardByName(boardId);
+                        Optional<Board> boardOptional = boardService.getBoardById(boardId);
                         if( boardOptional.isPresent() ) {
                             rewardService.newMoneyReward(amount, boardOptional.get(), rankPosition);
                         }
@@ -343,7 +343,7 @@ public class SqlStorage implements StorageMethod {
                         Integer rankPosition = rs.getInt("rank_position");
                         String title = rs.getString("title");
 
-                        Optional<Board> boardOptional = boardService.getBoardByName(boardId);
+                        Optional<Board> boardOptional = boardService.getBoardById(boardId);
                         if( boardOptional.isPresent() ) {
                             rewardService.newTitleReward(title, boardOptional.get(), rankPosition);
                         }

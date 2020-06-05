@@ -13,13 +13,13 @@ public interface BoardService {
 
     void initDefaultBoards();
 
-    Board createBoard(String name, String description, int maxShownPlayers, String userScoreName);
+    Board createBoard(String id, String name, String description, int maxShownPlayers, String userScoreName);
 
     Set<Board> getBoards();
 
-    Optional<Board> getBoardByName(String name);
+    Optional<Board> getBoardById(String name);
 
-    boolean isNameAlreadyUsed(String name);
+    boolean isIdAlreadyUsed(String name);
 
     Optional<UserData> getUserData(Board board, Player player);
 

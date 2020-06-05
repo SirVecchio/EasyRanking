@@ -1,6 +1,5 @@
 package me.kaotich00.easyranking.command.admin.board;
 
-import me.kaotich00.easyranking.Easyranking;
 import me.kaotich00.easyranking.api.board.Board;
 import me.kaotich00.easyranking.api.service.BoardService;
 import me.kaotich00.easyranking.gui.reward.RewardGUI;
@@ -31,12 +30,12 @@ public class RewardCommand {
         BoardService boardService = ERBoardService.getInstance();
 
         String boardName = args[1];
-        if( !boardService.isNameAlreadyUsed(boardName) ) {
+        if( !boardService.isIdAlreadyUsed(boardName) ) {
             sender.sendMessage(ChatFormatter.formatErrorMessage("No board found for the name " + ChatColor.GOLD + boardName + ChatColor.RED ));
             return CommandTypes.COMMAND_SUCCESS;
         }
 
-        Optional<Board> optionalBoard = boardService.getBoardByName(boardName);
+        Optional<Board> optionalBoard = boardService.getBoardById(boardName);
         if( optionalBoard.isPresent() ) {
             RewardGUI gui = new RewardGUI((Player) sender, optionalBoard.get());
             gui.openGUI(GUIUtil.REWARD_PS_STEP);

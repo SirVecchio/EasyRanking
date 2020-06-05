@@ -1,6 +1,5 @@
 package me.kaotich00.easyranking.reward.conversation.prompt;
 
-import me.kaotich00.easyranking.Easyranking;
 import me.kaotich00.easyranking.api.board.Board;
 import me.kaotich00.easyranking.api.service.RewardService;
 import me.kaotich00.easyranking.gui.reward.RewardGUI;

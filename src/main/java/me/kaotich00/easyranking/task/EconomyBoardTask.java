@@ -17,7 +17,7 @@ public class EconomyBoardTask {
     public static void scheduleEconomy() {
         Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Easyranking.getPlugin(Easyranking.class), () -> {
             BoardService boardService = ERBoardService.getInstance();
-            Optional<Board> optionalBoard = boardService.getBoardByName(BoardUtil.ECONOMY_BOARD_SERVICE_NAME);
+            Optional<Board> optionalBoard = boardService.getBoardById(BoardUtil.ECONOMY_BOARD_SERVICE_ID);
 
             if( !optionalBoard.isPresent() ) {
                 return;
