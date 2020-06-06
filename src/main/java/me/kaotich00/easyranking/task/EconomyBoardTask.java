@@ -32,10 +32,7 @@ public class EconomyBoardTask {
                     boardService.createUserData(board,player);
                 }
 
-                float totalScore = boardService.setScoreOfPlayer(board, player, balance.floatValue());
-                Bukkit.getServer().broadcastMessage(ChatFormatter.formatSuccessMessage("Successfully set $" + ChatColor.GOLD + balance + ChatColor.GREEN + " for " + ChatColor.GOLD + player.getPlayerListName()));
-                Bukkit.getServer().broadcastMessage((ChatFormatter.formatSuccessMessage(ChatColor.GRAY + "New score for " + ChatColor.GOLD + player.getPlayerListName() + ChatColor.GRAY + ": " + ChatColor.GREEN + totalScore)));
-
+                boardService.setScoreOfPlayer(board, player, balance.floatValue());
             }
         }, 400L, 6000L );
     }

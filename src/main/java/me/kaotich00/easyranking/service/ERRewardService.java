@@ -1,12 +1,22 @@
 package me.kaotich00.easyranking.service;
 
+import com.google.gson.Gson;
+import me.kaotich00.easyranking.Easyranking;
 import me.kaotich00.easyranking.api.board.Board;
+import me.kaotich00.easyranking.api.data.UserData;
 import me.kaotich00.easyranking.api.reward.Reward;
+import me.kaotich00.easyranking.api.service.BoardService;
 import me.kaotich00.easyranking.api.service.RewardService;
 import me.kaotich00.easyranking.reward.types.ERItemReward;
 import me.kaotich00.easyranking.reward.types.ERMoneyReward;
 import me.kaotich00.easyranking.reward.types.ERTitleReward;
+import me.kaotich00.easyranking.utils.ChatFormatter;
 import me.kaotich00.easyranking.utils.GUIUtil;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.Sound;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
@@ -77,6 +87,66 @@ public class ERRewardService implements RewardService {
     public void clearTitleReward(Board board, int rankPosition) {
         List<Reward> rewardsList = rewardData.get(board).stream().filter(r -> (r.getRankingPosition() == rankPosition && r.getRewardType() == GUIUtil.TITLE_TYPE)).collect(Collectors.toList());
         rewardData.get(board).removeAll(rewardsList);
+    }
+
+    @Override
+    public void collectRewards() {
+        BoardService boardService = ERBoardService.getInstance();
+        Set<Board> boardsList = boardService.getBoards();
+
+        for( Board board : boardsList ) {
+
+            Bukkit.getServer().broadcastMessage("\n" + ChatColor.DARK_AQUA + board.getName());
+            boolean dataEmpty = true;
+            for( int i = 1; i <= 3; i ++ ) {
+                Optional<UserData> optUserData = boardService.getPlayerByRankPosition(board, i);
+                if( !optUserData.isPresent() ) {
+                    continue;
+                }
+
+                dataEmpty = false;
+
+                UserData userData = optUserData.get();
+                Player player = Bukkit.getPlayer(userData.getUniqueId());
+                if( player == null ) {
+                    OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(userData.getUniqueId());
+                    if( offlinePlayer != null ) {
+                        Bukkit.getServer().broadcastMessage(ChatColor.YELLOW + String.valueOf(i) + "." + ChatColor.GOLD + " " + offlinePlayer.getName() + ChatColor.DARK_GRAY + " (" + ChatColor.GREEN + (int) userData.getScore() + " " + board.getUserScoreName() + ChatColor.DARK_GRAY + ")");
+                    }
+                    continue;
+                } else {
+                    Bukkit.getServer().broadcastMessage(ChatColor.YELLOW + String.valueOf(i) + "." + ChatColor.GOLD + " " + player.getPlayerListName() + ChatColor.DARK_GRAY + " (" + ChatColor.GREEN + (int) userData.getScore() + " " + board.getUserScoreName() + ChatColor.DARK_GRAY + ")");
+                }
+                List<Reward> rewardsList = getRewardsByPosition(board, i);
+
+                for( Reward reward : rewardsList ) {
+                    if (reward instanceof ERItemReward) {
+                        ItemStack itemType = ((ERItemReward)reward).getReward();
+                        if(player.getInventory().addItem(itemType).size() != 0) {
+                            player.getWorld().dropItem(player.getLocation(), itemType);
+                        }
+                    }
+                    if (reward instanceof ERMoneyReward) {
+                        Double amount = ((ERMoneyReward)reward).getReward();
+                        Easyranking.getEconomy().depositPlayer(player,amount);
+                    }
+                    if (reward instanceof ERTitleReward) {
+                        String title = ((ERTitleReward)reward).getReward();
+                    }
+                }
+
+                player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 10, 1);
+                /*player.sendMessage(
+                        (ChatFormatter.formatSuccessMessage(
+                                ChatColor.DARK_GRAY + "[" + ChatColor.DARK_AQUA + board.getName() + ChatColor.DARK_GRAY + "] " +
+                                ChatColor.GREEN + " Congratulation, you were awarded for reaching rank " + ChatColor.GOLD + i
+                        ))
+                );*/
+            }
+            if( dataEmpty ) {
+                Bukkit.getServer().broadcastMessage(ChatColor.GRAY + "No data found");
+            }
+        }
     }
 
     @Override

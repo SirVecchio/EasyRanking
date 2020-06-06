@@ -64,6 +64,12 @@ public class SqlStorage implements StorageMethod {
     @Override
     public void shutdown() {
         try {
+            saveBoards();
+            Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[EasyRanking]" + ChatColor.RESET + " Saving boards to database...");
+            saveUserData();
+            Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[EasyRanking]" + ChatColor.RESET + " Saving user data to database...");
+            saveBoardRewards();
+            Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[EasyRanking]" + ChatColor.RESET + " Saving rewards to database...");
             this.connectionFactory.shutdown();
         } catch (Exception e) {
             e.printStackTrace();
@@ -214,9 +220,9 @@ public class SqlStorage implements StorageMethod {
 
             PreparedStatement userInsert = c.prepareStatement(USER_INSERT_OR_UPDATE);
             PreparedStatement userScoreInsert = c.prepareStatement(USER_SCORE_INSERT_OR_UPDATE);
-            for (Map.Entry<Board, Set<UserData>> data : boardService.getBoardData().entrySet()) {
+            for (Map.Entry<Board, List<UserData>> data : boardService.getBoardData().entrySet()) {
                 Board board = data.getKey();
-                Set<UserData> userData = data.getValue();
+                List<UserData> userData = data.getValue();
                 for (UserData ud : userData) {
                     String nickname = ud.getNickname();
                     UUID uuid = ud.getUniqueId();

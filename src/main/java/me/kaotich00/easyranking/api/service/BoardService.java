@@ -5,9 +5,7 @@ import me.kaotich00.easyranking.api.data.UserData;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 public interface BoardService {
 
@@ -23,16 +21,18 @@ public interface BoardService {
 
     Optional<UserData> getUserData(Board board, Player player);
 
-    Map<Board, Set<UserData>> getBoardData();
+    Map<Board, List<UserData>> getBoardData();
+
+    Optional<UserData> getPlayerByRankPosition(Board board, int rankPosition);
 
     void createUserData(Board board, Player player);
 
     void createUserData(Board board, OfflinePlayer player, Float amount);
 
-    float addScoreToPlayer(Board board, Player player, float score);
+    float addScoreToPlayer(Board board, Player player, Float score);
 
-    float subtractScoreFromPlayer(Board board, Player player, float score);
+    float subtractScoreFromPlayer(Board board, Player player, Float score);
 
-    float setScoreOfPlayer(Board board, Player player, float score);
+    float setScoreOfPlayer(Board board, Player player, Float score);
 
 }

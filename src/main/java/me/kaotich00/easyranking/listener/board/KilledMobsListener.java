@@ -43,7 +43,7 @@ public class KilledMobsListener implements Listener {
             boardService.createUserData(board,player);
         }
 
-        boardService.addScoreToPlayer(board, player, 1);
+        boardService.addScoreToPlayer(board, player, 1f);
     }
 
 }

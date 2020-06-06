@@ -25,6 +25,8 @@ public interface RewardService {
 
     void clearTitleReward(Board board, int position);
 
+    void collectRewards();
+
     List<Reward> getRewardsByPosition(Board board, int position);
 
     List<Reward> getItemRewardsByPosition(Board board, int position);

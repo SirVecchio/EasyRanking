@@ -2,6 +2,7 @@ package me.kaotich00.easyranking.command;
 
 import me.kaotich00.easyranking.api.board.Board;
 import me.kaotich00.easyranking.api.service.BoardService;
+import me.kaotich00.easyranking.command.admin.board.CollectCommand;
 import me.kaotich00.easyranking.command.admin.board.CreateCommand;
 import me.kaotich00.easyranking.command.admin.board.RewardCommand;
 import me.kaotich00.easyranking.command.admin.board.ScoreCommand;
@@ -46,6 +47,10 @@ public class EasyRankingCommand implements TabExecutor {
             case CommandTypes.SCORE_COMMAND:
                 result = ScoreCommand.executeCommand(sender, command, label, args);
                 break;
+
+            case CommandTypes.COLLECT_COMMAND:
+                result = CollectCommand.executeCommand(sender, command, label, args);
+                break;
         }
         return result;
     }
@@ -63,10 +68,11 @@ public class EasyRankingCommand implements TabExecutor {
             suggestions.add("modify");
             suggestions.add("score");
             suggestions.add("reward");
+            suggestions.add("collect");
         }
 
         /* Suggest Boards names */
-        if( args.length == 2 && !args[0].equals(CommandTypes.CREATE_COMMAND) ) {
+        if( args.length == 2 && !args[0].equals(CommandTypes.CREATE_COMMAND) && !args[0].equals(CommandTypes.COLLECT_COMMAND) ) {
             argsIndex = args[1];
             BoardService boardService = ERBoardService.getInstance();
             Set<Board> boardsList = boardService.getBoards();

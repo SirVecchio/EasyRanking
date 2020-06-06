@@ -5,8 +5,10 @@ import me.kaotich00.easyranking.api.data.UserData;
 import me.kaotich00.easyranking.api.service.BoardService;
 import me.kaotich00.easyranking.board.ERBoard;
 import me.kaotich00.easyranking.data.ERUserData;
+import me.kaotich00.easyranking.task.EconomyBoardTask;
 import me.kaotich00.easyranking.utils.BoardUtil;
 import me.kaotich00.easyranking.utils.ChatFormatter;
+import me.kaotich00.easyranking.utils.RankPositionComparator;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -17,7 +19,7 @@ public class ERBoardService implements BoardService {
 
     private static ERBoardService boardServiceInstance;
     private Set<Board> boardsList;
-    private Map<Board, Set<UserData>> boardData;
+    private Map<Board, List<UserData>> boardData;
 
     private ERBoardService() {
         if (boardServiceInstance != null){
@@ -41,13 +43,14 @@ public class ERBoardService implements BoardService {
         createBoard(BoardUtil.PLAYER_KILLED_BOARD_ID, BoardUtil.PLAYER_KILLED_BOARD_NAME, BoardUtil.PLAYER_KILLED_BOARD_DESCRIPTION, 100, "kills");
         createBoard(BoardUtil.ORES_MINED_BOARD_ID, BoardUtil.ORES_MINED_BOARD_NAME, BoardUtil.ORES_MINED_BOARD_DESCRIPTION, 100, "ores");
         createBoard(BoardUtil.ECONOMY_BOARD_SERVICE_ID, BoardUtil.ECONOMY_BOARD_SERVICE_NAME, BoardUtil.ECONOMY_BOARD_SERVICE_DESCRIPTION, 100, "$");
+        EconomyBoardTask.scheduleEconomy();
     }
 
     @Override
     public Board createBoard(String id, String name, String description, int maxShownPlayers, String userScoreName) {
         ERBoard board = new ERBoard(id, name, description, maxShownPlayers, userScoreName);
         boardsList.add(board);
-        boardData.put(board, new HashSet<>());
+        boardData.put(board, new ArrayList<>());
         ERRewardService.getInstance().registerBoard(board);
         return board;
     }
@@ -73,8 +76,17 @@ public class ERBoardService implements BoardService {
     }
 
     @Override
-    public Map<Board, Set<UserData>> getBoardData() {
+    public Map<Board, List<UserData>> getBoardData() {
         return this.boardData;
+    }
+
+    @Override
+    public Optional<UserData> getPlayerByRankPosition(Board board, int rankPosition) {
+        List<UserData> userList = this.boardData.get(board);
+        userList.sort(new RankPositionComparator());
+        if( rankPosition > userList.size() )
+            return Optional.empty();
+        return Optional.of(userList.get(rankPosition-1));
     }
 
     @Override
@@ -90,7 +102,7 @@ public class ERBoardService implements BoardService {
     }
 
     @Override
-    public float addScoreToPlayer(Board board, Player player, float score) {
+    public float addScoreToPlayer(Board board, Player player, Float score) {
         UserData userData = getUserData(board,player).get();
         userData.addScore(score);
 
@@ -98,10 +110,10 @@ public class ERBoardService implements BoardService {
                 (ChatFormatter.formatSuccessMessage(
                         ChatColor.DARK_GRAY +
                         "[" + ChatColor.DARK_AQUA + board.getName() + ChatColor.DARK_GRAY + "] " +
-                        ChatColor.GRAY + "(" + ChatColor.GREEN + "+" + score + " " + board.getUserScoreName() + ChatColor.GRAY + ")" +
+                        ChatColor.GRAY + "(" + ChatColor.GREEN + "+" + score.intValue() + " " + board.getUserScoreName() + ChatColor.GRAY + ")" +
                         ChatColor.DARK_GRAY + " |" +
                         ChatColor.GRAY + " New score: " +
-                        ChatColor.GREEN + userData.getScore() + " " + board.getUserScoreName()
+                        ChatColor.GOLD + (int) userData.getScore() + " " + board.getUserScoreName()
                 ))
         );
 
@@ -109,16 +121,40 @@ public class ERBoardService implements BoardService {
     }
 
     @Override
-    public float subtractScoreFromPlayer(Board board, Player player, float score) {
+    public float subtractScoreFromPlayer(Board board, Player player, Float score) {
         UserData userData = getUserData(board,player).get();
         userData.subtractScore(score);
+
+        player.sendMessage(
+                (ChatFormatter.formatSuccessMessage(
+                        ChatColor.DARK_GRAY +
+                                "[" + ChatColor.DARK_AQUA + board.getName() + ChatColor.DARK_GRAY + "] " +
+                                ChatColor.GRAY + "(" + ChatColor.RED + "-" + score.intValue() + " " + board.getUserScoreName() + ChatColor.GRAY + ")" +
+                                ChatColor.DARK_GRAY + " |" +
+                                ChatColor.GRAY + " New score: " +
+                                ChatColor.GOLD + (int) userData.getScore() + " " + board.getUserScoreName()
+                ))
+        );
+
         return userData.getScore();
     }
 
     @Override
-    public float setScoreOfPlayer(Board board, Player player, float score) {
+    public float setScoreOfPlayer(Board board, Player player, Float score) {
         UserData userData = getUserData(board,player).get();
         userData.setScore(score);
+
+        player.sendMessage(
+                (ChatFormatter.formatSuccessMessage(
+                        ChatColor.DARK_GRAY +
+                                "[" + ChatColor.DARK_AQUA + board.getName() + ChatColor.DARK_GRAY + "] " +
+                                ChatColor.GRAY + "(" + ChatColor.GREEN + "=" + score.intValue() + " " + board.getUserScoreName() + ChatColor.GRAY + ")" +
+                                ChatColor.DARK_GRAY + " |" +
+                                ChatColor.GRAY + " New score: " +
+                                ChatColor.GOLD + (int) userData.getScore() + " " + board.getUserScoreName()
+                ))
+        );
+
         return userData.getScore();
     }
 }

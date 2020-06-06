@@ -17,11 +17,6 @@ import java.util.Arrays;
 public class ScoreCommand {
 
     public static boolean executeCommand(CommandSender sender, Command command, String label, String[] args) {
-        if( !(sender instanceof Player) ) {
-            sender.sendMessage(ChatFormatter.formatErrorMessage("Only players can run that command"));
-            return CommandTypes.COMMAND_SUCCESS;
-        }
-
         if( args.length < 5 ) {
             sender.sendMessage(ChatFormatter.formatErrorMessage("Not enough arguments, usage:"));
             sender.sendMessage(ChatFormatter.formatSuccessMessage(ChatColor.DARK_GREEN + "/er " + ChatColor.GREEN + "score "  + ChatColor.DARK_GRAY + "<" + ChatColor.GRAY + "nome" + ChatColor.DARK_GRAY + "> " + ChatColor.DARK_AQUA + "[add/subtract] " + ChatColor.DARK_GRAY + "<" + ChatColor.GRAY + "player" + ChatColor.DARK_GRAY + "> " + "<" + ChatColor.GRAY + "amount" + ChatColor.DARK_GRAY + ">"));
@@ -65,15 +60,15 @@ public class ScoreCommand {
         switch(scoreOperator) {
             case "add":
                 totalScore = boardService.addScoreToPlayer(board, player, score);
-                sender.sendMessage(ChatFormatter.formatSuccessMessage("Successfully added " + ChatColor.GOLD + score + ChatColor.GREEN + " points to " + ChatColor.GOLD + playerName));
+                sender.sendMessage(ChatFormatter.formatSuccessMessage("Successfully added " + ChatColor.GOLD + score.intValue() + " " + ChatColor.GREEN + board.getUserScoreName() + " to " + ChatColor.GOLD + playerName));
                 break;
             case "subtract":
                 totalScore = boardService.subtractScoreFromPlayer(board, player, score);
-                sender.sendMessage(ChatFormatter.formatSuccessMessage("Successfully subtracted " + ChatColor.GOLD + score + ChatColor.GREEN + " points from " + ChatColor.GOLD + playerName));
+                sender.sendMessage(ChatFormatter.formatSuccessMessage("Successfully subtracted " + ChatColor.GOLD + score.intValue() + " " + ChatColor.GREEN + board.getUserScoreName() + " from " + ChatColor.GOLD + playerName));
                 break;
             case "set":
                 totalScore = boardService.setScoreOfPlayer(board, player, score);
-                sender.sendMessage(ChatFormatter.formatSuccessMessage("Successfully set " + ChatColor.GOLD + score + ChatColor.GREEN + " points to " + ChatColor.GOLD + playerName));
+                sender.sendMessage(ChatFormatter.formatSuccessMessage("Successfully set " + ChatColor.GOLD + score.intValue() + " " + ChatColor.GREEN + board.getUserScoreName() + " to " + ChatColor.GOLD + playerName));
                 break;
         }
 

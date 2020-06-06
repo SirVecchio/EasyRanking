@@ -9,7 +9,6 @@ import me.kaotich00.easyranking.service.ERBoardService;
 import me.kaotich00.easyranking.service.ERRewardService;
 import me.kaotich00.easyranking.storage.Storage;
 import me.kaotich00.easyranking.storage.StorageFactory;
-import me.kaotich00.easyranking.storage.sql.hikari.MySQLConnectionFactory;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -52,13 +51,7 @@ public final class Easyranking extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        Storage storage = StorageFactory.getInstance();
-        storage.getStorageMethod().saveBoards();
-        Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[EasyRanking]" + ChatColor.RESET + " Saving boards to database...");
-        storage.getStorageMethod().saveUserData();
-        Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[EasyRanking]" + ChatColor.RESET + " Saving user data to database...");
-        storage.getStorageMethod().saveBoardRewards();
-        Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[EasyRanking]" + ChatColor.RESET + " Saving rewards to database...");
+        shutdownStorage();
     }
 
     public void disablePlugin() {
@@ -83,6 +76,11 @@ public final class Easyranking extends JavaPlugin {
     public void initStorage() {
         Storage storage = StorageFactory.getInstance();
         storage.init();
+    }
+
+    public void shutdownStorage() {
+        Storage storage = StorageFactory.getInstance();
+        storage.shutdown();
     }
 
     public void registerListeners(){
