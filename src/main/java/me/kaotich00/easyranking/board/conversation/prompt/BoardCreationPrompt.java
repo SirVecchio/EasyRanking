@@ -41,14 +41,14 @@ public class BoardCreationPrompt implements ConversationAbandonedListener {
         @Override
         public String getPromptText(ConversationContext context) {
             String promptMessage = ChatFormatter.formatSuccessMessage(ChatColor.GRAY + "Board creation initialized. Follow the instructions below or type 'cancel' at any moment to abandon the setup");
-            promptMessage = promptMessage.concat( "\n" + ChatFormatter.formatErrorMessage(ChatColor.GRAY + "Please choose an ID for the board. It will be the board identifiers for the commands, example: mobKilled") );
+            promptMessage = promptMessage.concat( "\n" + ChatFormatter.formatErrorMessage(ChatColor.GRAY + "Please choose an ID for the board. It will be the board identifiers for the commands (must not contain white spaces), example: mobKilled") );
             return promptMessage;
         }
 
         @Override
         protected boolean isInputValid(ConversationContext context, String input) {
             BoardService boardService = ERBoardService.getInstance();
-            return !boardService.getBoardById(input).isPresent();
+            return !boardService.getBoardById(input).isPresent() && !input.contains(" ");
         }
 
         @Override
@@ -59,7 +59,7 @@ public class BoardCreationPrompt implements ConversationAbandonedListener {
 
         @Override
         protected String getFailedValidationText(ConversationContext context, String invalidInput) {
-            return "A board with that id already exists!";
+            return "Make sure a board with that name doesn't already exists! Also make sure the ID doesn't contain any white space.";
         }
     }
 
