@@ -11,7 +11,7 @@ public interface BoardService {
 
     void initDefaultBoards();
 
-    Board createBoard(String id, String name, String description, int maxShownPlayers, String userScoreName);
+    Board createBoard(String id, String name, String description, int maxShownPlayers, String userScoreName, boolean isDefault);
 
     void modifyBoardName(Board board, String name);
 
@@ -20,6 +20,8 @@ public interface BoardService {
     void modifyBoardMaxShownPlayers(Board board, Integer maxShownPlayers);
 
     void modifyBoardSuffix(Board board, String suffix);
+
+    void deleteBoard(Board board);
 
     Set<Board> getBoards();
 

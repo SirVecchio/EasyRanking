@@ -14,6 +14,7 @@ import me.kaotich00.easyranking.service.ERBoardService;
 import me.kaotich00.easyranking.service.ERRewardService;
 import me.kaotich00.easyranking.storage.StorageMethod;
 import me.kaotich00.easyranking.storage.util.SchemaReader;
+import me.kaotich00.easyranking.utils.SerializationUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.inventory.ItemStack;
@@ -29,11 +30,17 @@ public class SqlStorage implements StorageMethod {
 
     private static final String BOARD_INSERT_OR_UPDATE = "INSERT INTO easyranking_board(`id`,`name`,`description`,`max_players`,`user_score_name`,`is_visible`,`is_deleted`) VALUES (?,?,?,?,?,true,false) ON DUPLICATE KEY UPDATE `id`=`id`";
     private static final String BOARD_SELECT = "SELECT * FROM easyranking_board WHERE is_deleted = false";
-    private static final String BOARD_ITEM_REWARD_DELETE_PREVIOUS = "DELETE FROM easyranking_item_reward WHERE id_board = ?";
+    private static final String BOARD_DELETE = "DELETE FROM easyranking_board WHERE id = ?";
+
+    private static final String BOARD_ITEM_REWARD_DELETE = "DELETE FROM easyranking_item_reward WHERE id_board = ?";
     private static final String BOARD_ITEM_REWARD_INSERT_OR_UPDATE = "INSERT INTO easyranking_item_reward(`id_board`,`rank_position`,`item_type`) VALUES (?,?,?)";
     private static final String BOARD_ITEM_REWARD_SELECT = "SELECT * FROM easyranking_item_reward";
+
+    private static final String BOARD_MONEY_REWARD_DELETE = "DELETE FROM easyranking_money_reward WHERE id_board = ?";
     private static final String BOARD_MONEY_REWARD_INSERT_OR_UPDATE = "INSERT INTO easyranking_money_reward(`id_board`,`rank_position`,`amount`) VALUES (?,?,?) ON DUPLICATE KEY UPDATE `amount` = ?";
     private static final String BOARD_MONEY_REWARD_SELECT = "SELECT * FROM easyranking_money_reward";
+
+    private static final String BOARD_TITLE_REWARD_DELETE = "DELETE FROM easyranking_title_reward WHERE id_board = ?";
     private static final String BOARD_TITLE_REWARD_INSERT_OR_UPDATE = "INSERT INTO easyranking_title_reward(`id_board`,`rank_position`,`title`) VALUES (?,?,?) ON DUPLICATE KEY UPDATE `title` = ?";
     private static final String BOARD_TITLE_REWARD_SELECT = "SELECT * FROM easyranking_title_reward";
 
@@ -41,6 +48,7 @@ public class SqlStorage implements StorageMethod {
 
     private static final String USER_SCORE_INSERT_OR_UPDATE = "INSERT INTO easyranking_user_score(`id_user`,`id_board`,`amount`) VALUES (?,?,?) ON DUPLICATE KEY UPDATE `amount` = ?";
     private static final String USER_DATA_SELECT = "SELECT * FROM easyranking_user_score";
+    private static final String USER_DATA_DELETE = "DELETE FROM easyranking_user_score WHERE id_board = ?";
 
     private ConnectionFactory connectionFactory;
     private final Easyranking plugin;
@@ -160,7 +168,7 @@ public class SqlStorage implements StorageMethod {
 
                         Optional<Board> board = boardService.getBoardById(id);
                         if( !board.isPresent() ) {
-                            boardService.createBoard(id,name,description,maxShownPlayers,userScoreName);
+                            boardService.createBoard(id,name,description,maxShownPlayers,userScoreName, false);
                         }
                     }
                 }
@@ -251,7 +259,7 @@ public class SqlStorage implements StorageMethod {
         RewardService rewardService = ERRewardService.getInstance();
 
         try (Connection c = getConnection()) {
-            PreparedStatement deletePreviousItemsReward = c.prepareStatement(BOARD_ITEM_REWARD_DELETE_PREVIOUS);
+            PreparedStatement deletePreviousItemsReward = c.prepareStatement(BOARD_ITEM_REWARD_DELETE);
             PreparedStatement insertItemReward = c.prepareStatement(BOARD_ITEM_REWARD_INSERT_OR_UPDATE);
 
             PreparedStatement insertMoneyReward = c.prepareStatement(BOARD_MONEY_REWARD_INSERT_OR_UPDATE);
@@ -267,7 +275,7 @@ public class SqlStorage implements StorageMethod {
                 for (Reward reward : rewards) {
                     Integer rankingPosition = reward.getRankingPosition();
                     if (reward instanceof ERItemReward) {
-                        String itemType = new Gson().toJson(((ERItemReward)reward).getReward().serialize());
+                        String itemType = SerializationUtil.toBase64(((ERItemReward)reward).getReward());
 
                         insertItemReward.setString(1, board.getId());
                         insertItemReward.setInt(2, rankingPosition);
@@ -317,11 +325,11 @@ public class SqlStorage implements StorageMethod {
                         String itemType = rs.getString("item_type");
 
                         /* Deserialize ItemStack */
-                        Map<String,Object> itemStack = new Gson().fromJson(itemType,Map.class);
+                        ItemStack itemStack = SerializationUtil.fromBase64(itemType);
 
                         Optional<Board> boardOptional = boardService.getBoardById(boardId);
                         if( boardOptional.isPresent() ) {
-                            rewardService.newItemReward(ItemStack.deserialize(itemStack), boardOptional.get(), rankPosition);
+                            rewardService.newItemReward(itemStack, boardOptional.get(), rankPosition);
                         }
                     }
                 }
@@ -356,6 +364,39 @@ public class SqlStorage implements StorageMethod {
                     }
                 }
             }
+        } catch (SQLException | IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void deleteBoard(String boardId) {
+        try (Connection c = getConnection()) {
+            PreparedStatement deleteItemRewards = c.prepareStatement(BOARD_ITEM_REWARD_DELETE);
+            deleteItemRewards.setString(1, boardId);
+            deleteItemRewards.executeUpdate();
+            deleteItemRewards.close();
+
+            PreparedStatement deleteMoneyRewards = c.prepareStatement(BOARD_MONEY_REWARD_DELETE);
+            deleteMoneyRewards.setString(1, boardId);
+            deleteMoneyRewards.executeUpdate();
+            deleteMoneyRewards.close();
+
+            PreparedStatement deleteTitleRewards = c.prepareStatement(BOARD_TITLE_REWARD_DELETE);
+            deleteTitleRewards.setString(1, boardId);
+            deleteTitleRewards.executeUpdate();
+            deleteTitleRewards.close();
+
+            PreparedStatement deleteUserScore = c.prepareStatement(USER_DATA_DELETE);
+            deleteUserScore.setString(1, boardId);
+            deleteUserScore.executeUpdate();
+            deleteUserScore.close();
+
+            PreparedStatement deleteBoard = c.prepareStatement(BOARD_DELETE);
+            deleteBoard.setString(1, boardId);
+            deleteBoard.executeUpdate();
+            deleteBoard.close();
+
         } catch (SQLException e) {
             e.printStackTrace();
         }

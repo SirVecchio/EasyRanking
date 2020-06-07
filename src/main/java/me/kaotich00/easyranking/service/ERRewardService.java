@@ -150,6 +150,11 @@ public class ERRewardService implements RewardService {
     }
 
     @Override
+    public void deleteBoardRewards(Board board) {
+        rewardData.remove(board);
+    }
+
+    @Override
     public List<Reward> getRewardsByPosition(Board board, int position) {
         return rewardData.get(board).stream().filter(r -> r.getRankingPosition() == position).collect(Collectors.toList());
     }

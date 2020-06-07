@@ -3,8 +3,11 @@ package me.kaotich00.easyranking.service;
 import me.kaotich00.easyranking.api.board.Board;
 import me.kaotich00.easyranking.api.data.UserData;
 import me.kaotich00.easyranking.api.service.BoardService;
+import me.kaotich00.easyranking.api.service.RewardService;
 import me.kaotich00.easyranking.board.ERBoard;
 import me.kaotich00.easyranking.data.ERUserData;
+import me.kaotich00.easyranking.storage.Storage;
+import me.kaotich00.easyranking.storage.StorageFactory;
 import me.kaotich00.easyranking.task.EconomyBoardTask;
 import me.kaotich00.easyranking.utils.BoardUtil;
 import me.kaotich00.easyranking.utils.ChatFormatter;
@@ -39,16 +42,16 @@ public class ERBoardService implements BoardService {
 
     @Override
     public void initDefaultBoards() {
-        createBoard(BoardUtil.MOB_KILLED_BOARD_ID, BoardUtil.MOB_KILLED_BOARD_NAME, BoardUtil.MOB_KILLED_BOARD_DESCRIPTION, 100, "kills");
-        createBoard(BoardUtil.PLAYER_KILLED_BOARD_ID, BoardUtil.PLAYER_KILLED_BOARD_NAME, BoardUtil.PLAYER_KILLED_BOARD_DESCRIPTION, 100, "kills");
-        createBoard(BoardUtil.ORES_MINED_BOARD_ID, BoardUtil.ORES_MINED_BOARD_NAME, BoardUtil.ORES_MINED_BOARD_DESCRIPTION, 100, "ores");
-        createBoard(BoardUtil.ECONOMY_BOARD_SERVICE_ID, BoardUtil.ECONOMY_BOARD_SERVICE_NAME, BoardUtil.ECONOMY_BOARD_SERVICE_DESCRIPTION, 100, "$");
+        createBoard(BoardUtil.MOB_KILLED_BOARD_ID, BoardUtil.MOB_KILLED_BOARD_NAME, BoardUtil.MOB_KILLED_BOARD_DESCRIPTION, 100, "kills", true);
+        createBoard(BoardUtil.PLAYER_KILLED_BOARD_ID, BoardUtil.PLAYER_KILLED_BOARD_NAME, BoardUtil.PLAYER_KILLED_BOARD_DESCRIPTION, 100, "kills", true);
+        createBoard(BoardUtil.ORES_MINED_BOARD_ID, BoardUtil.ORES_MINED_BOARD_NAME, BoardUtil.ORES_MINED_BOARD_DESCRIPTION, 100, "ores", true);
+        createBoard(BoardUtil.ECONOMY_BOARD_SERVICE_ID, BoardUtil.ECONOMY_BOARD_SERVICE_NAME, BoardUtil.ECONOMY_BOARD_SERVICE_DESCRIPTION, 100, "$", true);
         EconomyBoardTask.scheduleEconomy();
     }
 
     @Override
-    public Board createBoard(String id, String name, String description, int maxShownPlayers, String userScoreName) {
-        ERBoard board = new ERBoard(id, name, description, maxShownPlayers, userScoreName);
+    public Board createBoard(String id, String name, String description, int maxShownPlayers, String userScoreName, boolean isDefault) {
+        ERBoard board = new ERBoard(id, name, description, maxShownPlayers, userScoreName, isDefault);
         boardsList.add(board);
         boardData.put(board, new ArrayList<>());
         ERRewardService.getInstance().registerBoard(board);
@@ -73,6 +76,18 @@ public class ERBoardService implements BoardService {
     @Override
     public void modifyBoardSuffix(Board board, String suffix) {
         board.setUserScoreName(suffix);
+    }
+
+    @Override
+    public void deleteBoard(Board board) {
+        /* Removes the board from the database */
+        Storage storage = StorageFactory.getInstance();
+        storage.getStorageMethod().deleteBoard(board.getId());
+        /* Removes all rewards from the board */
+        RewardService rewardService = ERRewardService.getInstance();
+        rewardService.deleteBoardRewards(board);
+        /* Removes the board */
+        boardsList.remove(board);
     }
 
     @Override

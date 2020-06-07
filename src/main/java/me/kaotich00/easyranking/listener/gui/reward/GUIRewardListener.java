@@ -150,7 +150,7 @@ public class GUIRewardListener implements Listener, ConversationAbandonedListene
                     ChatFormatter.formatSuccessMessage(
                         "Board: " + ChatColor.GOLD + board.getId() +
                         ChatColor.GREEN + " - Successfully added " +
-                        ChatColor.GOLD + reward.getItemMeta().getLocalizedName() + " " +
+                        ChatColor.GOLD + reward.getType().getKey().getKey() + " " +
                         ChatColor.GOLD + reward.getItemMeta().getDisplayName() +
                         ChatColor.GREEN + " x " +
                         ChatColor.GOLD + reward.getAmount() +

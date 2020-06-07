@@ -20,4 +20,6 @@ public interface Board {
 
     void setUserScoreName(String userScoreName);
 
+    boolean isDefault();
+
 }

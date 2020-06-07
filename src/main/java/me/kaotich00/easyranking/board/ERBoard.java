@@ -11,13 +11,15 @@ public class ERBoard implements Board {
     private String description;
     private int maxShownPlayers;
     private String userScoreName;
+    private boolean isDefault;
 
-    public ERBoard(String id, String name, String description, int maxShownPlayers, String userScoreName) {
+    public ERBoard(String id, String name, String description, int maxShownPlayers, String userScoreName, boolean isDefault) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.maxShownPlayers = maxShownPlayers;
         this.userScoreName = userScoreName;
+        this.isDefault = isDefault;
     }
 
     @Override
@@ -63,6 +65,11 @@ public class ERBoard implements Board {
     @Override
     public void setUserScoreName(String userScoreName) {
         this.userScoreName = userScoreName;
+    }
+
+    @Override
+    public boolean isDefault() {
+        return this.isDefault;
     }
 
     @Override

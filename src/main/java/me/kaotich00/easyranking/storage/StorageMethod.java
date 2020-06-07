@@ -1,6 +1,7 @@
 package me.kaotich00.easyranking.storage;
 
 import me.kaotich00.easyranking.Easyranking;
+import me.kaotich00.easyranking.api.board.Board;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -28,5 +29,7 @@ public interface StorageMethod {
     void saveBoardRewards();
 
     void loadBoardRewards();
+
+    void deleteBoard(String boardId);
 
 }
