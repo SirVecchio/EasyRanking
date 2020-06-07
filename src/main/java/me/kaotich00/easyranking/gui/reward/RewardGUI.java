@@ -7,6 +7,7 @@ import me.kaotich00.easyranking.service.ERRewardService;
 import me.kaotich00.easyranking.utils.GUIUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -78,8 +79,18 @@ public class RewardGUI {
         Inventory GUI = Bukkit.createInventory(null, GUIUtil.REWARD_SELECT_ITEMS_INVENTORY_SIZE, GUIUtil.REWARD_SELECT_ITEMS_TITLE);
         List<Reward> rewardsList = ERRewardService.getInstance().getItemRewardsByPosition( board, this.rankPlace );
 
+        GUI.setItem(GUIUtil.REWARD_ITEM_INFO_SLOT, itemRewardInfoMenu());
+        GUI.setItem(1, new ItemStack(Material.CYAN_STAINED_GLASS_PANE));
+        GUI.setItem(2, new ItemStack(Material.CYAN_STAINED_GLASS_PANE));
+        GUI.setItem(3, new ItemStack(Material.CYAN_STAINED_GLASS_PANE));
+        GUI.setItem(GUIUtil.REWARD_ITEM_TITLE_SLOT, itemRewardTitleMenu());
+        GUI.setItem(5, new ItemStack(Material.CYAN_STAINED_GLASS_PANE));
+        GUI.setItem(6, new ItemStack(Material.CYAN_STAINED_GLASS_PANE));
+        GUI.setItem(7, new ItemStack(Material.CYAN_STAINED_GLASS_PANE));
+        GUI.setItem(GUIUtil.REWARD_ITEM_BACK_SLOT, itemRewardConfirmMenu());
+
         if( rewardsList != null ) {
-            int currentSlot = 0;
+            int currentSlot = 9;
             for( Reward reward : rewardsList ) {
                 GUI.setItem(currentSlot, ((ERItemReward) reward).getReward());
                 currentSlot++;
@@ -166,6 +177,25 @@ public class RewardGUI {
     private ItemStack rtCloseMenu(){
         String[] lores = new String[] {};
         return GUIUtil.prepareMenuPoint(GUIUtil.REWARD_PS_CLOSE_MATERIAL,ChatColor.RED + "Back", lores );
+    }
+
+    private ItemStack itemRewardTitleMenu(){
+        String[] lores = new String[] {};
+        return GUIUtil.prepareMenuPoint(GUIUtil.REWARD_ITEM_SELECTION_TITLE_MATERIAL,ChatColor.GOLD + "Board: " + board.getName(), lores );
+    }
+
+    private ItemStack itemRewardInfoMenu(){
+        String[] lores = new String[] {
+                ChatColor.GRAY + "Drag and drop an item",
+                ChatColor.GRAY + "in the slots below to",
+                ChatColor.GRAY + "add it as a reward",
+        };
+        return GUIUtil.prepareMenuPoint(GUIUtil.REWARD_ITEM_SELECTION_INFO_MATERIAL,ChatColor.RED + "Info", lores );
+    }
+
+    private ItemStack itemRewardConfirmMenu(){
+        String[] lores = new String[] {};
+        return GUIUtil.prepareMenuPoint(GUIUtil.REWARD_ITEM_SELECTION_CONFIRM_MATERIAL,ChatColor.GREEN + "Confirm", lores );
     }
 
 }

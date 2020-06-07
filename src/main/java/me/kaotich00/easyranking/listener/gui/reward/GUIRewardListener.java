@@ -42,12 +42,21 @@ public class GUIRewardListener implements Listener, ConversationAbandonedListene
 
         switch(event.getView().getTitle()) {
             case GUIUtil.REWARD_TS_INVENTORY_TITLE:
-                handleTypeSelectionGUI((Player)event.getWhoClicked(), event.getCurrentItem().getType());
+                if(event.getRawSlot() <= event.getInventory().getSize()) {
+                    handleClickTypeSelection((Player) event.getWhoClicked(), event.getCurrentItem().getType());
+                }
                 event.setCancelled(true);
                 break;
             case GUIUtil.REWARD_PS_INVENTORY_TITLE:
-                handlePositionSelectionGUI((Player)event.getWhoClicked(), event.getCurrentItem().getType());
+                if(event.getRawSlot() <= event.getInventory().getSize()) {
+                    handleClickPositionSelection((Player) event.getWhoClicked(), event.getCurrentItem().getType());
+                }
                 event.setCancelled(true);
+                break;
+            case GUIUtil.REWARD_SELECT_ITEMS_TITLE:
+                handleClickItemReward((Player) event.getWhoClicked(), event.getCurrentItem().getType());
+                if( event.getRawSlot() >= 0 && event.getRawSlot() <= 8 )
+                    event.setCancelled(true);
                 break;
             default:
                 return;
@@ -57,12 +66,12 @@ public class GUIRewardListener implements Listener, ConversationAbandonedListene
     private void dispatchCloseEvent(InventoryCloseEvent event) {
         switch(event.getView().getTitle()) {
             case GUIUtil.REWARD_SELECT_ITEMS_TITLE:
-                handleItemRewardSelection((Player) event.getPlayer(), event.getInventory());
+                handleCloseItemReward((Player) event.getPlayer());
                 break;
         }
     }
 
-    private void handlePositionSelectionGUI(Player player, Material clickedMenu) {
+    private void handleClickPositionSelection(Player player, Material clickedMenu) {
         RewardService rewardService = ERRewardService.getInstance();
         switch( clickedMenu ) {
             /* Close menu */
@@ -91,7 +100,7 @@ public class GUIRewardListener implements Listener, ConversationAbandonedListene
         }
     }
 
-    private void handleTypeSelectionGUI(Player player, Material clickedMenu) {
+    private void handleClickTypeSelection(Player player, Material clickedMenu) {
         RewardService rewardService = ERRewardService.getInstance();
         Board board = rewardService.getBoardFromModifyingPlayer(player.getUniqueId());
         int rewardRank = rewardService.getItemSelectionRankFromModifyingPlayer(player.getUniqueId());
@@ -137,32 +146,51 @@ public class GUIRewardListener implements Listener, ConversationAbandonedListene
         }
     }
 
-    private void handleItemRewardSelection(Player player, Inventory inventory) {
+    private void handleClickItemReward(Player player, Material clickedMenu) {
+        switch( clickedMenu ) {
+            /* Back arrow */
+            case EMERALD:
+                RewardService rewardService = ERRewardService.getInstance();
+                Board board = rewardService.getBoardFromModifyingPlayer(player.getUniqueId());
+                int rewardRank = rewardService.getItemSelectionRankFromModifyingPlayer(player.getUniqueId());
+
+                addItemRewards(player, player.getOpenInventory().getTopInventory());
+                RewardGUI prevGui = new RewardGUI(player, board, rewardRank);
+                prevGui.openGUI(GUIUtil.REWARD_TS_STEP);
+                player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 10, 1);
+                break;
+        }
+    }
+
+    private void addItemRewards(Player player, Inventory inventory) {
         RewardService rewardService = ERRewardService.getInstance();
         Board board = rewardService.getBoardFromModifyingPlayer(player.getUniqueId());
         int rewardRank = rewardService.getItemSelectionRankFromModifyingPlayer(player.getUniqueId());
         rewardService.clearItemReward(board, rewardRank);
 
-        for( ItemStack reward : inventory.getContents() ) {
+        for( int i = 9; i < inventory.getSize(); i++ ) {
+            ItemStack reward = inventory.getItem(i);
             if( reward != null ) {
                 rewardService.newItemReward(reward.clone(), board, rewardRank);
                 player.sendMessage(
-                    ChatFormatter.formatSuccessMessage(
-                        "Board: " + ChatColor.GOLD + board.getId() +
-                        ChatColor.GREEN + " - Successfully added " +
-                        ChatColor.GOLD + reward.getType().getKey().getKey() + " " +
-                        ChatColor.GOLD + reward.getItemMeta().getDisplayName() +
-                        ChatColor.GREEN + " x " +
-                        ChatColor.GOLD + reward.getAmount() +
-                        ChatColor.GREEN + " for rank position " + ChatColor.GOLD + rewardRank
-                    )
+                        ChatFormatter.formatSuccessMessage(
+                                "Board: " + ChatColor.GOLD + board.getId() +
+                                        ChatColor.GREEN + " - Successfully added " +
+                                        ChatColor.GOLD + reward.getType().getKey().getKey() + " " +
+                                        ChatColor.GOLD + reward.getItemMeta().getDisplayName() +
+                                        ChatColor.GREEN + " x " +
+                                        ChatColor.GOLD + reward.getAmount() +
+                                        ChatColor.GREEN + " for rank position " + ChatColor.GOLD + rewardRank
+                        )
                 );
             }
         }
+    }
 
-        player.playSound(player.getLocation(),Sound.ENTITY_EXPERIENCE_ORB_PICKUP,10,1);
-        rewardService.removeItemSelectionRank(player.getUniqueId());
-        rewardService.removeModifyingPlayer(player.getUniqueId());
+    private void handleCloseItemReward(Player player) {
+        /*RewardService rewardService = ERRewardService.getInstance();
+        Board board = rewardService.getBoardFromModifyingPlayer(player.getUniqueId());
+        int rewardRank = rewardService.getItemSelectionRankFromModifyingPlayer(player.getUniqueId());*/
     }
 
     @Override

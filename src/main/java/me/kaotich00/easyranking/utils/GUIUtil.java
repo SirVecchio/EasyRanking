@@ -65,6 +65,14 @@ public class GUIUtil {
     public static final String REWARD_SELECT_ITEMS_TITLE = "Select item rewards";
     public static int REWARD_SELECT_ITEMS_INVENTORY_SIZE = 45;
 
+    public static final int REWARD_ITEM_INFO_SLOT = 0;
+    public static final int REWARD_ITEM_TITLE_SLOT = 4;
+    public static final int REWARD_ITEM_BACK_SLOT = 8;
+
+    public static final Material REWARD_ITEM_SELECTION_INFO_MATERIAL = Material.PAPER;
+    public static final Material REWARD_ITEM_SELECTION_TITLE_MATERIAL = Material.NETHER_STAR;
+    public static final Material REWARD_ITEM_SELECTION_CONFIRM_MATERIAL = Material.EMERALD;
+
     /**********************/
     /* Global GUI Methods */
     /**********************/
