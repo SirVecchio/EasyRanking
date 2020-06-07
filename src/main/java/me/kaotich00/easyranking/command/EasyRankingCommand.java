@@ -2,10 +2,8 @@ package me.kaotich00.easyranking.command;
 
 import me.kaotich00.easyranking.api.board.Board;
 import me.kaotich00.easyranking.api.service.BoardService;
-import me.kaotich00.easyranking.command.admin.board.CollectCommand;
-import me.kaotich00.easyranking.command.admin.board.CreateCommand;
-import me.kaotich00.easyranking.command.admin.board.RewardCommand;
-import me.kaotich00.easyranking.command.admin.board.ScoreCommand;
+import me.kaotich00.easyranking.command.admin.board.*;
+import me.kaotich00.easyranking.command.user.InfoCommand;
 import me.kaotich00.easyranking.service.ERBoardService;
 import me.kaotich00.easyranking.utils.ChatFormatter;
 import me.kaotich00.easyranking.utils.CommandTypes;
@@ -40,6 +38,18 @@ public class EasyRankingCommand implements TabExecutor {
                 result = CreateCommand.executeCommand(sender, command, label, args);
                 break;
 
+            case CommandTypes.DELETE_COMMAND:
+                result = DeleteCommand.executeCommand(sender, command, label, args);
+                break;
+
+            case CommandTypes.MODIFY_COMMAND:
+                result = ModifyCommand.executeCommand(sender, command, label, args);
+                break;
+
+            case CommandTypes.INFO_COMMAND:
+                result = InfoCommand.executeCommand(sender, command, label, args);
+                break;
+
             case CommandTypes.REWARD_COMMAND:
                 result = RewardCommand.executeCommand(sender, command, label, args);
                 break;
@@ -63,12 +73,16 @@ public class EasyRankingCommand implements TabExecutor {
         /* Suggest child commands */
         if( args.length == 1 ) {
             argsIndex = args[0];
-            suggestions.add("help");
+            /* Admin commands */
             suggestions.add("create");
             suggestions.add("modify");
+            suggestions.add("delete");
             suggestions.add("score");
             suggestions.add("reward");
             suggestions.add("collect");
+            /* User commands */
+            suggestions.add("help");
+            suggestions.add("info");
         }
 
         /* Suggest Boards names */
@@ -84,11 +98,21 @@ public class EasyRankingCommand implements TabExecutor {
         }
 
         /* Suggest add/subtract for score command */
-        if(args.length == 3 && args[0].equals(CommandTypes.SCORE_COMMAND)) {
+        if(args.length == 3) {
             argsIndex = args[2];
-            suggestions.add("add");
-            suggestions.add("subtract");
-            suggestions.add("set");
+            switch(args[0]) {
+                case CommandTypes.SCORE_COMMAND:
+                    suggestions.add("add");
+                    suggestions.add("subtract");
+                    suggestions.add("set");
+                    break;
+                case CommandTypes.MODIFY_COMMAND:
+                    suggestions.add("name");
+                    suggestions.add("description");
+                    suggestions.add("maxShownPlayers");
+                    suggestions.add("suffix");
+                    break;
+            }
         }
 
         /* Suggest player name for score command */

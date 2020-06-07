@@ -56,6 +56,26 @@ public class ERBoardService implements BoardService {
     }
 
     @Override
+    public void modifyBoardName(Board board, String name) {
+        board.setName(name);
+    }
+
+    @Override
+    public void modifyBoardDescription(Board board, String description) {
+        board.setDescription(description);
+    }
+
+    @Override
+    public void modifyBoardMaxShownPlayers(Board board, Integer maxShownPlayers) {
+        board.setMaxShownPlayers(maxShownPlayers);
+    }
+
+    @Override
+    public void modifyBoardSuffix(Board board, String suffix) {
+        board.setUserScoreName(suffix);
+    }
+
+    @Override
     public Set<Board> getBoards() {
         return this.boardsList;
     }
@@ -63,6 +83,17 @@ public class ERBoardService implements BoardService {
     @Override
     public Optional<Board> getBoardById(String id) {
         return boardsList.stream().filter(board -> board.getId().equals(id)).findFirst();
+    }
+
+    @Override
+    public List<String> getBoardInfo(Board board) {
+        List<String> info = new ArrayList<>();
+        info.add(ChatColor.GREEN + "ID" + ": " + ChatColor.RESET + board.getId());
+        info.add(ChatColor.GREEN + "Name" +  ": " + ChatColor.RESET + board.getName());
+        info.add(ChatColor.GREEN + "Description" + ": " + ChatColor.RESET + board.getDescription());
+        info.add(ChatColor.GREEN + "Max shown players" + ": " + ChatColor.RESET + board.getMaxShownPlayers());
+        info.add(ChatColor.GREEN + "Score suffix" + ": " + ChatColor.RESET + board.getUserScoreName());
+        return info;
     }
 
     @Override
@@ -108,8 +139,7 @@ public class ERBoardService implements BoardService {
 
         player.sendMessage(
                 (ChatFormatter.formatSuccessMessage(
-                        ChatColor.DARK_GRAY +
-                        "[" + ChatColor.DARK_AQUA + board.getName() + ChatColor.DARK_GRAY + "] " +
+                        ChatColor.DARK_GRAY + "[" + ChatColor.DARK_AQUA + board.getName() + ChatColor.DARK_GRAY + "] " +
                         ChatColor.GRAY + "(" + ChatColor.GREEN + "+" + score.intValue() + " " + board.getUserScoreName() + ChatColor.GRAY + ")" +
                         ChatColor.DARK_GRAY + " |" +
                         ChatColor.GRAY + " New score: " +

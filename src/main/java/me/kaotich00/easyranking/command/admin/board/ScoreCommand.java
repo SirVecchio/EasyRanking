@@ -34,7 +34,7 @@ public class ScoreCommand {
 
         String scoreOperator = args[2];
         if(!isValidScoreOperator(scoreOperator)) {
-            sender.sendMessage(ChatFormatter.formatErrorMessage("Not a valid operator, allower operators: add/subtract" ));
+            sender.sendMessage(ChatFormatter.formatErrorMessage("Not a valid operator, allowed operators: add/subtract" ));
             return CommandTypes.COMMAND_SUCCESS;
         }
 

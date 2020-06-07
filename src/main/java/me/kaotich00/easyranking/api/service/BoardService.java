@@ -13,9 +13,19 @@ public interface BoardService {
 
     Board createBoard(String id, String name, String description, int maxShownPlayers, String userScoreName);
 
+    void modifyBoardName(Board board, String name);
+
+    void modifyBoardDescription(Board board, String description);
+
+    void modifyBoardMaxShownPlayers(Board board, Integer maxShownPlayers);
+
+    void modifyBoardSuffix(Board board, String suffix);
+
     Set<Board> getBoards();
 
     Optional<Board> getBoardById(String name);
+
+    List<String> getBoardInfo(Board board);
 
     boolean isIdAlreadyUsed(String name);
 

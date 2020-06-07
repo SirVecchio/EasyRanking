@@ -10,5 +10,8 @@ public class CommandTypes {
     public static final String REWARD_COMMAND = "reward";
     public static final String SCORE_COMMAND = "score";
     public static final String COLLECT_COMMAND = "collect";
+    public static final String MODIFY_COMMAND = "modify";
+    public static final String DELETE_COMMAND = "delete";
+    public static final String INFO_COMMAND = "info";
 
 }
