@@ -16,12 +16,9 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.sql.Connection;
-
 public final class Easyranking extends JavaPlugin {
 
-    static FileConfiguration defaultConfig;
-    private Connection connection;
+    public static FileConfiguration defaultConfig;
     public static Economy economyService;
 
     @Override
@@ -52,10 +49,6 @@ public final class Easyranking extends JavaPlugin {
     @Override
     public void onDisable() {
         shutdownStorage();
-    }
-
-    public void disablePlugin() {
-        this.getPluginLoader().disablePlugin(this);
     }
 
     private void loadConfiguration() {
@@ -107,16 +100,13 @@ public final class Easyranking extends JavaPlugin {
         return defaultConfig;
     }
 
-    public Connection getConnection() {
-        return this.connection;
-    }
-
-    public void setConnection(Connection connection) {
-        this.connection = connection;
-    }
-
     public static Economy getEconomy() {
         return economyService;
+    }
+
+    public void reloadDefaultConfig() {
+        reloadConfig();
+        defaultConfig = getConfig();
     }
 
 }

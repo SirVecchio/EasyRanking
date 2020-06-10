@@ -61,6 +61,10 @@ public class EasyRankingCommand implements TabExecutor {
             case CommandTypes.COLLECT_COMMAND:
                 result = CollectCommand.executeCommand(sender, command, label, args);
                 break;
+
+            case CommandTypes.RELOAD_COMMAND:
+                result = ReloadCommand.executeCommand(sender, command, label, args);
+                break;
         }
         return result;
     }
@@ -80,6 +84,7 @@ public class EasyRankingCommand implements TabExecutor {
             suggestions.add("score");
             suggestions.add("reward");
             suggestions.add("collect");
+            suggestions.add("reload");
             /* User commands */
             suggestions.add("help");
             suggestions.add("info");
