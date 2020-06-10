@@ -11,6 +11,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -59,13 +61,17 @@ public class OresMinedListener implements Listener {
 
         Board board = optionalBoard.get();
 
-        // TODO - CUSTOM ORE VALUES FROM CONFIG
+        FileConfiguration defaultConfig = Easyranking.getDefaultConfig();
+        ConfigurationSection oreSection = defaultConfig.getConfigurationSection("oresMined.values");
+        String minedOre = event.getBlock().getType().name();
+
+        Integer score = oreSection.contains(minedOre) ? defaultConfig.getInt("oresMined.values." + minedOre) : 1;
 
         if(!boardService.getUserData(board,player).isPresent()) {
             boardService.createUserData(board,player);
         }
 
-        boardService.addScoreToPlayer(board, player, 1f);
+        boardService.addScoreToPlayer(board, player, score.floatValue());
     }
 
     @EventHandler

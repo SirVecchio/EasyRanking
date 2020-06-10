@@ -148,7 +148,7 @@ public class GUIRewardListener implements Listener, ConversationAbandonedListene
 
     private void handleClickItemReward(Player player, Material clickedMenu) {
         switch( clickedMenu ) {
-            /* Back arrow */
+            /* Confirm item rewards */
             case EMERALD:
                 RewardService rewardService = ERRewardService.getInstance();
                 Board board = rewardService.getBoardFromModifyingPlayer(player.getUniqueId());

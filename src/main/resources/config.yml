@@ -29,3 +29,45 @@ database: 'easyranking'
 username: 'username'
 password: 'password'
 
+# +----------------------------------------------------------------------------------------------+ #
+# |                                                                                              | #
+# |                                       BOARDS SETTINGS                                        | #
+# |                                                                                              | #
+# |                               Configure Default Leaderboards                                 | #
+# |                                                                                              | #
+# +----------------------------------------------------------------------------------------------+ #
+
+# MOB KILLED LEADERBOARD
+# Please never ever change the leaderboard node name,
+# unless you want very big trouble
+mobKilled:
+  # Wheter the leaderboard should be enabled or not (default: true)
+  enabled: true
+
+#PLAYER KILLED LEADERBOARD
+# Please never ever change the leaderboard node name,
+# unless you want very big trouble
+playerKilled:
+  enabled: true
+
+#ECONOMY LEADERBOARD
+# Please never ever change the leaderboard node name,
+# unless you want very big trouble
+economy:
+  enabled: true
+
+#ORES MINED LEADERBOARD
+# Please never ever change the leaderboard node name,
+# unless you want very big trouble
+oresMined:
+  enabled: true
+  # Define the amount of points given for each ore type
+  values:
+    EMERALD_ORE: 10
+    DIAMOND_ORE: 8
+    LAPIS_ORE: 5
+    GOLD_ORE: 5
+    IRON_ORE: 3
+    REDSTONE_ORE: 2
+    COAL_ORE: 1
+    NETHER_QUARTZ_ORE: 1

@@ -1,5 +1,6 @@
 package me.kaotich00.easyranking.service;
 
+import me.kaotich00.easyranking.Easyranking;
 import me.kaotich00.easyranking.api.board.Board;
 import me.kaotich00.easyranking.api.data.UserData;
 import me.kaotich00.easyranking.api.service.BoardService;
@@ -14,6 +15,7 @@ import me.kaotich00.easyranking.utils.ChatFormatter;
 import me.kaotich00.easyranking.utils.RankPositionComparator;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import java.util.*;
@@ -42,10 +44,19 @@ public class ERBoardService implements BoardService {
 
     @Override
     public void initDefaultBoards() {
-        createBoard(BoardUtil.MOB_KILLED_BOARD_ID, BoardUtil.MOB_KILLED_BOARD_NAME, BoardUtil.MOB_KILLED_BOARD_DESCRIPTION, 100, "kills", true);
-        createBoard(BoardUtil.PLAYER_KILLED_BOARD_ID, BoardUtil.PLAYER_KILLED_BOARD_NAME, BoardUtil.PLAYER_KILLED_BOARD_DESCRIPTION, 100, "kills", true);
-        createBoard(BoardUtil.ORES_MINED_BOARD_ID, BoardUtil.ORES_MINED_BOARD_NAME, BoardUtil.ORES_MINED_BOARD_DESCRIPTION, 100, "ores", true);
-        createBoard(BoardUtil.ECONOMY_BOARD_SERVICE_ID, BoardUtil.ECONOMY_BOARD_SERVICE_NAME, BoardUtil.ECONOMY_BOARD_SERVICE_DESCRIPTION, 100, "$", true);
+        FileConfiguration defaultConfig = Easyranking.getDefaultConfig();
+        if( defaultConfig.getBoolean("mobKilled.enabled") ) {
+            createBoard(BoardUtil.MOB_KILLED_BOARD_ID, BoardUtil.MOB_KILLED_BOARD_NAME, BoardUtil.MOB_KILLED_BOARD_DESCRIPTION, 100, "kills", true);
+        }
+        if( defaultConfig.getBoolean("playerKilled.enabled") ) {
+            createBoard(BoardUtil.PLAYER_KILLED_BOARD_ID, BoardUtil.PLAYER_KILLED_BOARD_NAME, BoardUtil.PLAYER_KILLED_BOARD_DESCRIPTION, 100, "kills", true);
+        }
+        if( defaultConfig.getBoolean("economy.enabled") ) {
+            createBoard(BoardUtil.ECONOMY_BOARD_SERVICE_ID, BoardUtil.ECONOMY_BOARD_SERVICE_NAME, BoardUtil.ECONOMY_BOARD_SERVICE_DESCRIPTION, 100, "$", true);
+        }
+        if( defaultConfig.getBoolean("oresMined.enabled") ) {
+            createBoard(BoardUtil.ORES_MINED_BOARD_ID, BoardUtil.ORES_MINED_BOARD_NAME, BoardUtil.ORES_MINED_BOARD_DESCRIPTION, 100, "ores", true);
+        }
         EconomyBoardTask.scheduleEconomy();
     }
 

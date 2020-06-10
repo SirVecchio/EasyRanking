@@ -28,8 +28,8 @@ import java.util.stream.Collectors;
 
 public class SqlStorage implements StorageMethod {
 
-    private static final String BOARD_INSERT_OR_UPDATE = "INSERT INTO easyranking_board(`id`,`name`,`description`,`max_players`,`user_score_name`,`is_visible`,`is_deleted`) VALUES (?,?,?,?,?,true,false) ON DUPLICATE KEY UPDATE `id`=`id`";
-    private static final String BOARD_SELECT = "SELECT * FROM easyranking_board WHERE is_deleted = false";
+    private static final String BOARD_INSERT_OR_UPDATE = "INSERT INTO easyranking_board(`id`,`name`,`description`,`max_players`,`user_score_name`,`is_visible`,`is_deleted`,`is_default`) VALUES (?,?,?,?,?,true,false,?) ON DUPLICATE KEY UPDATE `id`=`id`";
+    private static final String BOARD_SELECT = "SELECT * FROM easyranking_board WHERE is_deleted = false AND is_default = false";
     private static final String BOARD_DELETE = "DELETE FROM easyranking_board WHERE id = ?";
 
     private static final String BOARD_ITEM_REWARD_DELETE = "DELETE FROM easyranking_item_reward WHERE id_board = ?";
@@ -213,6 +213,7 @@ public class SqlStorage implements StorageMethod {
                 preparedStatement.setString(3, b.getDescription());
                 preparedStatement.setInt(4, b.getMaxShownPlayers());
                 preparedStatement.setString(5, b.getUserScoreName());
+                preparedStatement.setBoolean(6, b.isDefault());
                 preparedStatement.executeUpdate();
             }
             preparedStatement.close();
