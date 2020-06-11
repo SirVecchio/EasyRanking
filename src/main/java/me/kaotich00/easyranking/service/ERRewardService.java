@@ -117,7 +117,11 @@ public class ERRewardService implements RewardService {
                 } else {
                     Bukkit.getServer().broadcastMessage(ChatColor.YELLOW + String.valueOf(position) + "." + ChatColor.GOLD + " " + player.getPlayerListName() + ChatColor.DARK_GRAY + " (" + ChatColor.GREEN + board.getUserScore(playerUUID).get().intValue() + " " + board.getUserScoreName() + ChatColor.DARK_GRAY + ")");
                 }
+
                 List<Reward> rewardsList = getRewardsByPosition(board, position);
+                if( rewardsList == null ) {
+                    continue;
+                }
 
                 for( Reward reward : rewardsList ) {
                     if (reward instanceof ERItemReward) {
@@ -150,21 +154,33 @@ public class ERRewardService implements RewardService {
 
     @Override
     public List<Reward> getRewardsByPosition(Board board, int position) {
+        if( !rewardData.containsKey(board) ) {
+            return null;
+        }
         return rewardData.get(board).stream().filter(r -> r.getRankingPosition() == position).collect(Collectors.toList());
     }
 
     @Override
     public List<Reward> getItemRewardsByPosition(Board board, int position) {
+        if( !rewardData.containsKey(board) ) {
+            return null;
+        }
         return rewardData.get(board).stream().filter(r -> (r.getRewardType() == GUIUtil.ITEM_TYPE && r.getRankingPosition() == position )).collect(Collectors.toList());
     }
 
     @Override
     public Optional<Reward> getMoneyRewardByPosition(Board board, int position) {
+        if( !rewardData.containsKey(board) ) {
+            return null;
+        }
         return rewardData.get(board).stream().filter(r -> (r.getRewardType() == GUIUtil.MONEY_TYPE && r.getRankingPosition() == position )).findFirst();
     }
 
     @Override
     public Optional<Reward> getTitleRewardByPosition(Board board, int position) {
+        if( !rewardData.containsKey(board) ) {
+            return null;
+        }
         return rewardData.get(board).stream().filter(r -> (r.getRewardType() == GUIUtil.TITLE_TYPE && r.getRankingPosition() == position )).findFirst();
     }
 
