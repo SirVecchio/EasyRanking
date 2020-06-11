@@ -5,9 +5,6 @@ import me.kaotich00.easyranking.api.board.Board;
 import me.kaotich00.easyranking.api.service.BoardService;
 import me.kaotich00.easyranking.service.ERBoardService;
 import me.kaotich00.easyranking.utils.BoardUtil;
-import me.kaotich00.easyranking.utils.ChatFormatter;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -66,11 +63,6 @@ public class OresMinedListener implements Listener {
         String minedOre = event.getBlock().getType().name();
 
         Integer score = oreSection.contains(minedOre) ? defaultConfig.getInt("oresMined.values." + minedOre) : 1;
-
-        if(!boardService.getUserData(board,player).isPresent()) {
-            boardService.createUserData(board,player);
-        }
-
         boardService.addScoreToPlayer(board, player, score.floatValue());
     }
 

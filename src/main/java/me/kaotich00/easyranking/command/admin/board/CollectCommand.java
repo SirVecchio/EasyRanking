@@ -1,7 +1,6 @@
 package me.kaotich00.easyranking.command.admin.board;
 
 import me.kaotich00.easyranking.api.board.Board;
-import me.kaotich00.easyranking.api.data.UserData;
 import me.kaotich00.easyranking.api.service.BoardService;
 import me.kaotich00.easyranking.api.service.RewardService;
 import me.kaotich00.easyranking.service.ERBoardService;

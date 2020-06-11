@@ -1,9 +1,7 @@
 package me.kaotich00.easyranking.storage.sql;
 
-import com.google.gson.Gson;
 import me.kaotich00.easyranking.Easyranking;
 import me.kaotich00.easyranking.api.board.Board;
-import me.kaotich00.easyranking.api.data.UserData;
 import me.kaotich00.easyranking.api.reward.Reward;
 import me.kaotich00.easyranking.api.service.BoardService;
 import me.kaotich00.easyranking.api.service.RewardService;
@@ -191,7 +189,7 @@ public class SqlStorage implements StorageMethod {
 
                         Optional<Board> boardOptional = boardService.getBoardById(boardId);
                         if( boardOptional.isPresent() ) {
-                            boardService.createUserData(boardOptional.get(), Bukkit.getOfflinePlayer(uuid), amount);
+                            boardService.initUserScore(boardOptional.get(), Bukkit.getOfflinePlayer(uuid), amount);
                         }
                     }
                 }
@@ -229,22 +227,23 @@ public class SqlStorage implements StorageMethod {
 
             PreparedStatement userInsert = c.prepareStatement(USER_INSERT_OR_UPDATE);
             PreparedStatement userScoreInsert = c.prepareStatement(USER_SCORE_INSERT_OR_UPDATE);
-            for (Map.Entry<Board, List<UserData>> data : boardService.getBoardData().entrySet()) {
-                Board board = data.getKey();
-                List<UserData> userData = data.getValue();
-                for (UserData ud : userData) {
-                    String nickname = ud.getNickname();
-                    UUID uuid = ud.getUniqueId();
-                    float amount = ud.getScore();
+            for (Board board : boardService.getBoards()) {
+                Iterator iterator = board.getAllScores().entrySet().iterator();
+                while( iterator.hasNext() ) {
+                    Map.Entry pair = (Map.Entry)iterator.next();
+                    UUID playerUUID = (UUID)pair.getKey();
+                    Float score = (Float)pair.getValue();
 
-                    userInsert.setString(1, uuid.toString());
-                    userInsert.setString(2, nickname);
+                    String playerName = Bukkit.getPlayer(playerUUID) != null ? Bukkit.getPlayer(playerUUID).getPlayerListName() : Bukkit.getOfflinePlayer(playerUUID).getName();
+
+                    userInsert.setString(1, playerUUID.toString());
+                    userInsert.setString(2, playerName);
                     userInsert.executeUpdate();
 
-                    userScoreInsert.setString(1, uuid.toString());
+                    userScoreInsert.setString(1, playerUUID.toString());
                     userScoreInsert.setString(2, board.getId());
-                    userScoreInsert.setFloat(3, amount);
-                    userScoreInsert.setFloat(4, amount);
+                    userScoreInsert.setFloat(3, score);
+                    userScoreInsert.setFloat(4, score);
                     userScoreInsert.executeUpdate();
                 }
             }

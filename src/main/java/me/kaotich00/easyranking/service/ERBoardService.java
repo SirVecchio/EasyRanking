@@ -2,17 +2,15 @@ package me.kaotich00.easyranking.service;
 
 import me.kaotich00.easyranking.Easyranking;
 import me.kaotich00.easyranking.api.board.Board;
-import me.kaotich00.easyranking.api.data.UserData;
 import me.kaotich00.easyranking.api.service.BoardService;
 import me.kaotich00.easyranking.api.service.RewardService;
 import me.kaotich00.easyranking.board.ERBoard;
-import me.kaotich00.easyranking.data.ERUserData;
 import me.kaotich00.easyranking.storage.Storage;
 import me.kaotich00.easyranking.storage.StorageFactory;
 import me.kaotich00.easyranking.task.EconomyBoardTask;
 import me.kaotich00.easyranking.utils.BoardUtil;
 import me.kaotich00.easyranking.utils.ChatFormatter;
-import me.kaotich00.easyranking.utils.RankPositionComparator;
+import me.kaotich00.easyranking.utils.SortUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -24,14 +22,12 @@ public class ERBoardService implements BoardService {
 
     private static ERBoardService boardServiceInstance;
     private Set<Board> boardsList;
-    private Map<Board, List<UserData>> boardData;
 
     private ERBoardService() {
         if (boardServiceInstance != null){
             throw new RuntimeException("Use getInstance() method to get the single instance of this class.");
         }
         this.boardsList = new HashSet<>();
-        this.boardData = new HashMap<>();
         initDefaultBoards();
     }
 
@@ -64,7 +60,6 @@ public class ERBoardService implements BoardService {
     public Board createBoard(String id, String name, String description, int maxShownPlayers, String userScoreName, boolean isDefault) {
         ERBoard board = new ERBoard(id, name, description, maxShownPlayers, userScoreName, isDefault);
         boardsList.add(board);
-        boardData.put(board, new ArrayList<>());
         ERRewardService.getInstance().registerBoard(board);
         return board;
     }
@@ -128,40 +123,30 @@ public class ERBoardService implements BoardService {
     }
 
     @Override
-    public Optional<UserData> getUserData(Board board, Player player) {
-        return boardData.get(board).stream().filter(userData -> userData.getUniqueId().equals(player.getUniqueId())).findFirst();
+    public List<UUID> sortScores(Board board) {
+        Map<UUID,Float> sortedMap = SortUtil.sortByValue(board.getAllScores(),SortUtil.DESC);
+        return new ArrayList<UUID>(sortedMap.keySet());
     }
 
     @Override
-    public Map<Board, List<UserData>> getBoardData() {
-        return this.boardData;
+    public void initUserScore(Board board, Player player) {
+        board.addUser(player.getUniqueId());
     }
 
     @Override
-    public Optional<UserData> getPlayerByRankPosition(Board board, int rankPosition) {
-        List<UserData> userList = this.boardData.get(board);
-        userList.sort(new RankPositionComparator());
-        if( rankPosition > userList.size() )
-            return Optional.empty();
-        return Optional.of(userList.get(rankPosition-1));
-    }
-
-    @Override
-    public void createUserData(Board board, Player player) {
-        UserData userData = new ERUserData(player);
-        boardData.get(board).add(userData);
-    }
-
-    @Override
-    public void createUserData(Board board, OfflinePlayer player, Float amount) {
-        UserData userData = new ERUserData(player, amount);
-        boardData.get(board).add(userData);
+    public void initUserScore(Board board, OfflinePlayer player, Float amount) {
+        board.addUser(player.getUniqueId(),amount);
     }
 
     @Override
     public float addScoreToPlayer(Board board, Player player, Float score) {
-        UserData userData = getUserData(board,player).get();
-        userData.addScore(score);
+
+        if(!board.getUserScore(player.getUniqueId()).isPresent()) {
+            board.addUser(player.getUniqueId());
+        }
+
+        Float newScore = board.getUserScore(player.getUniqueId()).get() + score;
+        board.setUserScore(player.getUniqueId(), newScore);
 
         player.sendMessage(
                 (ChatFormatter.formatSuccessMessage(
@@ -169,17 +154,22 @@ public class ERBoardService implements BoardService {
                         ChatColor.GRAY + "(" + ChatColor.GREEN + "+" + score.intValue() + " " + board.getUserScoreName() + ChatColor.GRAY + ")" +
                         ChatColor.DARK_GRAY + " |" +
                         ChatColor.GRAY + " New score: " +
-                        ChatColor.GOLD + (int) userData.getScore() + " " + board.getUserScoreName()
+                        ChatColor.GOLD + newScore.intValue() + " " + board.getUserScoreName()
                 ))
         );
 
-        return userData.getScore();
+        return newScore;
     }
 
     @Override
     public float subtractScoreFromPlayer(Board board, Player player, Float score) {
-        UserData userData = getUserData(board,player).get();
-        userData.subtractScore(score);
+
+        if(!board.getUserScore(player.getUniqueId()).isPresent()) {
+            board.addUser(player.getUniqueId());
+        }
+
+        Float newScore = (board.getUserScore(player.getUniqueId()).get() - score) >= 0 ? (board.getUserScore(player.getUniqueId()).get() - score) : 0;
+        board.setUserScore(player.getUniqueId(), newScore);
 
         player.sendMessage(
                 (ChatFormatter.formatSuccessMessage(
@@ -188,17 +178,20 @@ public class ERBoardService implements BoardService {
                                 ChatColor.GRAY + "(" + ChatColor.RED + "-" + score.intValue() + " " + board.getUserScoreName() + ChatColor.GRAY + ")" +
                                 ChatColor.DARK_GRAY + " |" +
                                 ChatColor.GRAY + " New score: " +
-                                ChatColor.GOLD + (int) userData.getScore() + " " + board.getUserScoreName()
+                                ChatColor.GOLD + newScore.intValue() + " " + board.getUserScoreName()
                 ))
         );
 
-        return userData.getScore();
+        return newScore;
     }
 
     @Override
     public float setScoreOfPlayer(Board board, Player player, Float score) {
-        UserData userData = getUserData(board,player).get();
-        userData.setScore(score);
+        if(!board.getUserScore(player.getUniqueId()).isPresent()) {
+            board.addUser(player.getUniqueId());
+        }
+
+        board.setUserScore(player.getUniqueId(), score);
 
         player.sendMessage(
                 (ChatFormatter.formatSuccessMessage(
@@ -207,10 +200,10 @@ public class ERBoardService implements BoardService {
                                 ChatColor.GRAY + "(" + ChatColor.GREEN + "=" + score.intValue() + " " + board.getUserScoreName() + ChatColor.GRAY + ")" +
                                 ChatColor.DARK_GRAY + " |" +
                                 ChatColor.GRAY + " New score: " +
-                                ChatColor.GOLD + (int) userData.getScore() + " " + board.getUserScoreName()
+                                ChatColor.GOLD + score.intValue() + " " + board.getUserScoreName()
                 ))
         );
 
-        return userData.getScore();
+        return score;
     }
 }

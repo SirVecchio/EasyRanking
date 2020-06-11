@@ -1,8 +1,10 @@
 package me.kaotich00.easyranking.board;
 
 import me.kaotich00.easyranking.api.board.Board;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
 
-import java.util.Objects;
+import java.util.*;
 
 public class ERBoard implements Board {
 
@@ -12,6 +14,7 @@ public class ERBoard implements Board {
     private int maxShownPlayers;
     private String userScoreName;
     private boolean isDefault;
+    private Map<UUID,Float> userScore;
 
     public ERBoard(String id, String name, String description, int maxShownPlayers, String userScoreName, boolean isDefault) {
         this.id = id;
@@ -20,6 +23,7 @@ public class ERBoard implements Board {
         this.maxShownPlayers = maxShownPlayers;
         this.userScoreName = userScoreName;
         this.isDefault = isDefault;
+        this.userScore = new HashMap<>();
     }
 
     @Override
@@ -70,6 +74,31 @@ public class ERBoard implements Board {
     @Override
     public boolean isDefault() {
         return this.isDefault;
+    }
+
+    @Override
+    public Optional<Float> getUserScore(UUID player) {
+        return Optional.ofNullable(this.userScore.get(player));
+    }
+
+    @Override
+    public Map<UUID, Float> getAllScores() {
+        return this.userScore;
+    }
+
+    @Override
+    public void setUserScore(UUID uuid, Float amount) {
+        this.userScore.put(uuid,amount);
+    }
+
+    @Override
+    public void addUser(UUID player) {
+        this.userScore.put(player, 0f);
+    }
+
+    @Override
+    public void addUser(UUID player, Float amount) {
+        this.userScore.put(player, amount);
     }
 
     @Override

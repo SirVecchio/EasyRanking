@@ -5,9 +5,7 @@ import me.kaotich00.easyranking.api.board.Board;
 import me.kaotich00.easyranking.api.service.BoardService;
 import me.kaotich00.easyranking.service.ERBoardService;
 import me.kaotich00.easyranking.utils.BoardUtil;
-import me.kaotich00.easyranking.utils.ChatFormatter;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import java.util.Optional;
@@ -27,11 +25,6 @@ public class EconomyBoardTask {
 
             for( Player player : Bukkit.getOnlinePlayers() ) {
                 Double balance = Easyranking.getEconomy().getBalance(player);
-
-                if(!boardService.getUserData(board,player).isPresent()) {
-                    boardService.createUserData(board,player);
-                }
-
                 boardService.setScoreOfPlayer(board, player, balance.floatValue());
             }
         }, 400L, 6000L );

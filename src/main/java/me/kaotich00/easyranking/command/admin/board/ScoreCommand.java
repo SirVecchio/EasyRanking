@@ -34,7 +34,7 @@ public class ScoreCommand {
 
         String scoreOperator = args[2];
         if(!isValidScoreOperator(scoreOperator)) {
-            sender.sendMessage(ChatFormatter.formatErrorMessage("Not a valid operator, allowed operators: add/subtract" ));
+            sender.sendMessage(ChatFormatter.formatErrorMessage("Not a valid operator, allowed operators: add/subtract/set" ));
             return CommandTypes.COMMAND_SUCCESS;
         }
 
@@ -51,10 +51,6 @@ public class ScoreCommand {
             return CommandTypes.COMMAND_SUCCESS;
         }
         Float score = Float.parseFloat(pointsAmount);
-
-        if(!boardService.getUserData(board,player).isPresent()) {
-            boardService.createUserData(board,player);
-        }
 
         float totalScore = 0;
         switch(scoreOperator) {
@@ -77,7 +73,7 @@ public class ScoreCommand {
     }
 
     private static boolean isValidScoreOperator(String scoreOperator) {
-        return Arrays.asList("add","subtract").contains(scoreOperator);
+        return Arrays.asList("add","subtract","set").contains(scoreOperator);
     }
 
 }

@@ -4,9 +4,6 @@ import me.kaotich00.easyranking.api.board.Board;
 import me.kaotich00.easyranking.api.service.BoardService;
 import me.kaotich00.easyranking.service.ERBoardService;
 import me.kaotich00.easyranking.utils.BoardUtil;
-import me.kaotich00.easyranking.utils.ChatFormatter;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Flying;
 import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
@@ -38,11 +35,6 @@ public class KilledMobsListener implements Listener {
         }
 
         Board board = optionalBoard.get();
-
-        if(!boardService.getUserData(board,player).isPresent()) {
-            boardService.createUserData(board,player);
-        }
-
         boardService.addScoreToPlayer(board, player, 1f);
     }
 

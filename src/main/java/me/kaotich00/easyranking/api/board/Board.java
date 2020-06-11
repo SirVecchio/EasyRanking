@@ -1,5 +1,12 @@
 package me.kaotich00.easyranking.api.board;
 
+import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
+
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
+
 public interface Board {
 
     String getId();
@@ -21,5 +28,15 @@ public interface Board {
     void setUserScoreName(String userScoreName);
 
     boolean isDefault();
+
+    Optional<Float> getUserScore(UUID player);
+
+    Map<UUID,Float> getAllScores();
+
+    void setUserScore(UUID uuid, Float amount);
+
+    void addUser(UUID player);
+
+    void addUser(UUID player, Float amount);
 
 }
