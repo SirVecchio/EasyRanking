@@ -65,6 +65,10 @@ public class EasyRankingCommand implements TabExecutor {
             case CommandTypes.RELOAD_COMMAND:
                 result = ReloadCommand.executeCommand(sender, command, label, args);
                 break;
+
+            case CommandTypes.EXEMPT_COMMAND:
+                result = ExemptCommand.executeCommand(sender, command, label, args);
+                break;
         }
         return result;
     }
@@ -85,13 +89,17 @@ public class EasyRankingCommand implements TabExecutor {
             suggestions.add("reward");
             suggestions.add("collect");
             suggestions.add("reload");
+            suggestions.add("exempt");
             /* User commands */
             suggestions.add("help");
             suggestions.add("info");
         }
 
-        /* Suggest Boards names */
-        if( args.length == 2 && !args[0].equals(CommandTypes.CREATE_COMMAND) && !args[0].equals(CommandTypes.COLLECT_COMMAND) ) {
+        if( args.length == 2 && (   args[0].equals(CommandTypes.MODIFY_COMMAND) ||
+                                    args[0].equals(CommandTypes.SCORE_COMMAND) ||
+                                    args[0].equals(CommandTypes.DELETE_COMMAND) ||
+                                    args[0].equals(CommandTypes.REWARD_COMMAND) ||
+                                    args[0].equals(CommandTypes.INFO_COMMAND))) {
             argsIndex = args[1];
             BoardService boardService = ERBoardService.getInstance();
             Set<Board> boardsList = boardService.getBoards();
@@ -102,7 +110,13 @@ public class EasyRankingCommand implements TabExecutor {
             }
         }
 
-        /* Suggest add/subtract for score command */
+        if(args.length == 2 && args[0].equals(CommandTypes.EXEMPT_COMMAND)) {
+            argsIndex = args[1];
+            suggestions.add("add");
+            suggestions.add("remove");
+            suggestions.add("list");
+        }
+
         if(args.length == 3) {
             argsIndex = args[2];
             switch(args[0]) {
@@ -116,6 +130,14 @@ public class EasyRankingCommand implements TabExecutor {
                     suggestions.add("description");
                     suggestions.add("maxShownPlayers");
                     suggestions.add("suffix");
+                    break;
+                case CommandTypes.EXEMPT_COMMAND:
+                    if(args[2].equals("list")) {
+                        break;
+                    }
+                    for( Player p : Bukkit.getOnlinePlayers() ) {
+                        suggestions.add(p.getPlayerListName());
+                    }
                     break;
             }
         }

@@ -29,6 +29,11 @@ database: 'easyranking'
 username: 'username'
 password: 'password'
 
+# How frequently should the plugin
+# save the boards data and user scores
+# to the database in minutes (default: 10)
+sync_frequency: 10
+
 # +----------------------------------------------------------------------------------------------+ #
 # |                                                                                              | #
 # |                                       BOARDS SETTINGS                                        | #

@@ -25,7 +25,12 @@ public class EconomyBoardTask {
 
             for( Player player : Bukkit.getOnlinePlayers() ) {
                 Double balance = Easyranking.getEconomy().getBalance(player);
-                boardService.setScoreOfPlayer(board, player, balance.floatValue());
+
+                if(boardService.isUserExempted(player.getUniqueId())) {
+                    continue;
+                }
+
+                boardService.setScoreOfPlayer(board, player.getUniqueId(), balance.floatValue());
             }
         }, 400L, 6000L );
     }

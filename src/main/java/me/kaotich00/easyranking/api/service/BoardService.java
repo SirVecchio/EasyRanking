@@ -5,6 +5,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 public interface BoardService {
 
@@ -32,14 +33,22 @@ public interface BoardService {
 
     List<UUID> sortScores(Board board);
 
-    void initUserScore(Board board, Player player);
+    void initUserScore(Board board, UUID playerUUID);
 
-    void initUserScore(Board board, OfflinePlayer player, Float amount);
+    void initUserScore(Board board, UUID playerUUID, Float amount);
 
-    float addScoreToPlayer(Board board, Player player, Float score);
+    float addScoreToPlayer(Board board, UUID playerUUID, Float score);
 
-    float subtractScoreFromPlayer(Board board, Player player, Float score);
+    float subtractScoreFromPlayer(Board board, UUID playerUUID, Float score);
 
-    float setScoreOfPlayer(Board board, Player player, Float score);
+    float setScoreOfPlayer(Board board, UUID playerUUID, Float score);
+
+    boolean isUserExempted(UUID player);
+
+    void toggleUserExempt(UUID player);
+
+    Set<UUID> getExemptedUsers();
+
+    CompletableFuture<Void> saveBoardsToDatabase();
 
 }

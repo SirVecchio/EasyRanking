@@ -14,5 +14,6 @@ public class CommandTypes {
     public static final String DELETE_COMMAND = "delete";
     public static final String INFO_COMMAND = "info";
     public static final String RELOAD_COMMAND = "reload";
+    public static final String EXEMPT_COMMAND = "exempt";
 
 }

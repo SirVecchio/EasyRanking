@@ -4,6 +4,8 @@ import me.kaotich00.easyranking.api.board.Board;
 import me.kaotich00.easyranking.api.service.BoardService;
 import me.kaotich00.easyranking.service.ERBoardService;
 import me.kaotich00.easyranking.utils.BoardUtil;
+import me.kaotich00.easyranking.utils.ChatFormatter;
+import me.kaotich00.easyranking.utils.CommandTypes;
 import org.bukkit.entity.Flying;
 import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
@@ -28,6 +30,11 @@ public class KilledMobsListener implements Listener {
 
         BoardService boardService = ERBoardService.getInstance();
         Player player = event.getEntity().getKiller();
+
+        if(boardService.isUserExempted(player.getUniqueId())) {
+            return;
+        }
+
         Optional<Board> optionalBoard = boardService.getBoardById(BoardUtil.MOB_KILLED_BOARD_ID);
 
         if( !optionalBoard.isPresent() ) {
@@ -35,7 +42,7 @@ public class KilledMobsListener implements Listener {
         }
 
         Board board = optionalBoard.get();
-        boardService.addScoreToPlayer(board, player, 1f);
+        boardService.addScoreToPlayer(board, player.getUniqueId(), 1f);
     }
 
 }

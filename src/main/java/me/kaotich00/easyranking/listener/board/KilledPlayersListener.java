@@ -21,6 +21,11 @@ public class KilledPlayersListener implements Listener {
 
         BoardService boardService = ERBoardService.getInstance();
         Player player = event.getEntity().getKiller();
+
+        if(boardService.isUserExempted(player.getUniqueId())) {
+            return;
+        }
+
         Optional<Board> optionalBoard = boardService.getBoardById(BoardUtil.PLAYER_KILLED_BOARD_ID);
 
         if( !optionalBoard.isPresent() ) {
@@ -28,7 +33,7 @@ public class KilledPlayersListener implements Listener {
         }
 
         Board board = optionalBoard.get();
-        boardService.addScoreToPlayer(board, player, 1f);
+        boardService.addScoreToPlayer(board, player.getUniqueId(), 1f);
     }
 
 }

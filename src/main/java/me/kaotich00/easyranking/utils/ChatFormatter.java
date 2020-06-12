@@ -40,7 +40,9 @@ public class ChatFormatter {
                 "\n" + ChatColor.GOLD + "> " + ChatColor.DARK_GREEN + "/er " + ChatColor.GREEN + "delete "  + ChatColor.DARK_GRAY + "<" + ChatColor.GRAY + "board_id" + ChatColor.DARK_GRAY + "> " +
                 "\n" + ChatColor.GOLD + "> " + ChatColor.DARK_GREEN + "/er " + ChatColor.GREEN + "reward " + ChatColor.DARK_GRAY + "<" + ChatColor.GRAY + "board_id" + ChatColor.DARK_GRAY + ">" +
                 "\n" + ChatColor.GOLD + "> " + ChatColor.DARK_GREEN + "/er " + ChatColor.GREEN + "score "  + ChatColor.DARK_GRAY + "<" + ChatColor.GRAY + "board_id" + ChatColor.DARK_GRAY + "> " + ChatColor.DARK_AQUA + "[add/subtract] " + ChatColor.DARK_GRAY + "<" + ChatColor.GRAY + "player" + ChatColor.DARK_GRAY + "> " + "<" + ChatColor.GRAY + "amount" + ChatColor.DARK_GRAY + ">" +
-                "\n" + ChatColor.GOLD + "> " + ChatColor.DARK_GREEN + "/er " + ChatColor.GREEN + "collect "
+                "\n" + ChatColor.GOLD + "> " + ChatColor.DARK_GREEN + "/er " + ChatColor.GREEN + "exempt " + ChatColor.DARK_AQUA + "[list/add/remove] " + ChatColor.DARK_GRAY + "<" + ChatColor.GRAY + "player" + ChatColor.DARK_GRAY + "> " +
+                "\n" + ChatColor.GOLD + "> " + ChatColor.DARK_GREEN + "/er " + ChatColor.GREEN + "collect " +
+                "\n" + ChatColor.GOLD + "> " + ChatColor.DARK_GREEN + "/er " + ChatColor.GREEN + "reload "
         );
         return message;
     }

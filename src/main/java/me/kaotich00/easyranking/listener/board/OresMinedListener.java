@@ -50,6 +50,11 @@ public class OresMinedListener implements Listener {
 
         BoardService boardService = ERBoardService.getInstance();
         Player player = event.getPlayer();
+
+        if(boardService.isUserExempted(player.getUniqueId())) {
+            return;
+        }
+
         Optional<Board> optionalBoard = boardService.getBoardById(BoardUtil.ORES_MINED_BOARD_ID);
 
         if( !optionalBoard.isPresent() ) {
@@ -63,7 +68,7 @@ public class OresMinedListener implements Listener {
         String minedOre = event.getBlock().getType().name();
 
         Integer score = oreSection.contains(minedOre) ? defaultConfig.getInt("oresMined.values." + minedOre) : 1;
-        boardService.addScoreToPlayer(board, player, score.floatValue());
+        boardService.addScoreToPlayer(board, player.getUniqueId(), score.floatValue());
     }
 
     @EventHandler

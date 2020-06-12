@@ -8,11 +8,13 @@ import me.kaotich00.easyranking.utils.CommandTypes;
 import org.apache.commons.lang.math.NumberUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.Arrays;
+import java.util.UUID;
 
 public class ScoreCommand {
 
@@ -39,11 +41,23 @@ public class ScoreCommand {
         }
 
         String playerName = args[3];
-        if(Bukkit.getPlayer(playerName) == null) {
+        if(Bukkit.getPlayer(playerName) == null && Bukkit.getOfflinePlayer(playerName) == null) {
             sender.sendMessage(ChatFormatter.formatErrorMessage("The player " + playerName + " doesn't exist" ));
             return CommandTypes.COMMAND_SUCCESS;
         }
+        UUID playerUUID;
         Player player = Bukkit.getPlayer(playerName);
+        if( player == null ) {
+            OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(args[2]);
+            playerUUID = offlinePlayer.getUniqueId();
+        } else {
+            playerUUID = player.getUniqueId();
+        }
+
+        if(boardService.isUserExempted(playerUUID)) {
+            sender.sendMessage(ChatFormatter.formatErrorMessage("Cannot modify user score: the user " + playerName + " is exempted from leaderboards" ));
+            return CommandTypes.COMMAND_SUCCESS;
+        }
 
         String pointsAmount = args[4];
         if(!NumberUtils.isNumber(pointsAmount)) {
@@ -55,15 +69,15 @@ public class ScoreCommand {
         float totalScore = 0;
         switch(scoreOperator) {
             case "add":
-                totalScore = boardService.addScoreToPlayer(board, player, score);
+                totalScore = boardService.addScoreToPlayer(board, playerUUID, score);
                 sender.sendMessage(ChatFormatter.formatSuccessMessage("Successfully added " + ChatColor.GOLD + score.intValue() + " " + ChatColor.GREEN + board.getUserScoreName() + " to " + ChatColor.GOLD + playerName));
                 break;
             case "subtract":
-                totalScore = boardService.subtractScoreFromPlayer(board, player, score);
+                totalScore = boardService.subtractScoreFromPlayer(board, playerUUID, score);
                 sender.sendMessage(ChatFormatter.formatSuccessMessage("Successfully subtracted " + ChatColor.GOLD + score.intValue() + " " + ChatColor.GREEN + board.getUserScoreName() + " from " + ChatColor.GOLD + playerName));
                 break;
             case "set":
-                totalScore = boardService.setScoreOfPlayer(board, player, score);
+                totalScore = boardService.setScoreOfPlayer(board, playerUUID, score);
                 sender.sendMessage(ChatFormatter.formatSuccessMessage("Successfully set " + ChatColor.GOLD + score.intValue() + " " + ChatColor.GREEN + board.getUserScoreName() + " to " + ChatColor.GOLD + playerName));
                 break;
         }
