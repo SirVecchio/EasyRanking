@@ -5,6 +5,7 @@ import me.kaotich00.easyranking.api.board.Board;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.UUID;
 
 public interface StorageMethod {
 
@@ -31,5 +32,7 @@ public interface StorageMethod {
     void loadBoardRewards();
 
     void deleteBoard(String boardId);
+
+    void deleteUserScores(UUID player);
 
 }

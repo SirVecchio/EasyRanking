@@ -47,7 +47,8 @@ public class SqlStorage implements StorageMethod {
 
     private static final String USER_SCORE_INSERT_OR_UPDATE = "INSERT INTO easyranking_user_score(`id_user`,`id_board`,`amount`) VALUES (?,?,?) ON DUPLICATE KEY UPDATE `amount` = ?";
     private static final String USER_DATA_SELECT = "SELECT * FROM easyranking_user_score";
-    private static final String USER_DATA_DELETE = "DELETE FROM easyranking_user_score WHERE id_board = ?";
+    private static final String USER_DATA_DELETE_BY_BOARD = "DELETE FROM easyranking_user_score WHERE id_board = ?";
+    private static final String USER_DATA_DELETE_BY_USER = "DELETE FROM easyranking_user_score WHERE id_user = ?";
 
     private ConnectionFactory connectionFactory;
     private final Easyranking plugin;
@@ -399,7 +400,7 @@ public class SqlStorage implements StorageMethod {
             deleteTitleRewards.executeUpdate();
             deleteTitleRewards.close();
 
-            PreparedStatement deleteUserScore = c.prepareStatement(USER_DATA_DELETE);
+            PreparedStatement deleteUserScore = c.prepareStatement(USER_DATA_DELETE_BY_BOARD);
             deleteUserScore.setString(1, boardId);
             deleteUserScore.executeUpdate();
             deleteUserScore.close();
@@ -409,6 +410,18 @@ public class SqlStorage implements StorageMethod {
             deleteBoard.executeUpdate();
             deleteBoard.close();
 
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void deleteUserScores(UUID player) {
+        try (Connection c = getConnection()) {
+            PreparedStatement deleteScoreByUUID = c.prepareStatement(USER_DATA_DELETE_BY_USER);
+            deleteScoreByUUID.setString(1, player.toString());
+            deleteScoreByUUID.executeUpdate();
+            deleteScoreByUUID.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }

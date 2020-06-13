@@ -3,6 +3,7 @@ package me.kaotich00.easyranking.command;
 import me.kaotich00.easyranking.api.board.Board;
 import me.kaotich00.easyranking.api.service.BoardService;
 import me.kaotich00.easyranking.command.admin.board.*;
+import me.kaotich00.easyranking.command.user.CreditsCommand;
 import me.kaotich00.easyranking.command.user.InfoCommand;
 import me.kaotich00.easyranking.service.ERBoardService;
 import me.kaotich00.easyranking.utils.ChatFormatter;
@@ -69,6 +70,14 @@ public class EasyRankingCommand implements TabExecutor {
             case CommandTypes.EXEMPT_COMMAND:
                 result = ExemptCommand.executeCommand(sender, command, label, args);
                 break;
+
+            case CommandTypes.CLEAR_COMMAND:
+                result = ClearCommand.executeCommand(sender, command, label, args);
+                break;
+
+            case CommandTypes.CREDITS_COMMAND:
+                result = CreditsCommand.executeCommand(sender, command, label, args);
+                break;
         }
         return result;
     }
@@ -90,6 +99,8 @@ public class EasyRankingCommand implements TabExecutor {
             suggestions.add("collect");
             suggestions.add("reload");
             suggestions.add("exempt");
+            suggestions.add("clear");
+            suggestions.add("credits");
             /* User commands */
             suggestions.add("help");
             suggestions.add("info");
@@ -132,6 +143,7 @@ public class EasyRankingCommand implements TabExecutor {
                     suggestions.add("suffix");
                     break;
                 case CommandTypes.EXEMPT_COMMAND:
+                case CommandTypes.CLEAR_COMMAND:
                     if(args[2].equals("list")) {
                         break;
                     }

@@ -26,6 +26,8 @@ public interface Board {
 
     boolean isDefault();
 
+    void clearUserScore(UUID player);
+
     Optional<Float> getUserScore(UUID player);
 
     Map<UUID,Float> getAllScores();

@@ -1,8 +1,6 @@
 package me.kaotich00.easyranking.board;
 
 import me.kaotich00.easyranking.api.board.Board;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
 
 import java.util.*;
 
@@ -74,6 +72,11 @@ public class ERBoard implements Board {
     @Override
     public boolean isDefault() {
         return this.isDefault;
+    }
+
+    @Override
+    public void clearUserScore(UUID player) {
+        this.userScore.remove(player);
     }
 
     @Override

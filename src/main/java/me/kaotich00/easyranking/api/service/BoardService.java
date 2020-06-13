@@ -43,6 +43,8 @@ public interface BoardService {
 
     float setScoreOfPlayer(Board board, UUID playerUUID, Float score);
 
+    void clearUserScores(UUID player);
+
     boolean isUserExempted(UUID player);
 
     void toggleUserExempt(UUID player);

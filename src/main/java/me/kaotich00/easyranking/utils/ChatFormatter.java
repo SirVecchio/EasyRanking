@@ -47,4 +47,14 @@ public class ChatFormatter {
         return message;
     }
 
+    public static String creditsMessage() {
+        String message = chatHeader();
+        message = message.concat(
+                "\n" + ChatColor.GOLD + "Author: " + ChatColor.GREEN + "Kaotich00" +
+                "\n" + ChatColor.GOLD + "Web UI/UX: " + ChatColor.GREEN + "OhMeMuffin" +
+                "\n" + ChatColor.GOLD + "Web API: " + ChatColor.GREEN + "Kaotich00"
+        );
+        return message;
+    }
+
 }

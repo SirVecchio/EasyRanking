@@ -15,5 +15,7 @@ public class CommandTypes {
     public static final String INFO_COMMAND = "info";
     public static final String RELOAD_COMMAND = "reload";
     public static final String EXEMPT_COMMAND = "exempt";
+    public static final String CLEAR_COMMAND = "clear";
+    public static final String CREDITS_COMMAND = "credits";
 
 }

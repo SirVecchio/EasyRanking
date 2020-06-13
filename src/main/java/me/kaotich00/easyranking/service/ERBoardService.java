@@ -94,7 +94,7 @@ public class ERBoardService implements BoardService {
     public void deleteBoard(Board board) {
         /* Removes the board from the database */
         Storage storage = StorageFactory.getInstance();
-        storage.getStorageMethod().deleteBoard(board.getId());
+        CompletableFuture.runAsync(() -> storage.getStorageMethod().deleteBoard(board.getId()));
         /* Removes all rewards from the board */
         RewardService rewardService = ERRewardService.getInstance();
         rewardService.deleteBoardRewards(board);
@@ -233,6 +233,15 @@ public class ERBoardService implements BoardService {
         }
 
         return score;
+    }
+
+    @Override
+    public void clearUserScores(UUID player) {
+        Storage storage = StorageFactory.getInstance();
+        for( Board b : this.boardsList ) {
+            b.clearUserScore(player);
+        }
+        CompletableFuture.runAsync(() -> storage.getStorageMethod().deleteUserScores(player));
     }
 
     @Override
