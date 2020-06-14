@@ -5,6 +5,7 @@ import me.kaotich00.easyranking.listener.board.KilledMobsListener;
 import me.kaotich00.easyranking.listener.board.KilledPlayersListener;
 import me.kaotich00.easyranking.listener.board.OresMinedListener;
 import me.kaotich00.easyranking.listener.gui.reward.GUIRewardListener;
+import me.kaotich00.easyranking.listener.gui.reward.TitleRewardListener;
 import me.kaotich00.easyranking.service.ERBoardService;
 import me.kaotich00.easyranking.service.ERRewardService;
 import me.kaotich00.easyranking.storage.Storage;
@@ -81,6 +82,7 @@ public final class Easyranking extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new KilledMobsListener(),this);
         getServer().getPluginManager().registerEvents(new KilledPlayersListener(),this);
         getServer().getPluginManager().registerEvents(new OresMinedListener(),this);
+        getServer().getPluginManager().registerEvents(new TitleRewardListener(),this);
     };
 
     public boolean setupEconomy() {

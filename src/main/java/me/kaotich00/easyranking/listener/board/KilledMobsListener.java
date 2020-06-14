@@ -1,15 +1,15 @@
 package me.kaotich00.easyranking.listener.board;
 
+import me.kaotich00.easyranking.Easyranking;
 import me.kaotich00.easyranking.api.board.Board;
 import me.kaotich00.easyranking.api.service.BoardService;
 import me.kaotich00.easyranking.service.ERBoardService;
 import me.kaotich00.easyranking.utils.BoardUtil;
 import me.kaotich00.easyranking.utils.ChatFormatter;
 import me.kaotich00.easyranking.utils.CommandTypes;
-import org.bukkit.entity.Flying;
-import org.bukkit.entity.Monster;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Slime;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
@@ -42,7 +42,13 @@ public class KilledMobsListener implements Listener {
         }
 
         Board board = optionalBoard.get();
-        boardService.addScoreToPlayer(board, player.getUniqueId(), 1f);
+
+        FileConfiguration defaultConfig = Easyranking.getDefaultConfig();
+        ConfigurationSection oreSection = defaultConfig.getConfigurationSection("mobKilled.values");
+        String killedMob = event.getEntityType().name();
+
+        Integer score = oreSection.contains(killedMob) ? defaultConfig.getInt("mobKilled.values." + killedMob) : 1;
+        boardService.addScoreToPlayer(board, player.getUniqueId(), score.floatValue());
     }
 
 }

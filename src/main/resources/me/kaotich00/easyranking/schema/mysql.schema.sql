@@ -16,6 +16,7 @@ CREATE TABLE IF NOT EXISTS `easyranking_user` (
   `uuid` varchar(36) NOT NULL,
   `nickname` varchar(50) NOT NULL,
   `is_exempted` BOOL NOT NULL,
+  `active_title` varchar(100) NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`uuid`)

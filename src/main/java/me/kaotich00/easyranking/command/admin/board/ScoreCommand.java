@@ -66,23 +66,23 @@ public class ScoreCommand {
         }
         Float score = Float.parseFloat(pointsAmount);
 
-        float totalScore = 0;
+        Float totalScore = 0f;
         switch(scoreOperator) {
             case "add":
                 totalScore = boardService.addScoreToPlayer(board, playerUUID, score);
-                sender.sendMessage(ChatFormatter.formatSuccessMessage("Successfully added " + ChatColor.GOLD + score.intValue() + " " + ChatColor.GREEN + board.getUserScoreName() + " to " + ChatColor.GOLD + playerName));
+                sender.sendMessage(ChatFormatter.formatSuccessMessage("Successfully added " + ChatColor.GOLD + ChatFormatter.thousandSeparator(score.intValue()) + " " + ChatColor.GREEN + board.getUserScoreName() + " to " + ChatColor.GOLD + playerName));
                 break;
             case "subtract":
                 totalScore = boardService.subtractScoreFromPlayer(board, playerUUID, score);
-                sender.sendMessage(ChatFormatter.formatSuccessMessage("Successfully subtracted " + ChatColor.GOLD + score.intValue() + " " + ChatColor.GREEN + board.getUserScoreName() + " from " + ChatColor.GOLD + playerName));
+                sender.sendMessage(ChatFormatter.formatSuccessMessage("Successfully subtracted " + ChatColor.GOLD + ChatFormatter.thousandSeparator(score.intValue()) + " " + ChatColor.GREEN + board.getUserScoreName() + " from " + ChatColor.GOLD + playerName));
                 break;
             case "set":
                 totalScore = boardService.setScoreOfPlayer(board, playerUUID, score);
-                sender.sendMessage(ChatFormatter.formatSuccessMessage("Successfully set " + ChatColor.GOLD + score.intValue() + " " + ChatColor.GREEN + board.getUserScoreName() + " to " + ChatColor.GOLD + playerName));
+                sender.sendMessage(ChatFormatter.formatSuccessMessage("Successfully set " + ChatColor.GOLD + ChatFormatter.thousandSeparator(score.intValue()) + " " + ChatColor.GREEN + board.getUserScoreName() + " to " + ChatColor.GOLD + playerName));
                 break;
         }
 
-        sender.sendMessage(ChatFormatter.formatSuccessMessage(ChatColor.GRAY + "New score for " + ChatColor.GOLD + playerName + ChatColor.GRAY + ": " + ChatColor.GREEN + totalScore));
+        sender.sendMessage(ChatFormatter.formatSuccessMessage(ChatColor.GRAY + "New score for " + ChatColor.GOLD + playerName + ChatColor.GRAY + ": " + ChatColor.GREEN + ChatFormatter.thousandSeparator(totalScore.intValue())));
         return CommandTypes.COMMAND_SUCCESS;
     }
 

@@ -48,6 +48,11 @@ sync_frequency: 10
 mobKilled:
   # Wheter the leaderboard should be enabled or not (default: true)
   enabled: true
+  # Define the amount of points given for each monster type
+  # See here for a full reference: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/entity/EntityType.html
+  values:
+    CREEPER: 3
+    ZOMBIE: 2
 
 #PLAYER KILLED LEADERBOARD
 # Please never ever change the leaderboard node name,

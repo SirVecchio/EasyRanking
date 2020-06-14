@@ -51,4 +51,10 @@ public interface RewardService {
 
     int getItemSelectionRankFromModifyingPlayer(UUID playerUniqueId);
 
+    Optional<String> getUserTitleIfActive(UUID player);
+
+    void setUserTitle(UUID player, String title);
+
+    void removeUserTitle(UUID player);
+
 }

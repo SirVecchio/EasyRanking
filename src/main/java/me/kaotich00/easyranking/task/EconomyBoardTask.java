@@ -6,6 +6,7 @@ import me.kaotich00.easyranking.api.service.BoardService;
 import me.kaotich00.easyranking.service.ERBoardService;
 import me.kaotich00.easyranking.utils.BoardUtil;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import java.util.Optional;
@@ -23,7 +24,7 @@ public class EconomyBoardTask {
 
             Board board = optionalBoard.get();
 
-            for( Player player : Bukkit.getOnlinePlayers() ) {
+            for( OfflinePlayer player : Bukkit.getOfflinePlayers() ) {
                 Double balance = Easyranking.getEconomy().getBalance(player);
 
                 if(boardService.isUserExempted(player.getUniqueId())) {

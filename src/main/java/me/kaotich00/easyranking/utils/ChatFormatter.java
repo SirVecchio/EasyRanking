@@ -2,6 +2,9 @@ package me.kaotich00.easyranking.utils;
 
 import org.bukkit.ChatColor;
 
+import java.text.NumberFormat;
+import java.util.Locale;
+
 public class ChatFormatter {
 
     public static String pluginPrefix() {
@@ -29,6 +32,10 @@ public class ChatFormatter {
     public static String formatErrorMessage(String message) {
         message = pluginPrefix() + ChatColor.RED + message;
         return message;
+    }
+
+    public static String thousandSeparator(Integer value) {
+        return NumberFormat.getNumberInstance(Locale.ITALY).format(value);
     }
 
     public static String helpMessage() {

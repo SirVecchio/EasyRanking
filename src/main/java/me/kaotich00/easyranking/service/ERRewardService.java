@@ -8,6 +8,7 @@ import me.kaotich00.easyranking.api.service.RewardService;
 import me.kaotich00.easyranking.reward.types.ERItemReward;
 import me.kaotich00.easyranking.reward.types.ERMoneyReward;
 import me.kaotich00.easyranking.reward.types.ERTitleReward;
+import me.kaotich00.easyranking.utils.ChatFormatter;
 import me.kaotich00.easyranking.utils.GUIUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -23,6 +24,7 @@ public class ERRewardService implements RewardService {
 
     private static ERRewardService rewardServiceInstance;
     private Map<Board, List<Reward>> rewardData;
+    private Map<UUID, String> activeTitles;
     private Map<UUID, Board> isModifyingBoard;
     private Map<UUID, Integer> isSelectingItems;
 
@@ -33,6 +35,7 @@ public class ERRewardService implements RewardService {
         this.rewardData = new HashMap<>();
         this.isModifyingBoard = new HashMap<>();
         this.isSelectingItems = new HashMap<>();
+        this.activeTitles = new HashMap<>();
     }
 
     public static ERRewardService getInstance() {
@@ -111,11 +114,11 @@ public class ERRewardService implements RewardService {
                 if( player == null ) {
                     OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(playerUUID);
                     if( offlinePlayer != null ) {
-                        Bukkit.getServer().broadcastMessage(ChatColor.YELLOW + String.valueOf(position) + "." + ChatColor.GOLD + " " + offlinePlayer.getName() + ChatColor.DARK_GRAY + " (" + ChatColor.GREEN + board.getUserScore(playerUUID).get().intValue() + " " + board.getUserScoreName() + ChatColor.DARK_GRAY + ")");
+                        Bukkit.getServer().broadcastMessage(ChatColor.YELLOW + String.valueOf(position) + "." + ChatColor.GOLD + " " + offlinePlayer.getName() + ChatColor.DARK_GRAY + " (" + ChatColor.GREEN + ChatFormatter.thousandSeparator(board.getUserScore(playerUUID).get().intValue()) + " " + board.getUserScoreName() + ChatColor.DARK_GRAY + ")");
                     }
                     continue;
                 } else {
-                    Bukkit.getServer().broadcastMessage(ChatColor.YELLOW + String.valueOf(position) + "." + ChatColor.GOLD + " " + player.getPlayerListName() + ChatColor.DARK_GRAY + " (" + ChatColor.GREEN + board.getUserScore(playerUUID).get().intValue() + " " + board.getUserScoreName() + ChatColor.DARK_GRAY + ")");
+                    Bukkit.getServer().broadcastMessage(ChatColor.YELLOW + String.valueOf(position) + "." + ChatColor.GOLD + " " + player.getPlayerListName() + ChatColor.DARK_GRAY + " (" + ChatColor.GREEN + ChatFormatter.thousandSeparator(board.getUserScore(playerUUID).get().intValue()) + " " + board.getUserScoreName() + ChatColor.DARK_GRAY + ")");
                 }
 
                 List<Reward> rewardsList = getRewardsByPosition(board, position);
@@ -136,6 +139,7 @@ public class ERRewardService implements RewardService {
                     }
                     if (reward instanceof ERTitleReward) {
                         String title = ((ERTitleReward)reward).getReward();
+                        setUserTitle(player.getUniqueId(), title);
                     }
                 }
 
@@ -219,5 +223,19 @@ public class ERRewardService implements RewardService {
         return isSelectingItems.containsKey(playerUniqueId) ? isSelectingItems.get(playerUniqueId) : 0;
     }
 
+    @Override
+    public Optional<String> getUserTitleIfActive(UUID player) {
+        return Optional.ofNullable(this.activeTitles.get(player));
+    }
+
+    @Override
+    public void setUserTitle(UUID player, String title) {
+        this.activeTitles.put(player, title);
+    }
+
+    @Override
+    public void removeUserTitle(UUID player) {
+        this.activeTitles.remove(player);
+    }
 
 }

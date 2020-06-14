@@ -42,8 +42,9 @@ public class SqlStorage implements StorageMethod {
     private static final String BOARD_TITLE_REWARD_INSERT_OR_UPDATE = "INSERT INTO easyranking_title_reward(`id_board`,`rank_position`,`title`) VALUES (?,?,?) ON DUPLICATE KEY UPDATE `title` = ?";
     private static final String BOARD_TITLE_REWARD_SELECT = "SELECT * FROM easyranking_title_reward";
 
-    private static final String USER_INSERT_OR_UPDATE = "INSERT INTO easyranking_user(`uuid`,`nickname`,`is_exempted`) VALUES (?,?,?) ON DUPLICATE KEY UPDATE `is_exempted`=?";
+    private static final String USER_INSERT_OR_UPDATE = "INSERT INTO easyranking_user(`uuid`,`nickname`,`is_exempted`) VALUES (?,?,?) ON DUPLICATE KEY UPDATE `is_exempted`=?, `active_title`=?";
     private static final String USER_EXEMPT_SELECT = "SELECT uuid FROM easyranking_user WHERE is_exempted = true";
+    private static final String USER_TITLE_SELECT = "SELECT uuid, active_title FROM easyranking_user WHERE active_title IS NOT NULL";
 
     private static final String USER_SCORE_INSERT_OR_UPDATE = "INSERT INTO easyranking_user_score(`id_user`,`id_board`,`amount`) VALUES (?,?,?) ON DUPLICATE KEY UPDATE `amount` = ?";
     private static final String USER_DATA_SELECT = "SELECT * FROM easyranking_user_score";
@@ -182,6 +183,7 @@ public class SqlStorage implements StorageMethod {
     public void loadUserData() {
         try (Connection c = getConnection()) {
             BoardService boardService = ERBoardService.getInstance();
+            RewardService rewardService = ERRewardService.getInstance();
             try (PreparedStatement ps = c.prepareStatement(USER_DATA_SELECT)) {
                 try (ResultSet rs = ps.executeQuery()) {
                     while (rs.next()) {
@@ -202,6 +204,16 @@ public class SqlStorage implements StorageMethod {
                     while (rs.next()) {
                         UUID uuid = UUID.fromString(rs.getString("uuid"));
                         boardService.toggleUserExempt(uuid);
+                    }
+                }
+            }
+
+            try (PreparedStatement ps = c.prepareStatement(USER_TITLE_SELECT)) {
+                try (ResultSet rs = ps.executeQuery()) {
+                    while (rs.next()) {
+                        UUID uuid = UUID.fromString(rs.getString("uuid"));
+                        String title = rs.getString("active_title");
+                        rewardService.setUserTitle(uuid,title);
                     }
                 }
             }
@@ -235,6 +247,7 @@ public class SqlStorage implements StorageMethod {
     public void saveUserData() {
         try (Connection c = getConnection()) {
             BoardService boardService = ERBoardService.getInstance();
+            RewardService rewardService = ERRewardService.getInstance();
 
             PreparedStatement userInsert = c.prepareStatement(USER_INSERT_OR_UPDATE);
             PreparedStatement userScoreInsert = c.prepareStatement(USER_SCORE_INSERT_OR_UPDATE);
@@ -246,11 +259,13 @@ public class SqlStorage implements StorageMethod {
                     Float score = (Float)pair.getValue();
 
                     String playerName = Bukkit.getPlayer(playerUUID) != null ? Bukkit.getPlayer(playerUUID).getPlayerListName() : Bukkit.getOfflinePlayer(playerUUID).getName();
+                    Optional<String> activeTitle = rewardService.getUserTitleIfActive(playerUUID);
 
                     userInsert.setString(1, playerUUID.toString());
                     userInsert.setString(2, playerName);
                     userInsert.setInt(3, boardService.isUserExempted(playerUUID) ? 1 : 0);
                     userInsert.setInt(4, boardService.isUserExempted(playerUUID) ? 1 : 0);
+                    userInsert.setString(5, activeTitle.isPresent() ? activeTitle.get() : null);
                     userInsert.executeUpdate();
 
                     userScoreInsert.setString(1, playerUUID.toString());
