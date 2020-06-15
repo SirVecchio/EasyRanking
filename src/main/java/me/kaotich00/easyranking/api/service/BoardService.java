@@ -1,8 +1,6 @@
 package me.kaotich00.easyranking.api.service;
 
 import me.kaotich00.easyranking.api.board.Board;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;

@@ -16,9 +16,7 @@ public class TitleRewardListener implements Listener {
         RewardService rewardService = ERRewardService.getInstance();
         Optional<String> title = rewardService.getUserTitleIfActive(event.getPlayer().getUniqueId());
 
-        if(title.isPresent()) {
-            event.setFormat( ChatColor.translateAlternateColorCodes('&',title.get() + " " + "&r") + event.getFormat());
-        }
+        title.ifPresent(s -> event.setFormat(ChatColor.translateAlternateColorCodes('&', s + " " + "&r") + event.getFormat()));
     }
 
 }

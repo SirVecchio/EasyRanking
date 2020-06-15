@@ -83,7 +83,7 @@ public final class Easyranking extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new KilledPlayersListener(),this);
         getServer().getPluginManager().registerEvents(new OresMinedListener(),this);
         getServer().getPluginManager().registerEvents(new TitleRewardListener(),this);
-    };
+    }
 
     public boolean setupEconomy() {
         if (Bukkit.getPluginManager().getPlugin("Vault") == null) {

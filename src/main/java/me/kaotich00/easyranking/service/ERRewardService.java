@@ -175,7 +175,7 @@ public class ERRewardService implements RewardService {
     @Override
     public Optional<Reward> getMoneyRewardByPosition(Board board, int position) {
         if( !rewardData.containsKey(board) ) {
-            return null;
+            return Optional.empty();
         }
         return rewardData.get(board).stream().filter(r -> (r.getRewardType() == GUIUtil.MONEY_TYPE && r.getRankingPosition() == position )).findFirst();
     }
@@ -183,7 +183,7 @@ public class ERRewardService implements RewardService {
     @Override
     public Optional<Reward> getTitleRewardByPosition(Board board, int position) {
         if( !rewardData.containsKey(board) ) {
-            return null;
+            return Optional.empty();
         }
         return rewardData.get(board).stream().filter(r -> (r.getRewardType() == GUIUtil.TITLE_TYPE && r.getRankingPosition() == position )).findFirst();
     }

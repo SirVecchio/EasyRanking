@@ -41,21 +41,21 @@ public class ModifyCommand {
         }
 
         /* Join together all the remaining args */
-        String value = "";
+        StringBuilder value = new StringBuilder();
         for(int i = 3; i < args.length; i++){
             String arg = args[i];
             if(i + 1 != args.length) {
                 arg += " ";
             }
-            value = value + arg;
+            value.append(arg);
         }
 
         switch(modifyAction) {
             case MODIFY_NAME:
-                boardService.modifyBoardName(board, value);
+                boardService.modifyBoardName(board, value.toString());
                 break;
             case MODIFY_DESCRIPTION:
-                boardService.modifyBoardDescription(board, value);
+                boardService.modifyBoardDescription(board, value.toString());
                 break;
             case MODIFY_MAX_SHOWN_PLAYERS:
                 if(!StringUtils.isNumeric(args[3])) {
@@ -63,10 +63,10 @@ public class ModifyCommand {
                     return CommandTypes.COMMAND_SUCCESS;
                 }
                 boardService.modifyBoardMaxShownPlayers(board, Integer.valueOf(args[3]));
-                value = String.valueOf(args[3]);
+                value = new StringBuilder(String.valueOf(args[3]));
                 break;
             case MODIFY_SUFFIX:
-                boardService.modifyBoardSuffix(board, value);
+                boardService.modifyBoardSuffix(board, value.toString());
                 break;
         }
 

@@ -6,7 +6,6 @@ import org.bukkit.util.io.BukkitObjectOutputStream;
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
 import java.io.*;
-import java.util.Base64;
 
 public class SerializationUtil {
 

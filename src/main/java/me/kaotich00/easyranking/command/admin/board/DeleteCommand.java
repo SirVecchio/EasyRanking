@@ -3,7 +3,6 @@ package me.kaotich00.easyranking.command.admin.board;
 import me.kaotich00.easyranking.Easyranking;
 import me.kaotich00.easyranking.api.board.Board;
 import me.kaotich00.easyranking.api.service.BoardService;
-import me.kaotich00.easyranking.board.conversation.prompt.BoardCreationPrompt;
 import me.kaotich00.easyranking.board.conversation.prompt.BoardDeletionPrompt;
 import me.kaotich00.easyranking.service.ERBoardService;
 import me.kaotich00.easyranking.utils.ChatFormatter;

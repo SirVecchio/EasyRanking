@@ -14,7 +14,6 @@ import me.kaotich00.easyranking.utils.ChatFormatter;
 import me.kaotich00.easyranking.utils.SortUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
@@ -125,7 +124,7 @@ public class ERBoardService implements BoardService {
 
     @Override
     public boolean isIdAlreadyUsed(String id) {
-        return boardsList.stream().filter(board -> board.getId().equals(id)).findFirst().isPresent();
+        return boardsList.stream().anyMatch(board -> board.getId().equals(id));
     }
 
     @Override

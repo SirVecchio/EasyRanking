@@ -98,8 +98,7 @@ public class SqlStorage implements StorageMethod {
                         throw new IOException("Couldn't locate schema file for MySQL");
                     }
 
-                    statements = SchemaReader.getStatements(is).stream()
-                            .collect(Collectors.toList());
+                    statements = new ArrayList<>(SchemaReader.getStatements(is));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -192,9 +191,7 @@ public class SqlStorage implements StorageMethod {
                         Float amount = rs.getFloat("amount");
 
                         Optional<Board> boardOptional = boardService.getBoardById(boardId);
-                        if( boardOptional.isPresent() ) {
-                            boardService.initUserScore(boardOptional.get(), uuid, amount);
-                        }
+                        boardOptional.ifPresent(board -> boardService.initUserScore(board, uuid, amount));
                     }
                 }
             }
@@ -265,7 +262,7 @@ public class SqlStorage implements StorageMethod {
                     userInsert.setString(2, playerName);
                     userInsert.setInt(3, boardService.isUserExempted(playerUUID) ? 1 : 0);
                     userInsert.setInt(4, boardService.isUserExempted(playerUUID) ? 1 : 0);
-                    userInsert.setString(5, activeTitle.isPresent() ? activeTitle.get() : null);
+                    userInsert.setString(5, activeTitle.orElse(null));
                     userInsert.executeUpdate();
 
                     userScoreInsert.setString(1, playerUUID.toString());
@@ -356,9 +353,7 @@ public class SqlStorage implements StorageMethod {
                         ItemStack itemStack = SerializationUtil.fromBase64(itemType);
 
                         Optional<Board> boardOptional = boardService.getBoardById(boardId);
-                        if( boardOptional.isPresent() ) {
-                            rewardService.newItemReward(itemStack, boardOptional.get(), rankPosition);
-                        }
+                        boardOptional.ifPresent(board -> rewardService.newItemReward(itemStack, board, rankPosition));
                     }
                 }
             }
@@ -371,9 +366,7 @@ public class SqlStorage implements StorageMethod {
                         Double amount = rs.getDouble("amount");
 
                         Optional<Board> boardOptional = boardService.getBoardById(boardId);
-                        if( boardOptional.isPresent() ) {
-                            rewardService.newMoneyReward(amount, boardOptional.get(), rankPosition);
-                        }
+                        boardOptional.ifPresent(board -> rewardService.newMoneyReward(amount, board, rankPosition));
                     }
                 }
             }
@@ -386,9 +379,7 @@ public class SqlStorage implements StorageMethod {
                         String title = rs.getString("title");
 
                         Optional<Board> boardOptional = boardService.getBoardById(boardId);
-                        if( boardOptional.isPresent() ) {
-                            rewardService.newTitleReward(title, boardOptional.get(), rankPosition);
-                        }
+                        boardOptional.ifPresent(board -> rewardService.newTitleReward(title, board, rankPosition));
                     }
                 }
             }
