@@ -12,6 +12,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
@@ -34,7 +35,7 @@ public class OresMinedListener implements Listener {
             Material.REDSTONE_ORE
     );
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onOreMined(BlockBreakEvent event) {
         if( event.getPlayer().getGameMode().equals(GameMode.CREATIVE) ) {
             return;
