@@ -57,8 +57,6 @@ public class ERBoardService implements BoardService {
         if( defaultConfig.getBoolean("oresMined.enabled") && !getBoardById(BoardUtil.ORES_MINED_BOARD_ID).isPresent() ) {
             createBoard(BoardUtil.ORES_MINED_BOARD_ID, BoardUtil.ORES_MINED_BOARD_NAME, BoardUtil.ORES_MINED_BOARD_DESCRIPTION, 100, "ores", true);
         }
-        EconomyBoardTask.scheduleEconomy();
-        SyncDatabaseTask.scheduleDataPersistence();
     }
 
     @Override

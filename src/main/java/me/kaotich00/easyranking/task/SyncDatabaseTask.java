@@ -8,14 +8,15 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 public class SyncDatabaseTask {
 
-    public static void scheduleDataPersistence() {
+    public static int scheduleDataPersistence() {
         FileConfiguration defaultConfig = Easyranking.getDefaultConfig();
         Long period = defaultConfig.getLong("sync_frequency") * 1200;
 
-        Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Easyranking.getPlugin(Easyranking.class), () -> {
+        int taskId = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Easyranking.getPlugin(Easyranking.class), () -> {
            BoardService boardService = ERBoardService.getInstance();
            boardService.saveBoardsToDatabase();
         }, period, period );
+        return taskId;
     }
 
 }

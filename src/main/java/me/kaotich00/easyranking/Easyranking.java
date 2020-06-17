@@ -1,5 +1,6 @@
 package me.kaotich00.easyranking;
 
+import me.kaotich00.easyranking.api.service.TaskService;
 import me.kaotich00.easyranking.command.EasyRankingCommand;
 import me.kaotich00.easyranking.listener.board.KilledMobsListener;
 import me.kaotich00.easyranking.listener.board.KilledPlayersListener;
@@ -8,6 +9,7 @@ import me.kaotich00.easyranking.listener.gui.reward.GUIRewardListener;
 import me.kaotich00.easyranking.listener.gui.reward.TitleRewardListener;
 import me.kaotich00.easyranking.service.ERBoardService;
 import me.kaotich00.easyranking.service.ERRewardService;
+import me.kaotich00.easyranking.service.ERTaskService;
 import me.kaotich00.easyranking.storage.Storage;
 import me.kaotich00.easyranking.storage.StorageFactory;
 import net.milkbowl.vault.economy.Economy;
@@ -65,6 +67,7 @@ public final class Easyranking extends JavaPlugin {
     public void registerServices() {
         ERRewardService.getInstance();
         ERBoardService.getInstance();
+        ERTaskService.getInstance();
     }
 
     public void initStorage() {
@@ -109,6 +112,12 @@ public final class Easyranking extends JavaPlugin {
     public void reloadDefaultConfig() {
         reloadConfig();
         defaultConfig = getConfig();
+        TaskService taskService = ERTaskService.getInstance();
+        // Re-schedule syn tasks
+        taskService.stopEconomyTask();
+        taskService.stopDatabaseSyncTask();
+        taskService.scheduleEconomyTask();
+        taskService.scheduleDatabaseSyncTask();
     }
 
 }

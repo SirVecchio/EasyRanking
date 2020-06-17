@@ -65,6 +65,10 @@ playerKilled:
 # unless you want very big trouble
 economy:
   enabled: true
+  # How frequently should the economy board
+  # update user balance in minutes(default: 5)
+  sync_frequency: 5
+
 
 #ORES MINED LEADERBOARD
 # Please never ever change the leaderboard node name,

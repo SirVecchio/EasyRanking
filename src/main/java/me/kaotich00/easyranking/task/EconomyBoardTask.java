@@ -7,13 +7,17 @@ import me.kaotich00.easyranking.service.ERBoardService;
 import me.kaotich00.easyranking.utils.BoardUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.Optional;
 
 public class EconomyBoardTask {
 
-    public static void scheduleEconomy() {
-        Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Easyranking.getPlugin(Easyranking.class), () -> {
+    public static int scheduleEconomy() {
+        FileConfiguration defaultConfig = Easyranking.getDefaultConfig();
+        Long period = defaultConfig.getLong("economy.sync_frequency") * 1200;
+
+        int taskId = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Easyranking.getPlugin(Easyranking.class), () -> {
             BoardService boardService = ERBoardService.getInstance();
             Optional<Board> optionalBoard = boardService.getBoardById(BoardUtil.ECONOMY_BOARD_SERVICE_ID);
 
@@ -32,7 +36,8 @@ public class EconomyBoardTask {
 
                 boardService.setScoreOfPlayer(board, player.getUniqueId(), balance.floatValue());
             }
-        }, 400L, 6000L );
+        }, period, period );
+        return taskId;
     }
 
 }
