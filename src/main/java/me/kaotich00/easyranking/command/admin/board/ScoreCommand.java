@@ -48,7 +48,7 @@ public class ScoreCommand {
         UUID playerUUID;
         Player player = Bukkit.getPlayer(playerName);
         if( player == null ) {
-            OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(args[2]);
+            OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(args[3]);
             playerUUID = offlinePlayer.getUniqueId();
         } else {
             playerUUID = player.getUniqueId();
