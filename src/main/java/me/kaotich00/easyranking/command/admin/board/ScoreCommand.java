@@ -45,11 +45,16 @@ public class ScoreCommand {
             sender.sendMessage(ChatFormatter.formatErrorMessage("The player " + playerName + " doesn't exist" ));
             return CommandTypes.COMMAND_SUCCESS;
         }
+
         UUID playerUUID;
         Player player = Bukkit.getPlayer(playerName);
         if( player == null ) {
             OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(args[3]);
             playerUUID = offlinePlayer.getUniqueId();
+            if( !offlinePlayer.hasPlayedBefore() ) {
+                sender.sendMessage(ChatFormatter.formatErrorMessage("The player " + ChatColor.GOLD + playerName + ChatColor.RED + " has never played on this server"));
+                return CommandTypes.COMMAND_SUCCESS;
+            }
         } else {
             playerUUID = player.getUniqueId();
         }

@@ -54,13 +54,13 @@ mobKilled:
     CREEPER: 3
     ZOMBIE: 2
 
-#PLAYER KILLED LEADERBOARD
+# PLAYER KILLED LEADERBOARD
 # Please never ever change the leaderboard node name,
 # unless you want very big trouble
 playerKilled:
   enabled: true
 
-#ECONOMY LEADERBOARD
+# ECONOMY LEADERBOARD
 # Please never ever change the leaderboard node name,
 # unless you want very big trouble
 economy:
@@ -70,7 +70,7 @@ economy:
   sync_frequency: 5
 
 
-#ORES MINED LEADERBOARD
+# ORES MINED LEADERBOARD
 # Please never ever change the leaderboard node name,
 # unless you want very big trouble
 oresMined:
@@ -85,3 +85,9 @@ oresMined:
     REDSTONE_ORE: 2
     COAL_ORE: 1
     NETHER_QUARTZ_ORE: 1
+
+# DUNGEONS COMPLETED LEADERBOARD
+# Please never ever change the leaderboard node name,
+# unless you want very big trouble
+dungeons:
+  enabled: true

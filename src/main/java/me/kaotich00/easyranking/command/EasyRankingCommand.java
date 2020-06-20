@@ -5,6 +5,7 @@ import me.kaotich00.easyranking.api.service.BoardService;
 import me.kaotich00.easyranking.command.admin.board.*;
 import me.kaotich00.easyranking.command.user.CreditsCommand;
 import me.kaotich00.easyranking.command.user.InfoCommand;
+import me.kaotich00.easyranking.command.user.TopCommand;
 import me.kaotich00.easyranking.service.ERBoardService;
 import me.kaotich00.easyranking.utils.ChatFormatter;
 import me.kaotich00.easyranking.utils.CommandTypes;
@@ -78,6 +79,10 @@ public class EasyRankingCommand implements TabExecutor {
             case CommandTypes.CREDITS_COMMAND:
                 result = CreditsCommand.executeCommand(sender, command, label, args);
                 break;
+
+            case CommandTypes.TOP_COMMAND:
+                result = TopCommand.executeCommand(sender, command, label, args);
+                break;
         }
         return result;
     }
@@ -104,13 +109,15 @@ public class EasyRankingCommand implements TabExecutor {
             /* User commands */
             suggestions.add("help");
             suggestions.add("info");
+            suggestions.add("top");
         }
 
         if( args.length == 2 && (   args[0].equals(CommandTypes.MODIFY_COMMAND) ||
                                     args[0].equals(CommandTypes.SCORE_COMMAND) ||
                                     args[0].equals(CommandTypes.DELETE_COMMAND) ||
                                     args[0].equals(CommandTypes.REWARD_COMMAND) ||
-                                    args[0].equals(CommandTypes.INFO_COMMAND))) {
+                                    args[0].equals(CommandTypes.INFO_COMMAND) ||
+                                    args[0].equals(CommandTypes.TOP_COMMAND))) {
             argsIndex = args[1];
             BoardService boardService = ERBoardService.getInstance();
             Set<Board> boardsList = boardService.getBoards();

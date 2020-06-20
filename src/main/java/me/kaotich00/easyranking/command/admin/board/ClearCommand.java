@@ -23,11 +23,16 @@ public class ClearCommand {
             return CommandTypes.COMMAND_SUCCESS;
         }
 
+        String playerName = args[1];
         UUID playerUUID = null;
         Player player = Bukkit.getPlayer(args[1]);
         if( player == null ) {
             OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(args[1]);
             playerUUID = offlinePlayer.getUniqueId();
+            if( !offlinePlayer.hasPlayedBefore() ) {
+                sender.sendMessage(ChatFormatter.formatErrorMessage("The player " + ChatColor.GOLD + args[1] + ChatColor.RED + " has never played on this server"));
+                return CommandTypes.COMMAND_SUCCESS;
+            }
         } else {
             playerUUID = player.getUniqueId();
         }
@@ -36,8 +41,6 @@ public class ClearCommand {
             sender.sendMessage(ChatFormatter.formatErrorMessage("No user found for the name " + args[1]));
             return CommandTypes.COMMAND_SUCCESS;
         }
-
-        String playerName = args[1];
 
         BoardService boardService = ERBoardService.getInstance();
         boardService.clearUserScores(playerUUID);

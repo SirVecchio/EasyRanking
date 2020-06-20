@@ -12,6 +12,7 @@ import me.kaotich00.easyranking.task.SyncDatabaseTask;
 import me.kaotich00.easyranking.utils.BoardUtil;
 import me.kaotich00.easyranking.utils.ChatFormatter;
 import me.kaotich00.easyranking.utils.SortUtil;
+import me.rayzr522.jsonmessage.JSONMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -56,6 +57,9 @@ public class ERBoardService implements BoardService {
         }
         if( defaultConfig.getBoolean("oresMined.enabled") && !getBoardById(BoardUtil.ORES_MINED_BOARD_ID).isPresent() ) {
             createBoard(BoardUtil.ORES_MINED_BOARD_ID, BoardUtil.ORES_MINED_BOARD_NAME, BoardUtil.ORES_MINED_BOARD_DESCRIPTION, 100, "ores", true);
+        }
+        if( defaultConfig.getBoolean("dungeons.enabled") && !getBoardById(BoardUtil.DUNGEON_BOARD_ID).isPresent() ) {
+            createBoard(BoardUtil.DUNGEON_BOARD_ID, BoardUtil.DUNGEON_BOARD_NAME, BoardUtil.DUNGEON_BOARD_DESCRIPTION, 100, "points", true);
         }
     }
 
@@ -157,14 +161,14 @@ public class ERBoardService implements BoardService {
 
         Player player = Bukkit.getPlayer(playerUUID);
         if(player != null) {
-            player.sendMessage(
+            JSONMessage.actionbar(
                     (ChatFormatter.formatSuccessMessage(
                             ChatColor.DARK_GRAY + "[" + ChatColor.DARK_AQUA + board.getName() + ChatColor.DARK_GRAY + "] " +
                                     ChatColor.GRAY + "(" + ChatColor.GREEN + "+" + ChatFormatter.thousandSeparator(score.intValue()) + " " + board.getUserScoreName() + ChatColor.GRAY + ")" +
                                     ChatColor.DARK_GRAY + " |" +
                                     ChatColor.GRAY + " New score: " +
                                     ChatColor.GOLD + ChatFormatter.thousandSeparator(newScore.intValue()) + " " + board.getUserScoreName()
-                    ))
+                    )), player
             );
         }
 
@@ -187,7 +191,7 @@ public class ERBoardService implements BoardService {
 
         Player player = Bukkit.getPlayer(playerUUID);
         if(player != null) {
-            player.sendMessage(
+            JSONMessage.actionbar(
                     (ChatFormatter.formatSuccessMessage(
                             ChatColor.DARK_GRAY +
                                     "[" + ChatColor.DARK_AQUA + board.getName() + ChatColor.DARK_GRAY + "] " +
@@ -195,7 +199,7 @@ public class ERBoardService implements BoardService {
                                     ChatColor.DARK_GRAY + " |" +
                                     ChatColor.GRAY + " New score: " +
                                     ChatColor.GOLD + ChatFormatter.thousandSeparator(newScore.intValue()) + " " + board.getUserScoreName()
-                    ))
+                    )), player
             );
         }
 
@@ -217,7 +221,7 @@ public class ERBoardService implements BoardService {
 
         Player player = Bukkit.getPlayer(playerUUID);
         if(player != null) {
-            player.sendMessage(
+            JSONMessage.actionbar(
                     (ChatFormatter.formatSuccessMessage(
                             ChatColor.DARK_GRAY +
                                     "[" + ChatColor.DARK_AQUA + board.getName() + ChatColor.DARK_GRAY + "] " +
@@ -225,7 +229,7 @@ public class ERBoardService implements BoardService {
                                     ChatColor.DARK_GRAY + " |" +
                                     ChatColor.GRAY + " New score: " +
                                     ChatColor.GOLD + ChatFormatter.thousandSeparator(score.intValue()) + " " + board.getUserScoreName()
-                    ))
+                    )), player
             );
         }
 

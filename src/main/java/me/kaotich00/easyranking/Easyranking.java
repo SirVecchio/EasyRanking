@@ -2,11 +2,13 @@ package me.kaotich00.easyranking;
 
 import me.kaotich00.easyranking.api.service.TaskService;
 import me.kaotich00.easyranking.command.EasyRankingCommand;
+import me.kaotich00.easyranking.listener.board.FwDungeonListener;
 import me.kaotich00.easyranking.listener.board.KilledMobsListener;
 import me.kaotich00.easyranking.listener.board.KilledPlayersListener;
 import me.kaotich00.easyranking.listener.board.OresMinedListener;
 import me.kaotich00.easyranking.listener.gui.reward.GUIRewardListener;
 import me.kaotich00.easyranking.listener.gui.reward.TitleRewardListener;
+import me.kaotich00.easyranking.reward.types.title.TitleExpansion;
 import me.kaotich00.easyranking.service.ERBoardService;
 import me.kaotich00.easyranking.service.ERRewardService;
 import me.kaotich00.easyranking.service.ERTaskService;
@@ -85,7 +87,22 @@ public final class Easyranking extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new KilledMobsListener(),this);
         getServer().getPluginManager().registerEvents(new KilledPlayersListener(),this);
         getServer().getPluginManager().registerEvents(new OresMinedListener(),this);
-        getServer().getPluginManager().registerEvents(new TitleRewardListener(),this);
+
+        // If PlaceholderAPI is enable, easyranking will use it, otherwise
+        // it will use a custom made chat listener
+        if(Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null){
+            Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[EasyRanking]" + ChatColor.RESET + " Hooking to PlaceholderAPI...");
+            new TitleExpansion(this).register();
+        } else {
+            Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[EasyRanking]" + ChatColor.RESET + " PlaceholderAPI not found, using default title handler.");
+            getServer().getPluginManager().registerEvents(new TitleRewardListener(), this);
+        }
+
+        // If FWDungeons is enable, easyranking will hook to it
+        if(Bukkit.getPluginManager().getPlugin("FWDungeons") != null) {
+            Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[EasyRanking]" + ChatColor.RESET + " Hooking to FWDungeons...");
+            getServer().getPluginManager().registerEvents(new FwDungeonListener(),this);
+        }
     }
 
     public boolean setupEconomy() {

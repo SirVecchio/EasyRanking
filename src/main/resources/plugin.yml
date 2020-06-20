@@ -5,7 +5,8 @@ api-version: 1.13
 authors: [Kaotich00]
 description: A simple and lightweight plugin for custom Ranking Systems
 depend: [Vault]
-loadafter: [Vault]
+softdepend: [PlaceholderAPI,FWDungeons]
+loadafter: [Vault,PlaceholderAPI,FWDungeons]
 commands:
   er:
     description: Main EasyRanking command

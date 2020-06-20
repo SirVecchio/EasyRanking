@@ -18,4 +18,8 @@ public class BoardUtil {
     public static final String ECONOMY_BOARD_SERVICE_NAME = "Economy";
     public static final String ECONOMY_BOARD_SERVICE_DESCRIPTION = "This leaderboard tracks player's economy";
 
+    public static final String DUNGEON_BOARD_ID = "dungeons";
+    public static final String DUNGEON_BOARD_NAME = "Dungeons";
+    public static final String DUNGEON_BOARD_DESCRIPTION = "This leaderboard tracks the dungeon points for the players";
+
 }
