@@ -11,6 +11,11 @@ CREATE TABLE IF NOT EXISTS `easyranking_board` (
   `updated_at` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+INSERT INTO easyranking_board(`id`,`name`,`description`,`max_players`,`user_score_name`,`is_visible`,`is_deleted`,`is_default`) VALUES ('mobKilled','Killed Mobs','This leaderboard tracks how many hostile mobs were killed by the player',100,'kills',true,false,true) ON DUPLICATE KEY UPDATE `id` = `id`;
+INSERT INTO easyranking_board(`id`,`name`,`description`,`max_players`,`user_score_name`,`is_visible`,`is_deleted`,`is_default`) VALUES ('playerKilled','Killed Players','This leaderboard tracks how many players were killed by the player',100,'kills',true,false,true) ON DUPLICATE KEY UPDATE `id` = `id`;
+INSERT INTO easyranking_board(`id`,`name`,`description`,`max_players`,`user_score_name`,`is_visible`,`is_deleted`,`is_default`) VALUES ('oresMined','Mined Ores','This leaderboard tracks how many ores has the player mined',100,'ores',true,false,true) ON DUPLICATE KEY UPDATE `id` = `id`;
+INSERT INTO easyranking_board(`id`,`name`,`description`,`max_players`,`user_score_name`,`is_visible`,`is_deleted`,`is_default`) VALUES ('economy','Economy','This leaderboard tracks player''s economy',100,'$',true,false,true) ON DUPLICATE KEY UPDATE `id` = `id`;
+INSERT INTO easyranking_board(`id`,`name`,`description`,`max_players`,`user_score_name`,`is_visible`,`is_deleted`,`is_default`) VALUES ('dungeons','Dungeons','This leaderboard tracks the dungeon points for the players',100,'points',true,false,true) ON DUPLICATE KEY UPDATE `id` = `id`;
 
 CREATE TABLE IF NOT EXISTS `easyranking_user` (
   `uuid` varchar(36) NOT NULL,

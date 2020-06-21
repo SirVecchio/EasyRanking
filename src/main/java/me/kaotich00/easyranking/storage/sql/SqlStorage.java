@@ -15,6 +15,7 @@ import me.kaotich00.easyranking.storage.util.SchemaReader;
 import me.kaotich00.easyranking.utils.SerializationUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -26,8 +27,8 @@ import java.util.stream.Collectors;
 
 public class SqlStorage implements StorageMethod {
 
-    private static final String BOARD_INSERT_OR_UPDATE = "INSERT INTO easyranking_board(`id`,`name`,`description`,`max_players`,`user_score_name`,`is_visible`,`is_deleted`,`is_default`) VALUES (?,?,?,?,?,true,false,?) ON DUPLICATE KEY UPDATE `id`=`id`";
-    private static final String BOARD_SELECT = "SELECT * FROM easyranking_board WHERE is_deleted = false AND is_default = false";
+    private static final String BOARD_INSERT_OR_UPDATE = "INSERT INTO easyranking_board(`id`,`name`,`description`,`max_players`,`user_score_name`,`is_visible`,`is_deleted`,`is_default`) VALUES (?,?,?,?,?,true,false,?) ON DUPLICATE KEY UPDATE `name`=?, `description`=?, `max_players`=?, `user_score_name`=?";
+    private static final String BOARD_SELECT = "SELECT * FROM easyranking_board WHERE is_deleted = false";
     private static final String BOARD_DELETE = "DELETE FROM easyranking_board WHERE id = ?";
 
     private static final String BOARD_ITEM_REWARD_DELETE = "DELETE FROM easyranking_item_reward WHERE id_board = ?";
@@ -155,6 +156,7 @@ public class SqlStorage implements StorageMethod {
 
     @Override
     public void loadBoards() {
+        FileConfiguration defaultConfig = Easyranking.getDefaultConfig();
         try (Connection c = getConnection()) {
             try (PreparedStatement ps = c.prepareStatement(BOARD_SELECT)) {
                 BoardService boardService = ERBoardService.getInstance();
@@ -165,10 +167,15 @@ public class SqlStorage implements StorageMethod {
                         String description = rs.getString("description");
                         int maxShownPlayers = rs.getInt("max_players");
                         String userScoreName = rs.getString("user_score_name");
+                        boolean isDefault = rs.getBoolean("is_default");
+
+                        if(isDefault && !defaultConfig.getBoolean(id + ".enabled")) {
+                            continue;
+                        }
 
                         Optional<Board> board = boardService.getBoardById(id);
                         if( !board.isPresent() ) {
-                            boardService.createBoard(id,name,description,maxShownPlayers,userScoreName, false);
+                            boardService.createBoard(id,name,description,maxShownPlayers,userScoreName, isDefault);
                         }
                     }
                 }
@@ -232,6 +239,10 @@ public class SqlStorage implements StorageMethod {
                 preparedStatement.setInt(4, b.getMaxShownPlayers());
                 preparedStatement.setString(5, b.getUserScoreName());
                 preparedStatement.setBoolean(6, b.isDefault());
+                preparedStatement.setString(7, b.getName());
+                preparedStatement.setString(8, b.getDescription());
+                preparedStatement.setInt(9, b.getMaxShownPlayers());
+                preparedStatement.setString(10, b.getUserScoreName());
                 preparedStatement.executeUpdate();
             }
             preparedStatement.close();

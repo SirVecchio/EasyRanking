@@ -7,8 +7,6 @@ import java.util.concurrent.CompletableFuture;
 
 public interface BoardService {
 
-    void initDefaultBoards();
-
     Board createBoard(String id, String name, String description, int maxShownPlayers, String userScoreName, boolean isDefault);
 
     void modifyBoardName(Board board, String name);

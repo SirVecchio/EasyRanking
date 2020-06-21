@@ -33,7 +33,6 @@ public class ERBoardService implements BoardService {
         }
         this.boardsList = new HashSet<>();
         this.exemptedUsers = new HashSet<>();
-        initDefaultBoards();
     }
 
     public static ERBoardService getInstance() {
@@ -41,26 +40,6 @@ public class ERBoardService implements BoardService {
             boardServiceInstance = new ERBoardService();
         }
         return boardServiceInstance;
-    }
-
-    @Override
-    public void initDefaultBoards() {
-        FileConfiguration defaultConfig = Easyranking.getDefaultConfig();
-        if( defaultConfig.getBoolean("mobKilled.enabled") && !getBoardById(BoardUtil.MOB_KILLED_BOARD_ID).isPresent() ) {
-            createBoard(BoardUtil.MOB_KILLED_BOARD_ID, BoardUtil.MOB_KILLED_BOARD_NAME, BoardUtil.MOB_KILLED_BOARD_DESCRIPTION, 100, "kills", true);
-        }
-        if( defaultConfig.getBoolean("playerKilled.enabled") && !getBoardById(BoardUtil.PLAYER_KILLED_BOARD_ID).isPresent() ) {
-            createBoard(BoardUtil.PLAYER_KILLED_BOARD_ID, BoardUtil.PLAYER_KILLED_BOARD_NAME, BoardUtil.PLAYER_KILLED_BOARD_DESCRIPTION, 100, "kills", true);
-        }
-        if( defaultConfig.getBoolean("economy.enabled") && !getBoardById(BoardUtil.ECONOMY_BOARD_SERVICE_ID).isPresent() ) {
-            createBoard(BoardUtil.ECONOMY_BOARD_SERVICE_ID, BoardUtil.ECONOMY_BOARD_SERVICE_NAME, BoardUtil.ECONOMY_BOARD_SERVICE_DESCRIPTION, 100, "$", true);
-        }
-        if( defaultConfig.getBoolean("oresMined.enabled") && !getBoardById(BoardUtil.ORES_MINED_BOARD_ID).isPresent() ) {
-            createBoard(BoardUtil.ORES_MINED_BOARD_ID, BoardUtil.ORES_MINED_BOARD_NAME, BoardUtil.ORES_MINED_BOARD_DESCRIPTION, 100, "ores", true);
-        }
-        if( defaultConfig.getBoolean("dungeons.enabled") && !getBoardById(BoardUtil.DUNGEON_BOARD_ID).isPresent() ) {
-            createBoard(BoardUtil.DUNGEON_BOARD_ID, BoardUtil.DUNGEON_BOARD_NAME, BoardUtil.DUNGEON_BOARD_DESCRIPTION, 100, "points", true);
-        }
     }
 
     @Override
