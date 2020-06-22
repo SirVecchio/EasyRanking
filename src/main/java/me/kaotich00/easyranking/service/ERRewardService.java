@@ -73,18 +73,27 @@ public class ERRewardService implements RewardService {
 
     @Override
     public void clearItemReward(Board board, int rankPosition) {
+        if(!rewardData.containsKey(board)) {
+            return;
+        }
         List<Reward> rewardsList = rewardData.get(board).stream().filter(r -> (r.getRankingPosition() == rankPosition && r.getRewardType() == GUIUtil.ITEM_TYPE)).collect(Collectors.toList());
         rewardData.get(board).removeAll(rewardsList);
     }
 
     @Override
     public void clearMoneyReward(Board board, int rankPosition) {
+        if(!rewardData.containsKey(board)) {
+            return;
+        }
         List<Reward> rewardsList = rewardData.get(board).stream().filter(r -> (r.getRankingPosition() == rankPosition && r.getRewardType() == GUIUtil.MONEY_TYPE)).collect(Collectors.toList());
         rewardData.get(board).removeAll(rewardsList);
     }
 
     @Override
     public void clearTitleReward(Board board, int rankPosition) {
+        if(!rewardData.containsKey(board)) {
+            return;
+        }
         List<Reward> rewardsList = rewardData.get(board).stream().filter(r -> (r.getRankingPosition() == rankPosition && r.getRewardType() == GUIUtil.TITLE_TYPE)).collect(Collectors.toList());
         rewardData.get(board).removeAll(rewardsList);
     }

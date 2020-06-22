@@ -30,7 +30,7 @@ public class DeleteCommand {
         }
         Board board = boardService.getBoardById(boardName).get();
         if(board.isDefault()) {
-            sender.sendMessage(ChatFormatter.formatErrorMessage("You cannot delete this board, cause its a default one. However, you can modify it from configs"));
+            sender.sendMessage(ChatFormatter.formatErrorMessage("You cannot delete a default board. However, you can disable it from configs"));
             return CommandTypes.COMMAND_SUCCESS;
         }
 

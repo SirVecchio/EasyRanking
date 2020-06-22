@@ -4,6 +4,7 @@ import me.kaotich00.easyranking.Easyranking;
 import me.kaotich00.easyranking.api.board.Board;
 import me.kaotich00.easyranking.api.service.BoardService;
 import me.kaotich00.easyranking.api.service.RewardService;
+import me.kaotich00.easyranking.api.service.ScoreboardService;
 import me.kaotich00.easyranking.board.ERBoard;
 import me.kaotich00.easyranking.storage.Storage;
 import me.kaotich00.easyranking.storage.StorageFactory;
@@ -151,6 +152,9 @@ public class ERBoardService implements BoardService {
             );
         }
 
+        ScoreboardService scoreboardService = ERScoreboardService.getInstance();
+        scoreboardService.updateScoreBoard(playerUUID);
+
         return newScore;
     }
 
@@ -182,6 +186,9 @@ public class ERBoardService implements BoardService {
             );
         }
 
+        ScoreboardService scoreboardService = ERScoreboardService.getInstance();
+        scoreboardService.updateScoreBoard(playerUUID);
+
         return newScore;
     }
 
@@ -211,6 +218,9 @@ public class ERBoardService implements BoardService {
                     )), player
             );
         }
+
+        ScoreboardService scoreboardService = ERScoreboardService.getInstance();
+        scoreboardService.updateScoreBoard(playerUUID);
 
         return score;
     }

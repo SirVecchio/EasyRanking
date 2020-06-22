@@ -115,7 +115,7 @@ public class TitleExpansion extends PlaceholderExpansion {
             }
         }
 
-        return null;
+        return "";
     }
 
 }

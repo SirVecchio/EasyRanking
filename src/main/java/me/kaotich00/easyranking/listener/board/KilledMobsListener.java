@@ -3,7 +3,9 @@ package me.kaotich00.easyranking.listener.board;
 import me.kaotich00.easyranking.Easyranking;
 import me.kaotich00.easyranking.api.board.Board;
 import me.kaotich00.easyranking.api.service.BoardService;
+import me.kaotich00.easyranking.api.service.ScoreboardService;
 import me.kaotich00.easyranking.service.ERBoardService;
+import me.kaotich00.easyranking.service.ERScoreboardService;
 import me.kaotich00.easyranking.utils.BoardUtil;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
@@ -13,6 +15,8 @@ import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.scoreboard.Scoreboard;
 
 import java.util.Optional;
 

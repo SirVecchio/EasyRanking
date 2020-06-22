@@ -59,7 +59,7 @@ public class TopCommand {
     private static void paginateBoard(CommandSender sender, Board board, List<UUID> playerList, int page) {
 
         int maxPlayersPerPage = 15;
-        int totalPages = 0;
+        int totalPages = 1;
 
         if( playerList.size() > 0 ) {
             totalPages = (int) Math.ceil((double) playerList.size() / maxPlayersPerPage);
@@ -67,11 +67,12 @@ public class TopCommand {
 
         StringBuilder sb = new StringBuilder();
         sb.append(ChatFormatter.chatHeader());
-        sb.append("Top players for the board " + net.md_5.bungee.api.ChatColor.DARK_AQUA + board.getName());
-        sb.append(" \n \n");
+        sb.append("Top players for the board " + ChatColor.DARK_AQUA + board.getName());
 
         if(playerList.size() == 0) {
-            sb.append(ChatColor.DARK_GRAY + "No players found");
+            sb.append("\n" + ChatColor.DARK_GRAY + "No players found");
+        } else {
+            sb.append(" \n \n");
         }
 
         int position = ((page - 1) * maxPlayersPerPage) + 1;
