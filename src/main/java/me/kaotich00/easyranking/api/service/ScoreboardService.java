@@ -7,14 +7,14 @@ import java.util.UUID;
 
 public interface ScoreboardService {
 
-    void addPlayerToScoreboard(UUID player);
+    void addPlayerToScoreboard(UUID playerUUID);
 
-    boolean isPlayerInScoreboard(UUID player);
+    boolean isPlayerInScoreboard(UUID playerUUID);
 
-    void removePlayerFromScoreboard(UUID player);
+    void removePlayerFromScoreboard(UUID playerUUID);
 
-    void updateScoreBoard(UUID player);
+    void updateScoreBoard(UUID playerUUID);
 
-    void newScoreboard(Player player);
+    void newScoreboard(UUID playerUUID);
 
 }

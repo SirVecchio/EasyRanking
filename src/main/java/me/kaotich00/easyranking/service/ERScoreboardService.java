@@ -33,33 +33,36 @@ public class ERScoreboardService implements ScoreboardService {
     }
 
     @Override
-    public void addPlayerToScoreboard(UUID player) {
-        this.scoreboards.put(player, null);
+    public void addPlayerToScoreboard(UUID playerUUID) {
+        this.scoreboards.put(playerUUID, null);
     }
 
     @Override
-    public boolean isPlayerInScoreboard(UUID player) {
-        return this.scoreboards.containsKey(player);
+    public boolean isPlayerInScoreboard(UUID playerUUID) {
+        return this.scoreboards.containsKey(playerUUID);
     }
 
     @Override
-    public void removePlayerFromScoreboard(UUID player) {
-        this.scoreboards.remove(player);
+    public void removePlayerFromScoreboard(UUID playerUUID) {
+        Player player = Bukkit.getPlayer(playerUUID);
+        // Clear the scoreboard
+        player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
+        this.scoreboards.remove(playerUUID);
     }
 
     @Override
-    public void updateScoreBoard(UUID player) {
+    public void updateScoreBoard(UUID playerUUID) {
 
-        if(!isPlayerInScoreboard(player)) {
-            newScoreboard(Bukkit.getPlayer(player));
+        if(!isPlayerInScoreboard(playerUUID)) {
+            return;
         }
 
         BoardService boardService = ERBoardService.getInstance();
-        Scoreboard scoreboard = this.scoreboards.get(player);
+        Scoreboard scoreboard = this.scoreboards.get(playerUUID);
         Objective objective = scoreboard.getObjective("trackBoardsScore");
 
         for(Board board: boardService.getBoards()) {
-            board.getUserScore(player).ifPresent(amount -> {
+            board.getUserScore(playerUUID).ifPresent(amount -> {
                 Score score = objective.getScore(ChatColor.DARK_GRAY + "[" + ChatColor.DARK_AQUA + board.getName() + ChatColor.DARK_GRAY + "]");
                 score.setScore(amount.intValue());
             });
@@ -67,8 +70,9 @@ public class ERScoreboardService implements ScoreboardService {
     }
 
     @Override
-    public void newScoreboard(Player player) {
+    public void newScoreboard(UUID playerUUID) {
         BoardService boardService = ERBoardService.getInstance();
+        Player player = Bukkit.getPlayer(playerUUID);
 
         ScoreboardManager scoreboardManager = Bukkit.getScoreboardManager();
         Scoreboard scoreboard = scoreboardManager.getNewScoreboard();
@@ -76,13 +80,13 @@ public class ERScoreboardService implements ScoreboardService {
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 
         for(Board board: boardService.getBoards()) {
-            board.getUserScore(player.getUniqueId()).ifPresent(amount -> {
+            board.getUserScore(playerUUID).ifPresent(amount -> {
                 Score score = objective.getScore(ChatColor.DARK_GRAY + "[" + ChatColor.DARK_AQUA + board.getName() + ChatColor.DARK_GRAY + "]");
                 score.setScore(amount.intValue());
             });
         }
 
         player.setScoreboard(scoreboard);
-        this.scoreboards.put(player.getUniqueId(), scoreboard);
+        this.scoreboards.put(playerUUID, scoreboard);
     }
 }

@@ -5,6 +5,7 @@ import me.kaotich00.easyranking.api.service.BoardService;
 import me.kaotich00.easyranking.command.admin.board.*;
 import me.kaotich00.easyranking.command.user.CreditsCommand;
 import me.kaotich00.easyranking.command.user.InfoCommand;
+import me.kaotich00.easyranking.command.user.ShowCommand;
 import me.kaotich00.easyranking.command.user.TopCommand;
 import me.kaotich00.easyranking.service.ERBoardService;
 import me.kaotich00.easyranking.utils.ChatFormatter;
@@ -83,6 +84,10 @@ public class EasyRankingCommand implements TabExecutor {
             case CommandTypes.TOP_COMMAND:
                 result = TopCommand.executeCommand(sender, command, label, args);
                 break;
+
+            case CommandTypes.SHOW_COMMAND:
+                result = ShowCommand.executeCommand(sender, command, label, args);
+                break;
         }
         return result;
     }
@@ -110,6 +115,7 @@ public class EasyRankingCommand implements TabExecutor {
             suggestions.add("help");
             suggestions.add("info");
             suggestions.add("top");
+            suggestions.add("show");
         }
 
         if( args.length == 2 && (   args[0].equals(CommandTypes.MODIFY_COMMAND) ||

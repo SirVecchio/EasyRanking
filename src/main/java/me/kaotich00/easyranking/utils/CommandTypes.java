@@ -18,5 +18,6 @@ public class CommandTypes {
     public static final String CLEAR_COMMAND = "clear";
     public static final String CREDITS_COMMAND = "credits";
     public static final String TOP_COMMAND = "top";
+    public static final String SHOW_COMMAND = "show";
 
 }
