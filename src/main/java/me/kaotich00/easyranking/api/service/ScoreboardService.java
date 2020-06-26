@@ -1,8 +1,5 @@
 package me.kaotich00.easyranking.api.service;
 
-import org.bukkit.entity.Player;
-import org.bukkit.scoreboard.Scoreboard;
-
 import java.util.UUID;
 
 public interface ScoreboardService {

@@ -1,6 +1,5 @@
 package me.kaotich00.easyranking.service;
 
-import me.kaotich00.easyranking.Easyranking;
 import me.kaotich00.easyranking.api.board.Board;
 import me.kaotich00.easyranking.api.service.BoardService;
 import me.kaotich00.easyranking.api.service.RewardService;
@@ -8,15 +7,11 @@ import me.kaotich00.easyranking.api.service.ScoreboardService;
 import me.kaotich00.easyranking.board.ERBoard;
 import me.kaotich00.easyranking.storage.Storage;
 import me.kaotich00.easyranking.storage.StorageFactory;
-import me.kaotich00.easyranking.task.EconomyBoardTask;
-import me.kaotich00.easyranking.task.SyncDatabaseTask;
-import me.kaotich00.easyranking.utils.BoardUtil;
 import me.kaotich00.easyranking.utils.ChatFormatter;
 import me.kaotich00.easyranking.utils.SortUtil;
 import me.rayzr522.jsonmessage.JSONMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import java.util.*;

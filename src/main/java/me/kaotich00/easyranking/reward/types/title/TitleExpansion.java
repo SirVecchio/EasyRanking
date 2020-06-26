@@ -4,7 +4,6 @@ import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.kaotich00.easyranking.Easyranking;
 import me.kaotich00.easyranking.api.service.RewardService;
 import me.kaotich00.easyranking.service.ERRewardService;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import java.util.Optional;
