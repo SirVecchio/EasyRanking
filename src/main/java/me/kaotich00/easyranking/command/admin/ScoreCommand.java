@@ -1,7 +1,8 @@
-package me.kaotich00.easyranking.command.admin.board;
+package me.kaotich00.easyranking.command.admin;
 
 import me.kaotich00.easyranking.api.board.Board;
 import me.kaotich00.easyranking.api.service.BoardService;
+import me.kaotich00.easyranking.command.api.ERAdminCommand;
 import me.kaotich00.easyranking.service.ERBoardService;
 import me.kaotich00.easyranking.utils.ChatFormatter;
 import me.kaotich00.easyranking.utils.CommandTypes;
@@ -16,13 +17,13 @@ import org.bukkit.entity.Player;
 import java.util.Arrays;
 import java.util.UUID;
 
-public class ScoreCommand {
+public class ScoreCommand extends ERAdminCommand {
 
-    public static boolean executeCommand(CommandSender sender, Command command, String label, String[] args) {
+    public void onCommand(CommandSender sender, String[] args) {
         if( args.length < 5 ) {
             sender.sendMessage(ChatFormatter.formatErrorMessage("Not enough arguments, usage:"));
             sender.sendMessage(ChatFormatter.formatSuccessMessage(ChatColor.DARK_GREEN + "/er " + ChatColor.GREEN + "score "  + ChatColor.DARK_GRAY + "<" + ChatColor.GRAY + "nome" + ChatColor.DARK_GRAY + "> " + ChatColor.DARK_AQUA + "[add/subtract] " + ChatColor.DARK_GRAY + "<" + ChatColor.GRAY + "player" + ChatColor.DARK_GRAY + "> " + "<" + ChatColor.GRAY + "amount" + ChatColor.DARK_GRAY + ">"));
-            return CommandTypes.COMMAND_SUCCESS;
+            return;
         }
 
         BoardService boardService = ERBoardService.getInstance();
@@ -30,20 +31,20 @@ public class ScoreCommand {
         String boardName = args[1];
         if(!boardService.isIdAlreadyUsed(boardName)) {
             sender.sendMessage(ChatFormatter.formatErrorMessage("No board found for the name " + ChatColor.GOLD + boardName + ChatColor.RED ));
-            return CommandTypes.COMMAND_SUCCESS;
+            return;
         }
         Board board = boardService.getBoardById(boardName).get();
 
         String scoreOperator = args[2];
         if(!isValidScoreOperator(scoreOperator)) {
             sender.sendMessage(ChatFormatter.formatErrorMessage("Not a valid operator, allowed operators: add/subtract/set" ));
-            return CommandTypes.COMMAND_SUCCESS;
+            return;
         }
 
         String playerName = args[3];
         if(Bukkit.getPlayer(playerName) == null && Bukkit.getOfflinePlayer(playerName) == null) {
             sender.sendMessage(ChatFormatter.formatErrorMessage("The player " + playerName + " doesn't exist" ));
-            return CommandTypes.COMMAND_SUCCESS;
+            return;
         }
 
         UUID playerUUID;
@@ -53,7 +54,7 @@ public class ScoreCommand {
             playerUUID = offlinePlayer.getUniqueId();
             if( !offlinePlayer.hasPlayedBefore() ) {
                 sender.sendMessage(ChatFormatter.formatErrorMessage("The player " + ChatColor.GOLD + playerName + ChatColor.RED + " has never played on this server"));
-                return CommandTypes.COMMAND_SUCCESS;
+                return;
             }
         } else {
             playerUUID = player.getUniqueId();
@@ -61,13 +62,13 @@ public class ScoreCommand {
 
         if(boardService.isUserExempted(playerUUID)) {
             sender.sendMessage(ChatFormatter.formatErrorMessage("Cannot modify user score: the user " + playerName + " is exempted from leaderboards" ));
-            return CommandTypes.COMMAND_SUCCESS;
+            return;
         }
 
         String pointsAmount = args[4];
         if(!NumberUtils.isNumber(pointsAmount)) {
             sender.sendMessage(ChatFormatter.formatErrorMessage("The amount selected is not a numeric value" ));
-            return CommandTypes.COMMAND_SUCCESS;
+            return;
         }
         Float score = Float.parseFloat(pointsAmount);
 
@@ -88,7 +89,7 @@ public class ScoreCommand {
         }
 
         sender.sendMessage(ChatFormatter.formatSuccessMessage(ChatColor.GRAY + "New score for " + ChatColor.GOLD + playerName + ChatColor.GRAY + ": " + ChatColor.GREEN + ChatFormatter.thousandSeparator(totalScore.intValue())));
-        return CommandTypes.COMMAND_SUCCESS;
+        return;
     }
 
     private static boolean isValidScoreOperator(String scoreOperator) {

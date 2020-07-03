@@ -12,6 +12,7 @@ import me.kaotich00.easyranking.service.ERBoardService;
 import me.kaotich00.easyranking.service.ERRewardService;
 import me.kaotich00.easyranking.storage.StorageMethod;
 import me.kaotich00.easyranking.storage.util.SchemaReader;
+import me.kaotich00.easyranking.utils.ChatFormatter;
 import me.kaotich00.easyranking.utils.SerializationUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -50,6 +51,8 @@ public class SqlStorage implements StorageMethod {
     private static final String USER_DATA_SELECT = "SELECT * FROM easyranking_user_score";
     private static final String USER_DATA_DELETE_BY_BOARD = "DELETE FROM easyranking_user_score WHERE id_board = ?";
     private static final String USER_DATA_DELETE_BY_USER = "DELETE FROM easyranking_user_score WHERE id_user = ?";
+
+    private static final String BOARDS_CLEAR_DATA = "DELETE FROM easyranking_user_score";
 
     private ConnectionFactory connectionFactory;
     private final Easyranking plugin;
@@ -438,6 +441,18 @@ public class SqlStorage implements StorageMethod {
             deleteScoreByUUID.setString(1, player.toString());
             deleteScoreByUUID.executeUpdate();
             deleteScoreByUUID.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void clearBoardsData() {
+        try (Connection c = getConnection()) {
+            PreparedStatement deleteScoreByUUID = c.prepareStatement(BOARDS_CLEAR_DATA);
+            deleteScoreByUUID.executeUpdate();
+            deleteScoreByUUID.close();
+            Bukkit.getConsoleSender().sendMessage(ChatFormatter.formatSuccessMessage("Cleared user data from database"));
         } catch (SQLException e) {
             e.printStackTrace();
         }

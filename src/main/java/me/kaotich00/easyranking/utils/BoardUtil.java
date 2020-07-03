@@ -22,4 +22,8 @@ public class BoardUtil {
     public static final String DUNGEON_BOARD_NAME = "Dungeons";
     public static final String DUNGEON_BOARD_DESCRIPTION = "This leaderboard tracks the dungeon points for the players";
 
+    public static final String BOUNTY_BOARD_ID = "bounties";
+    public static final String BOUNTY_BOARD_NAME = "Bounty";
+    public static final String BOUNTY_BOARD_DESCRIPTION = "This leaderboard tracks the bounties of players";
+
 }

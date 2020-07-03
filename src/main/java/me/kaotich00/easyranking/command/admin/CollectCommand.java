@@ -1,8 +1,9 @@
-package me.kaotich00.easyranking.command.admin.board;
+package me.kaotich00.easyranking.command.admin;
 
 import me.kaotich00.easyranking.api.board.Board;
 import me.kaotich00.easyranking.api.service.BoardService;
 import me.kaotich00.easyranking.api.service.RewardService;
+import me.kaotich00.easyranking.command.api.ERAdminCommand;
 import me.kaotich00.easyranking.service.ERBoardService;
 import me.kaotich00.easyranking.service.ERRewardService;
 import me.kaotich00.easyranking.utils.BoardUtil;
@@ -15,15 +16,15 @@ import org.bukkit.command.CommandSender;
 
 import java.util.Optional;
 
-public class CollectCommand {
+public class CollectCommand extends ERAdminCommand {
 
-    public static boolean executeCommand(CommandSender sender, Command command, String label, String[] args) {
+    public void onCommand(CommandSender sender, String[] args) {
 
         BoardService boardService = ERBoardService.getInstance();
         Optional<Board> board = boardService.getBoardById(BoardUtil.MOB_KILLED_BOARD_ID);
 
         if(!board.isPresent()) {
-            return CommandTypes.COMMAND_SUCCESS;
+            return;
         }
 
         Bukkit.getServer().broadcastMessage(ChatFormatter.chatHeader());
@@ -32,7 +33,7 @@ public class CollectCommand {
         RewardService rewardService = ERRewardService.getInstance();
         rewardService.collectRewards();
 
-        return CommandTypes.COMMAND_SUCCESS;
+        return;
     }
 
 }

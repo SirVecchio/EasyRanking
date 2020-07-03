@@ -28,6 +28,8 @@ public interface Board {
 
     void clearUserScore(UUID player);
 
+    void clearAllScores();
+
     Optional<Float> getUserScore(UUID player);
 
     Map<UUID,Float> getAllScores();

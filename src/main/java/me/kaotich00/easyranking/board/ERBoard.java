@@ -80,6 +80,11 @@ public class ERBoard implements Board {
     }
 
     @Override
+    public void clearAllScores() {
+        this.userScore.clear();
+    }
+
+    @Override
     public Optional<Float> getUserScore(UUID player) {
         return Optional.ofNullable(this.userScore.get(player));
     }

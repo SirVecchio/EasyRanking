@@ -2,6 +2,7 @@ package me.kaotich00.easyranking.command.user;
 
 import me.kaotich00.easyranking.api.board.Board;
 import me.kaotich00.easyranking.api.service.BoardService;
+import me.kaotich00.easyranking.command.api.ERUserCommand;
 import me.kaotich00.easyranking.service.ERBoardService;
 import me.kaotich00.easyranking.utils.ChatFormatter;
 import me.kaotich00.easyranking.utils.CommandTypes;
@@ -11,14 +12,14 @@ import org.bukkit.command.CommandSender;
 
 import java.util.List;
 
-public class InfoCommand {
+public class InfoCommand extends ERUserCommand {
 
-    public static boolean executeCommand(CommandSender sender, Command command, String label, String[] args) {
+    public void onCommand(CommandSender sender, String[] args) {
 
         if( args.length < 2 ) {
             sender.sendMessage(ChatFormatter.formatErrorMessage("Not enough arguments, usage:"));
             sender.sendMessage(ChatFormatter.formatSuccessMessage(ChatColor.DARK_GREEN + "/er " + ChatColor.GREEN + "info "  + ChatColor.DARK_GRAY + "<" + ChatColor.GRAY + "board_id" + ChatColor.DARK_GRAY + ">"));
-            return CommandTypes.COMMAND_SUCCESS;
+            return;
         }
 
         BoardService boardService = ERBoardService.getInstance();
@@ -26,7 +27,7 @@ public class InfoCommand {
         String boardName = args[1];
         if(!boardService.isIdAlreadyUsed(boardName)) {
             sender.sendMessage(ChatFormatter.formatErrorMessage("No board found for the name " + ChatColor.GOLD + boardName + ChatColor.RED ));
-            return CommandTypes.COMMAND_SUCCESS;
+            return;
         }
         Board board = boardService.getBoardById(boardName).get();
 
@@ -37,7 +38,7 @@ public class InfoCommand {
         }
         sender.sendMessage(ChatFormatter.chatFooter());
 
-        return CommandTypes.COMMAND_SUCCESS;
+        return;
     }
 
 }

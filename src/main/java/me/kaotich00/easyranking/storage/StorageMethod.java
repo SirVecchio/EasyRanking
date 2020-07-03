@@ -34,4 +34,6 @@ public interface StorageMethod {
 
     void deleteUserScores(UUID player);
 
+    void clearBoardsData();
+
 }

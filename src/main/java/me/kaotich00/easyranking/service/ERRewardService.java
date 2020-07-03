@@ -5,9 +5,13 @@ import me.kaotich00.easyranking.api.board.Board;
 import me.kaotich00.easyranking.api.reward.Reward;
 import me.kaotich00.easyranking.api.service.BoardService;
 import me.kaotich00.easyranking.api.service.RewardService;
+import me.kaotich00.easyranking.api.service.ScoreboardService;
 import me.kaotich00.easyranking.reward.types.ERItemReward;
 import me.kaotich00.easyranking.reward.types.ERMoneyReward;
 import me.kaotich00.easyranking.reward.types.ERTitleReward;
+import me.kaotich00.easyranking.storage.Storage;
+import me.kaotich00.easyranking.storage.StorageFactory;
+import me.kaotich00.easyranking.storage.StorageMethod;
 import me.kaotich00.easyranking.utils.ChatFormatter;
 import me.kaotich00.easyranking.utils.GUIUtil;
 import org.bukkit.Bukkit;
@@ -18,6 +22,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 public class ERRewardService implements RewardService {
@@ -101,6 +106,7 @@ public class ERRewardService implements RewardService {
     @Override
     public void collectRewards() {
         BoardService boardService = ERBoardService.getInstance();
+        ScoreboardService scoreboardService = ERScoreboardService.getInstance();
         Set<Board> boardsList = boardService.getBoards();
 
         for( Board board : boardsList ) {
@@ -153,11 +159,19 @@ public class ERRewardService implements RewardService {
                 }
 
                 player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 10, 1);
+                scoreboardService.updateScoreBoard(player.getUniqueId());
             }
             if( dataEmpty ) {
                 Bukkit.getServer().broadcastMessage(ChatColor.GRAY + "No data found");
             }
+            // Clear all data from memory
+            board.clearAllScores();
         }
+
+        // Clear all data from database
+        StorageMethod storage = StorageFactory.getInstance().getStorageMethod();
+        CompletableFuture.runAsync(() -> storage.clearBoardsData());
+
     }
 
     @Override

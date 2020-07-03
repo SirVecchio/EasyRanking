@@ -1,6 +1,7 @@
-package me.kaotich00.easyranking.command.admin.board;
+package me.kaotich00.easyranking.command.admin;
 
 import me.kaotich00.easyranking.api.service.BoardService;
+import me.kaotich00.easyranking.command.api.ERAdminCommand;
 import me.kaotich00.easyranking.service.ERBoardService;
 import me.kaotich00.easyranking.utils.ChatFormatter;
 import me.kaotich00.easyranking.utils.CommandTypes;
@@ -13,24 +14,24 @@ import org.bukkit.entity.Player;
 
 import java.util.UUID;
 
-public class ExemptCommand {
+public class ExemptCommand extends ERAdminCommand {
 
     private final static String EXEMPT_ADD = "add";
     private final static String EXEMPT_REMOVE = "remove";
     private final static String EXEMPT_LIST = "list";
 
-    public static boolean executeCommand(CommandSender sender, Command command, String label, String[] args) {
+    public void onCommand(CommandSender sender, String[] args) {
 
         if( args.length < 1 ) {
             sender.sendMessage(ChatFormatter.formatErrorMessage("Not enough arguments, usage:"));
             sender.sendMessage(ChatFormatter.formatSuccessMessage(ChatColor.DARK_GREEN + "/er " + ChatColor.GREEN + "exempt "  + ChatColor.DARK_GRAY + "[add/remove/list] " + ChatColor.DARK_GRAY + "<" + ChatColor.GRAY + "player" + ChatColor.DARK_GRAY + "> "));
-            return CommandTypes.COMMAND_SUCCESS;
+            return;
         }
 
         if( (args[1].equals(EXEMPT_ADD) || args[1].equals(EXEMPT_REMOVE)) && args.length < 2 ) {
             sender.sendMessage(ChatFormatter.formatErrorMessage("Not enough arguments, usage:"));
             sender.sendMessage(ChatFormatter.formatSuccessMessage(ChatColor.DARK_GREEN + "/er " + ChatColor.GREEN + "exempt "  + ChatColor.DARK_GRAY + "[add/remove] " + ChatColor.DARK_GRAY + "<" + ChatColor.GRAY + "player" + ChatColor.DARK_GRAY + "> "));
-            return CommandTypes.COMMAND_SUCCESS;
+            return;
         }
 
         UUID playerUUID = null;
@@ -46,7 +47,7 @@ public class ExemptCommand {
 
         if( (args[1].equals(EXEMPT_ADD) || args[1].equals(EXEMPT_REMOVE)) && playerUUID == null ) {
             sender.sendMessage(ChatFormatter.formatErrorMessage("No user found for the name " + args[2]));
-            return CommandTypes.COMMAND_SUCCESS;
+            return;
         }
 
         String playerName = "";
@@ -56,7 +57,7 @@ public class ExemptCommand {
                 playerName = args[2];
                 if(boardService.isUserExempted(playerUUID)) {
                     sender.sendMessage(ChatFormatter.formatErrorMessage("The user " + playerName + " is already exempted"));
-                    return CommandTypes.COMMAND_SUCCESS;
+                    return;
                 } else {
                     boardService.toggleUserExempt(playerUUID);
                 }
@@ -66,7 +67,7 @@ public class ExemptCommand {
                 playerName = args[2];
                 if(!boardService.isUserExempted(playerUUID)) {
                     sender.sendMessage(ChatFormatter.formatErrorMessage("The user " + playerName + " is not exempted"));
-                    return CommandTypes.COMMAND_SUCCESS;
+                    return;
                 } else {
                     boardService.toggleUserExempt(playerUUID);
                 }
@@ -94,7 +95,7 @@ public class ExemptCommand {
                 break;
         }
 
-        return CommandTypes.COMMAND_SUCCESS;
+        return;
     }
 
 }

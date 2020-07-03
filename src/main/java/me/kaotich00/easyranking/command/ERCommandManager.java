@@ -1,8 +1,11 @@
 package me.kaotich00.easyranking.command;
 
+import com.sun.org.apache.xpath.internal.operations.Mod;
+import me.kaotich00.easyranking.Easyranking;
 import me.kaotich00.easyranking.api.board.Board;
+import me.kaotich00.easyranking.api.command.ERCommand;
 import me.kaotich00.easyranking.api.service.BoardService;
-import me.kaotich00.easyranking.command.admin.board.*;
+import me.kaotich00.easyranking.command.admin.*;
 import me.kaotich00.easyranking.command.user.CreditsCommand;
 import me.kaotich00.easyranking.command.user.InfoCommand;
 import me.kaotich00.easyranking.command.user.ShowCommand;
@@ -17,11 +20,35 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
-public class EasyRankingCommand implements TabExecutor {
+public class ERCommandManager implements TabExecutor {
+
+    private Map<String,ERCommand> commandRegistry;
+    private Easyranking plugin;
+
+    public ERCommandManager(Easyranking plugin) {
+        this.commandRegistry = new HashMap<>();
+        this.plugin = plugin;
+        setup();
+    }
+
+    private void setup() {
+        this.commandRegistry.put(CommandTypes.CREATE_COMMAND, new CreateCommand());
+        this.commandRegistry.put(CommandTypes.DELETE_COMMAND, new DeleteCommand());
+        this.commandRegistry.put(CommandTypes.MODIFY_COMMAND, new ModifyCommand());
+        this.commandRegistry.put(CommandTypes.INFO_COMMAND, new InfoCommand());
+        this.commandRegistry.put(CommandTypes.REWARD_COMMAND, new RewardCommand());
+        this.commandRegistry.put(CommandTypes.SCORE_COMMAND, new ScoreCommand());
+        this.commandRegistry.put(CommandTypes.COLLECT_COMMAND, new CollectCommand());
+        this.commandRegistry.put(CommandTypes.RELOAD_COMMAND, new ReloadCommand());
+        this.commandRegistry.put(CommandTypes.EXEMPT_COMMAND, new ExemptCommand());
+        this.commandRegistry.put(CommandTypes.CLEAR_COMMAND, new ClearCommand());
+        this.commandRegistry.put(CommandTypes.CREDITS_COMMAND, new CreditsCommand());
+        this.commandRegistry.put(CommandTypes.TOP_COMMAND, new TopCommand());
+        this.commandRegistry.put(CommandTypes.SHOW_COMMAND, new ShowCommand());
+
+    }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -30,66 +57,13 @@ public class EasyRankingCommand implements TabExecutor {
             return CommandTypes.COMMAND_SUCCESS;
         }
 
-        boolean result = CommandTypes.COMMAND_FAILURE;
-        switch(args[0]) {
-            case CommandTypes.HELP_COMMAND:
-                sender.sendMessage(ChatFormatter.helpMessage());
-                result = CommandTypes.COMMAND_SUCCESS;
-                break;
+        ERCommand erCommand = getCommand(args[0]);
 
-            case CommandTypes.CREATE_COMMAND:
-                result = CreateCommand.executeCommand(sender, command, label, args);
-                break;
-
-            case CommandTypes.DELETE_COMMAND:
-                result = DeleteCommand.executeCommand(sender, command, label, args);
-                break;
-
-            case CommandTypes.MODIFY_COMMAND:
-                result = ModifyCommand.executeCommand(sender, command, label, args);
-                break;
-
-            case CommandTypes.INFO_COMMAND:
-                result = InfoCommand.executeCommand(sender, command, label, args);
-                break;
-
-            case CommandTypes.REWARD_COMMAND:
-                result = RewardCommand.executeCommand(sender, command, label, args);
-                break;
-
-            case CommandTypes.SCORE_COMMAND:
-                result = ScoreCommand.executeCommand(sender, command, label, args);
-                break;
-
-            case CommandTypes.COLLECT_COMMAND:
-                result = CollectCommand.executeCommand(sender, command, label, args);
-                break;
-
-            case CommandTypes.RELOAD_COMMAND:
-                result = ReloadCommand.executeCommand(sender, command, label, args);
-                break;
-
-            case CommandTypes.EXEMPT_COMMAND:
-                result = ExemptCommand.executeCommand(sender, command, label, args);
-                break;
-
-            case CommandTypes.CLEAR_COMMAND:
-                result = ClearCommand.executeCommand(sender, command, label, args);
-                break;
-
-            case CommandTypes.CREDITS_COMMAND:
-                result = CreditsCommand.executeCommand(sender, command, label, args);
-                break;
-
-            case CommandTypes.TOP_COMMAND:
-                result = TopCommand.executeCommand(sender, command, label, args);
-                break;
-
-            case CommandTypes.SHOW_COMMAND:
-                result = ShowCommand.executeCommand(sender, command, label, args);
-                break;
+        if( erCommand != null ) {
+            erCommand.onCommand(sender, args);
         }
-        return result;
+        
+        return true;
     }
 
     @Override
@@ -177,4 +151,9 @@ public class EasyRankingCommand implements TabExecutor {
 
         return NameUtil.filterByStart(suggestions, argsIndex);
     }
+
+    private ERCommand getCommand(String name) {
+        return this.commandRegistry.get(name);
+    }
+
 }

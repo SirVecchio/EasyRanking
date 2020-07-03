@@ -2,6 +2,7 @@ package me.kaotich00.easyranking.command.user;
 
 import me.kaotich00.easyranking.api.board.Board;
 import me.kaotich00.easyranking.api.service.BoardService;
+import me.kaotich00.easyranking.command.api.ERUserCommand;
 import me.kaotich00.easyranking.service.ERBoardService;
 import me.kaotich00.easyranking.utils.ChatFormatter;
 import me.kaotich00.easyranking.utils.CommandTypes;
@@ -17,19 +18,19 @@ import org.bukkit.entity.Player;
 import java.util.List;
 import java.util.UUID;
 
-public class TopCommand {
+public class TopCommand extends ERUserCommand {
 
-    public static boolean executeCommand(CommandSender sender, Command command, String label, String[] args) {
+    public void onCommand(CommandSender sender, String[] args) {
 
         if(!(sender instanceof Player)) {
             sender.sendMessage(ChatFormatter.formatErrorMessage("Only players can run that command"));
-            return CommandTypes.COMMAND_SUCCESS;
+            return;
         }
 
         if( args.length < 2 ) {
             sender.sendMessage(ChatFormatter.formatErrorMessage("Not enough arguments, usage:"));
             sender.sendMessage(ChatFormatter.formatSuccessMessage(ChatColor.DARK_GREEN + "/er " + ChatColor.GREEN + "top "  + ChatColor.DARK_GRAY + "<" + ChatColor.GRAY + "board_id" + ChatColor.DARK_GRAY + "> " + "[" + ChatColor.AQUA + "page" + ChatColor.DARK_AQUA + "]" ));
-            return CommandTypes.COMMAND_SUCCESS;
+            return;
         }
 
         BoardService boardService = ERBoardService.getInstance();
@@ -37,7 +38,7 @@ public class TopCommand {
         String boardName = args[1];
         if(!boardService.isIdAlreadyUsed(boardName)) {
             sender.sendMessage(ChatFormatter.formatErrorMessage("No board found for the name " + ChatColor.GOLD + boardName));
-            return CommandTypes.COMMAND_SUCCESS;
+            return;
         }
         Board board = boardService.getBoardById(boardName).get();
 
@@ -45,7 +46,7 @@ public class TopCommand {
         if( args.length == 3 ) {
             if(!NumberUtils.isNumber(args[2])) {
                 sender.sendMessage(ChatFormatter.formatErrorMessage("The page number must be a numeric value" ));
-                return CommandTypes.COMMAND_SUCCESS;
+                return;
             }
             page = Integer.parseInt(args[2]);
         }
@@ -53,7 +54,7 @@ public class TopCommand {
         List<UUID> userScores = boardService.sortScores(board);
         paginateBoard(sender, board, userScores, page);
 
-        return CommandTypes.COMMAND_SUCCESS;
+        return;
     }
 
     private static void paginateBoard(CommandSender sender, Board board, List<UUID> playerList, int page) {

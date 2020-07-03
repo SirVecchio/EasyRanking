@@ -27,12 +27,14 @@ public class OresMinedListener implements Listener {
     List<Material> oreMaterials = Arrays.asList(
             Material.DIAMOND_ORE,
             Material.GOLD_ORE,
+            Material.NETHER_GOLD_ORE,
             Material.IRON_ORE,
             Material.COAL_ORE,
             Material.EMERALD_ORE,
             Material.LAPIS_ORE,
             Material.NETHER_QUARTZ_ORE,
-            Material.REDSTONE_ORE
+            Material.REDSTONE_ORE,
+            Material.ANCIENT_DEBRIS
     );
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)

@@ -1,7 +1,8 @@
-package me.kaotich00.easyranking.command.admin.board;
+package me.kaotich00.easyranking.command.admin;
 
 import me.kaotich00.easyranking.api.board.Board;
 import me.kaotich00.easyranking.api.service.BoardService;
+import me.kaotich00.easyranking.command.api.ERAdminCommand;
 import me.kaotich00.easyranking.gui.reward.RewardGUI;
 import me.kaotich00.easyranking.service.ERBoardService;
 import me.kaotich00.easyranking.utils.ChatFormatter;
@@ -14,17 +15,17 @@ import org.bukkit.entity.Player;
 
 import java.util.Optional;
 
-public class RewardCommand {
+public class RewardCommand extends ERAdminCommand {
 
-    public static boolean executeCommand(CommandSender sender, Command command, String label, String[] args) {
+    public void onCommand(CommandSender sender, String[] args) {
         if( !(sender instanceof Player) ) {
             sender.sendMessage(ChatFormatter.formatErrorMessage("Only players can run that command"));
-            return CommandTypes.COMMAND_SUCCESS;
+            return;
         }
 
         if( args.length < 2 ) {
             sender.sendMessage(ChatFormatter.formatErrorMessage("Not enough arguments"));
-            return CommandTypes.COMMAND_SUCCESS;
+            return;
         }
 
         BoardService boardService = ERBoardService.getInstance();
@@ -32,7 +33,7 @@ public class RewardCommand {
         String boardName = args[1];
         if( !boardService.isIdAlreadyUsed(boardName) ) {
             sender.sendMessage(ChatFormatter.formatErrorMessage("No board found for the name " + ChatColor.GOLD + boardName + ChatColor.RED ));
-            return CommandTypes.COMMAND_SUCCESS;
+            return;
         }
 
         Optional<Board> optionalBoard = boardService.getBoardById(boardName);
@@ -41,7 +42,7 @@ public class RewardCommand {
             gui.openGUI(GUIUtil.REWARD_PS_STEP);
         }
 
-        return CommandTypes.COMMAND_SUCCESS;
+        return;
     }
 
 }

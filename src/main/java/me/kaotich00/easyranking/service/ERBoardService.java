@@ -10,6 +10,8 @@ import me.kaotich00.easyranking.storage.StorageFactory;
 import me.kaotich00.easyranking.utils.ChatFormatter;
 import me.kaotich00.easyranking.utils.SortUtil;
 import me.rayzr522.jsonmessage.JSONMessage;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -136,15 +138,15 @@ public class ERBoardService implements BoardService {
 
         Player player = Bukkit.getPlayer(playerUUID);
         if(player != null) {
-            JSONMessage.actionbar(
+            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(
                     (ChatFormatter.formatSuccessMessage(
                             ChatColor.DARK_GRAY + "[" + ChatColor.DARK_AQUA + board.getName() + ChatColor.DARK_GRAY + "] " +
                                     ChatColor.GRAY + "(" + ChatColor.GREEN + "+" + ChatFormatter.thousandSeparator(score.intValue()) + " " + board.getUserScoreName() + ChatColor.GRAY + ")" +
                                     ChatColor.DARK_GRAY + " |" +
                                     ChatColor.GRAY + " New score: " +
                                     ChatColor.GOLD + ChatFormatter.thousandSeparator(newScore.intValue()) + " " + board.getUserScoreName()
-                    )), player
-            );
+                    ))
+            ));
         }
 
         ScoreboardService scoreboardService = ERScoreboardService.getInstance();
@@ -169,7 +171,7 @@ public class ERBoardService implements BoardService {
 
         Player player = Bukkit.getPlayer(playerUUID);
         if(player != null) {
-            JSONMessage.actionbar(
+            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(
                     (ChatFormatter.formatSuccessMessage(
                             ChatColor.DARK_GRAY +
                                     "[" + ChatColor.DARK_AQUA + board.getName() + ChatColor.DARK_GRAY + "] " +
@@ -177,8 +179,8 @@ public class ERBoardService implements BoardService {
                                     ChatColor.DARK_GRAY + " |" +
                                     ChatColor.GRAY + " New score: " +
                                     ChatColor.GOLD + ChatFormatter.thousandSeparator(newScore.intValue()) + " " + board.getUserScoreName()
-                    )), player
-            );
+                    ))
+            ));
         }
 
         ScoreboardService scoreboardService = ERScoreboardService.getInstance();
@@ -202,7 +204,7 @@ public class ERBoardService implements BoardService {
 
         Player player = Bukkit.getPlayer(playerUUID);
         if(player != null) {
-            JSONMessage.actionbar(
+            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(
                     (ChatFormatter.formatSuccessMessage(
                             ChatColor.DARK_GRAY +
                                     "[" + ChatColor.DARK_AQUA + board.getName() + ChatColor.DARK_GRAY + "] " +
@@ -210,8 +212,8 @@ public class ERBoardService implements BoardService {
                                     ChatColor.DARK_GRAY + " |" +
                                     ChatColor.GRAY + " New score: " +
                                     ChatColor.GOLD + ChatFormatter.thousandSeparator(score.intValue()) + " " + board.getUserScoreName()
-                    )), player
-            );
+                    ))
+            ));
         }
 
         ScoreboardService scoreboardService = ERScoreboardService.getInstance();

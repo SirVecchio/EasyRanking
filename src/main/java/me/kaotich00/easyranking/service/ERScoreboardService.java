@@ -3,6 +3,7 @@ package me.kaotich00.easyranking.service;
 import me.kaotich00.easyranking.api.board.Board;
 import me.kaotich00.easyranking.api.service.BoardService;
 import me.kaotich00.easyranking.api.service.ScoreboardService;
+import me.kaotich00.easyranking.utils.ChatFormatter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -71,19 +72,28 @@ public class ERScoreboardService implements ScoreboardService {
         score_header.setScore(slot);
         slot--;
 
+        boolean hasValues = false;
         for(Board board: boardService.getBoards()) {
             if( board.getUserScore(playerUUID).isPresent() ) {
                 Float amount = board.getUserScore(playerUUID).get();
                 Score score_title = objective.getScore(ChatColor.DARK_GRAY + "[" + ChatColor.DARK_AQUA + board.getName() + ChatColor.DARK_GRAY + "]");
                 score_title.setScore(slot);
                 slot--;
-                Score score_value = objective.getScore(ChatColor.GOLD + "" + ChatColor.BOLD + amount.intValue());
+                Score score_value = objective.getScore(ChatColor.GOLD + ChatFormatter.thousandSeparator(amount.intValue()));
                 score_value.setScore(slot);
                 slot--;
                 Score score_filler = objective.getScore(String.join("", Collections.nCopies(slot, " ")));
                 score_filler.setScore(slot);
                 slot--;
+
+                hasValues = true;
             }
+        }
+
+        if(!hasValues) {
+            Score score_title = objective.getScore(ChatColor.DARK_GRAY + "No data found");
+            score_title.setScore(slot);
+            slot--;
         }
 
         Score score_footer = objective.getScore(ChatColor.GREEN + String.join("", Collections.nCopies(27, "-")));

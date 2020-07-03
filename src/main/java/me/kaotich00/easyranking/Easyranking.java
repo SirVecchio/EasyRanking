@@ -1,11 +1,8 @@
 package me.kaotich00.easyranking;
 
 import me.kaotich00.easyranking.api.service.TaskService;
-import me.kaotich00.easyranking.command.EasyRankingCommand;
-import me.kaotich00.easyranking.listener.board.FwDungeonListener;
-import me.kaotich00.easyranking.listener.board.KilledMobsListener;
-import me.kaotich00.easyranking.listener.board.KilledPlayersListener;
-import me.kaotich00.easyranking.listener.board.OresMinedListener;
+import me.kaotich00.easyranking.command.ERCommandManager;
+import me.kaotich00.easyranking.listener.board.*;
 import me.kaotich00.easyranking.listener.gui.reward.GUIRewardListener;
 import me.kaotich00.easyranking.listener.gui.reward.TitleRewardListener;
 import me.kaotich00.easyranking.reward.types.title.TitleExpansion;
@@ -63,7 +60,7 @@ public final class Easyranking extends JavaPlugin {
     }
 
     public void registerCommands() {
-        getCommand("er").setExecutor(new EasyRankingCommand());
+        getCommand("er").setExecutor(new ERCommandManager(this));
     }
 
     public void registerServices() {
@@ -98,10 +95,16 @@ public final class Easyranking extends JavaPlugin {
             getServer().getPluginManager().registerEvents(new TitleRewardListener(), this);
         }
 
-        // If FWDungeons is enable, easyranking will hook to it
+        // If FWDungeons is enable, easyranking will hook into it
         if(Bukkit.getPluginManager().getPlugin("FWDungeons") != null) {
             Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[EasyRanking]" + ChatColor.RESET + " Hooking to FWDungeons...");
             getServer().getPluginManager().registerEvents(new FwDungeonListener(),this);
+        }
+
+        // If Bounties is enable, easyranking will hook into it
+        if(Bukkit.getPluginManager().getPlugin("Bounties") != null) {
+            Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[EasyRanking]" + ChatColor.RESET + " Hooking to Bounties...");
+            getServer().getPluginManager().registerEvents(new BountiesListener(),this);
         }
     }
 
