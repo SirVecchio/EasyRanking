@@ -34,7 +34,6 @@ public class BountiesListener implements Listener {
             return;
         }
 
-        Bukkit.getServer().broadcastMessage(ChatFormatter.formatSuccessMessage("The player" + player.getPlayerListName() + "received " + ChatColor.GOLD + ChatFormatter.thousandSeparator(event.getAmount().intValue()) + ChatColor.GREEN + "$"));
         boardService.addScoreToPlayer(board, player.getUniqueId(), event.getAmount().floatValue());
     }
 
@@ -55,7 +54,6 @@ public class BountiesListener implements Listener {
             return;
         }
 
-        Bukkit.getServer().broadcastMessage(ChatFormatter.formatSuccessMessage("The player" + player.getPlayerListName() + "lost " + ChatColor.GOLD + ChatFormatter.thousandSeparator(event.getAmount().intValue()) + ChatColor.GREEN + "$"));
         boardService.subtractScoreFromPlayer(board, player.getUniqueId(), event.getAmount().floatValue());
     }
 
