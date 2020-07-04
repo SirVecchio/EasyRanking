@@ -7,6 +7,10 @@ import me.kaotich00.easyranking.service.ERBoardService;
 import me.kaotich00.easyranking.utils.ChatFormatter;
 import me.kaotich00.easyranking.utils.CommandTypes;
 import me.rayzr522.jsonmessage.JSONMessage;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.apache.commons.lang.math.NumberUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -68,6 +72,7 @@ public class TopCommand extends ERUserCommand {
 
         StringBuilder sb = new StringBuilder();
         sb.append(ChatFormatter.chatHeader());
+        sb.append("\n ");
         sb.append("Top players for the board " + ChatColor.DARK_AQUA + board.getName());
 
         if(playerList.size() == 0) {
@@ -101,30 +106,30 @@ public class TopCommand extends ERUserCommand {
     }
 
     public static void sendChatPaginationFooter(Player player, String boardId, int currentPage, int totalPage) {
-        JSONMessage message = JSONMessage.create();
+        ComponentBuilder builder = new ComponentBuilder();
         if(currentPage > 1) {
-            message.then("[prev] ")
-                    .color(ChatColor.DARK_GREEN)
-                    .tooltip("Previous page")
-                    .runCommand("/er top " + boardId + " " + String.valueOf(currentPage-1));
+            TextComponent previousPage = new TextComponent(ChatColor.DARK_GREEN + "[prev] ");
+            previousPage.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Previous page").create()));
+            previousPage.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/er top " + boardId + " " + String.valueOf(currentPage-1)));
+
+            builder.append(previousPage);
         } else {
-            message.then("------")
-                    .color(ChatColor.GREEN);
+            builder.append(ChatColor.GREEN + "------");
         }
 
-        message.then("----------------< " + currentPage + "/" + totalPage + " >------------------").color(ChatColor.GREEN);
+        builder.append(ChatColor.GREEN + "----------------< " + currentPage + "/" + totalPage + " >------------------");
 
         if(currentPage < totalPage) {
-            message.then(" [next]")
-                    .color(ChatColor.DARK_GREEN)
-                    .tooltip("Next page")
-                    .runCommand("/er top " + boardId + " " + String.valueOf(currentPage+1));
+            TextComponent nextPage = new TextComponent(ChatColor.DARK_GREEN + "[next] ");
+            nextPage.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Next page").create()));
+            nextPage.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/er top " + boardId + " " + String.valueOf(currentPage+1)));
+
+            builder.append(nextPage);
         } else {
-            message.then("------")
-                    .color(ChatColor.GREEN);
+            builder.append(ChatColor.GREEN + "------");
         }
 
-        message.send(player);
+        player.spigot().sendMessage(builder.create());
     }
 
 }

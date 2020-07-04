@@ -91,3 +91,9 @@ oresMined:
 # unless you want very big trouble
 dungeons:
   enabled: true
+
+# BOUNTY LEADERBOARD
+# Please never ever change the leaderboard node name,
+# unless you want very big trouble
+bounties:
+  enabled: true

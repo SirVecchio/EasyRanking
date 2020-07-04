@@ -13,6 +13,7 @@ import me.kaotich00.easyranking.service.ERRewardService;
 import me.kaotich00.easyranking.storage.StorageMethod;
 import me.kaotich00.easyranking.storage.util.SchemaReader;
 import me.kaotich00.easyranking.utils.ChatFormatter;
+import me.kaotich00.easyranking.utils.PlayerUtils;
 import me.kaotich00.easyranking.utils.SerializationUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -196,6 +197,11 @@ public class SqlStorage implements StorageMethod {
                 try (ResultSet rs = ps.executeQuery()) {
                     while (rs.next()) {
                         UUID uuid = UUID.fromString(rs.getString("id_user"));
+
+                        if(!PlayerUtils.doesPlayerExist(uuid)) {
+                            continue;
+                        }
+
                         String boardId = rs.getString("id_board");
                         Float amount = rs.getFloat("amount");
 
@@ -209,6 +215,11 @@ public class SqlStorage implements StorageMethod {
                 try (ResultSet rs = ps.executeQuery()) {
                     while (rs.next()) {
                         UUID uuid = UUID.fromString(rs.getString("uuid"));
+
+                        if(!PlayerUtils.doesPlayerExist(uuid)) {
+                            continue;
+                        }
+
                         boardService.toggleUserExempt(uuid);
                     }
                 }
@@ -218,6 +229,11 @@ public class SqlStorage implements StorageMethod {
                 try (ResultSet rs = ps.executeQuery()) {
                     while (rs.next()) {
                         UUID uuid = UUID.fromString(rs.getString("uuid"));
+
+                        if(!PlayerUtils.doesPlayerExist(uuid)) {
+                            continue;
+                        }
+
                         String title = rs.getString("active_title");
                         rewardService.setUserTitle(uuid,title);
                     }
