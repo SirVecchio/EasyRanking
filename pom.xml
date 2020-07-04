@@ -131,4 +131,11 @@
             <version>b8cc05f196a32e94328aca03f2c3687d94aabeff</version>
         </dependency>
     </dependencies>
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub Packages</name>
+            <url>https://maven.pkg.github.com/ForgottenWorld/EasyRanking</url>
+        </repository>
+    </distributionManagement>
 </project>
