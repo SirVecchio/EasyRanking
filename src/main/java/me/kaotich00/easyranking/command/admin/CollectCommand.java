@@ -8,17 +8,21 @@ import me.kaotich00.easyranking.service.ERBoardService;
 import me.kaotich00.easyranking.service.ERRewardService;
 import me.kaotich00.easyranking.utils.BoardUtil;
 import me.kaotich00.easyranking.utils.ChatFormatter;
-import me.kaotich00.easyranking.utils.CommandTypes;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 
 import java.util.Optional;
 
 public class CollectCommand extends ERAdminCommand {
 
     public void onCommand(CommandSender sender, String[] args) {
+
+        if(!(sender instanceof ConsoleCommandSender)) {
+            sender.sendMessage(ChatFormatter.formatErrorMessage("This command can only be ran by console"));
+            return;
+        }
 
         BoardService boardService = ERBoardService.getInstance();
         Optional<Board> board = boardService.getBoardById(BoardUtil.MOB_KILLED_BOARD_ID);
