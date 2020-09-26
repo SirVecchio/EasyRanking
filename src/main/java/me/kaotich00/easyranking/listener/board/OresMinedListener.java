@@ -24,30 +24,19 @@ import java.util.Optional;
 
 public class OresMinedListener implements Listener {
 
-    List<Material> oreMaterials = Arrays.asList(
-            Material.DIAMOND_ORE,
-            Material.GOLD_ORE,
-            Material.NETHER_GOLD_ORE,
-            Material.IRON_ORE,
-            Material.COAL_ORE,
-            Material.EMERALD_ORE,
-            Material.LAPIS_ORE,
-            Material.NETHER_QUARTZ_ORE,
-            Material.REDSTONE_ORE,
-            Material.ANCIENT_DEBRIS
-    );
-
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onOreMined(BlockBreakEvent event) {
         if( event.getPlayer().getGameMode().equals(GameMode.CREATIVE) ) {
             return;
         }
 
-        if( !oreMaterials.contains(event.getBlock().getType()) ) {
+        if( !event.getBlock().getMetadata("PLACED").isEmpty() ) {
             return;
         }
 
-        if( !event.getBlock().getMetadata("PLACED").isEmpty() ) {
+        FileConfiguration defaultConfig = Easyranking.getDefaultConfig();
+        ConfigurationSection oreSection = defaultConfig.getConfigurationSection("oresMined.values");
+        if( !oreSection.contains(event.getBlock().getType().name()) ) {
             return;
         }
 
@@ -65,18 +54,18 @@ public class OresMinedListener implements Listener {
         }
 
         Board board = optionalBoard.get();
-
-        FileConfiguration defaultConfig = Easyranking.getDefaultConfig();
-        ConfigurationSection oreSection = defaultConfig.getConfigurationSection("oresMined.values");
         String minedOre = event.getBlock().getType().name();
 
-        Integer score = oreSection.contains(minedOre) ? defaultConfig.getInt("oresMined.values." + minedOre) : 1;
+        Integer score = defaultConfig.getInt("oresMined.values." + minedOre);
         boardService.addScoreToPlayer(board, player.getUniqueId(), score.floatValue());
     }
 
     @EventHandler
     public void onOrePlaced(BlockPlaceEvent event) {
-        if( !oreMaterials.contains(event.getBlock().getType()) ) {
+        FileConfiguration defaultConfig = Easyranking.getDefaultConfig();
+        ConfigurationSection oreSection = defaultConfig.getConfigurationSection("oresMined.values");
+
+        if( !oreSection.contains(event.getBlock().getType().name()) ) {
             return;
         }
 
