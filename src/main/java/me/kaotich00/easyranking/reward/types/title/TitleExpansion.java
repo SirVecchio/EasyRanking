@@ -69,7 +69,7 @@ public class TitleExpansion extends PlaceholderExpansion {
      */
     @Override
     public String getIdentifier(){
-        return "er";
+        return "townyadvanced";
     }
 
     /**
@@ -105,8 +105,7 @@ public class TitleExpansion extends PlaceholderExpansion {
             return "";
         }
 
-        // %easyranking_title%
-        if(identifier.equals("title")){
+        if(identifier.equals("surname")){
             RewardService rewardService = ERRewardService.getInstance();
             Optional<String> title = rewardService.getUserTitleIfActive(player.getUniqueId());
             if( title.isPresent() ) {
