@@ -6,7 +6,6 @@ import me.kaotich00.easyranking.api.service.BoardService;
 import me.kaotich00.easyranking.service.ERBoardService;
 import me.kaotich00.easyranking.utils.BoardUtil;
 import org.bukkit.GameMode;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -18,8 +17,6 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.metadata.FixedMetadataValue;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 
 public class OresMinedListener implements Listener {

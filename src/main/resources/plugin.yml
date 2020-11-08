@@ -5,10 +5,10 @@ api-version: 1.13
 authors: [Kaotich00]
 description: A simple and lightweight plugin for custom Ranking Systems
 depend: [Vault]
-softdepend: [PlaceholderAPI,FWDungeons,Bounties]
-loadafter: [Vault,PlaceholderAPI,FWDungeons,Bounties]
+softdepend: [PlaceholderAPI,Bounties]
+loadafter: [Vault,PlaceholderAPI,Bounties]
 commands:
   er:
     description: Main EasyRanking command
     usage: /<command>
-    aliases: [er, easyranking]
+    aliases: [er, easy, easyranking]

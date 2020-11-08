@@ -116,11 +116,6 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.github.ForgottenWorld</groupId>
-            <artifactId>FWDungeons</artifactId>
-            <version>-9ec5ba746b-1</version>
-        </dependency>
-        <dependency>
             <groupId>me.rayzr522</groupId>
             <artifactId>jsonmessage</artifactId>
             <version>1.2.0</version>
@@ -129,6 +124,7 @@
             <groupId>com.github.ForgottenWorld</groupId>
             <artifactId>Bounties</artifactId>
             <version>b8cc05f196a32e94328aca03f2c3687d94aabeff</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
     <distributionManagement>

@@ -95,12 +95,6 @@ public final class Easyranking extends JavaPlugin {
             getServer().getPluginManager().registerEvents(new TitleRewardListener(), this);
         }
 
-        // If FWDungeons is enable, easyranking will hook into it
-        if(Bukkit.getPluginManager().getPlugin("FWDungeons") != null) {
-            Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[EasyRanking]" + ChatColor.RESET + " Hooking to FWDungeons...");
-            getServer().getPluginManager().registerEvents(new FwDungeonListener(),this);
-        }
-
         // If Bounties is enable, easyranking will hook into it
         if(Bukkit.getPluginManager().getPlugin("Bounties") != null) {
             Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "[EasyRanking]" + ChatColor.RESET + " Hooking to Bounties...");
