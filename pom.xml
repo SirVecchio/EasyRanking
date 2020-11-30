@@ -126,6 +126,12 @@
             <version>b8cc05f196a32e94328aca03f2c3687d94aabeff</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>com.github.TownyAdvanced</groupId>
+            <artifactId>Towny</artifactId>
+            <version>0.96.2.0</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
     <distributionManagement>
         <repository>

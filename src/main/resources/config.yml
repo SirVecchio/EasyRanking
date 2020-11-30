@@ -97,3 +97,21 @@ dungeons:
 # unless you want very big trouble
 bounties:
   enabled: true
+
+# WOOD CUT LEADERBOARD
+# Please never ever change the leaderboard node name,
+# unless you want very big trouble
+wood:
+  enabled: true
+  # Define the amount of points given for each wood type
+  values:
+    BIRCH_WOOD: 10
+
+# FARMING LEADERBOARD
+# Please never ever change the leaderboard node name,
+# unless you want very big trouble
+farming:
+  enabled: true
+  # Define the amount of points given for each cultivation type
+  values:
+    WHEAT: 10

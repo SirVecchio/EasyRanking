@@ -26,4 +26,12 @@ public class BoardUtil {
     public static final String BOUNTY_BOARD_NAME = "Bounty";
     public static final String BOUNTY_BOARD_DESCRIPTION = "This leaderboard tracks the bounties of players";
 
+    public static final String CARPENTER_BOARD_ID = "wood";
+    public static final String CARPENTER_BOARD_NAME = "Carpenter";
+    public static final String BCARPENTER_BOARD_DESCRIPTION = "This leaderboard tracks how any wood pieces were cutted by player";
+
+    public static final String FARMER_BOARD_ID = "farming";
+    public static final String FARMER_BOARD_NAME = "Farmer";
+    public static final String FARMER_BOARD_DESCRIPTION = "This leaderboard tracks how many blocks of type farming were harvested";
+
 }

@@ -1,11 +1,15 @@
 package me.kaotich00.easyranking.service;
 
+import com.palmergames.bukkit.towny.TownyAPI;
+import com.palmergames.bukkit.towny.exceptions.NotRegisteredException;
+import com.palmergames.bukkit.towny.object.Resident;
 import me.kaotich00.easyranking.Easyranking;
 import me.kaotich00.easyranking.api.board.Board;
 import me.kaotich00.easyranking.api.reward.Reward;
 import me.kaotich00.easyranking.api.service.BoardService;
 import me.kaotich00.easyranking.api.service.RewardService;
 import me.kaotich00.easyranking.api.service.ScoreboardService;
+import me.kaotich00.easyranking.listener.board.BountiesListener;
 import me.kaotich00.easyranking.reward.types.ERItemReward;
 import me.kaotich00.easyranking.reward.types.ERMoneyReward;
 import me.kaotich00.easyranking.reward.types.ERTitleReward;
@@ -254,6 +258,21 @@ public class ERRewardService implements RewardService {
     @Override
     public void setUserTitle(UUID player, String title) {
         this.activeTitles.put(player, title);
+
+        // If Bounties is enable, easyranking will hook into it
+        if(Bukkit.getPluginManager().getPlugin("Towny") != null) {
+            TownyAPI townyAPI = TownyAPI.getInstance();
+
+            try{
+                Player p = Bukkit.getPlayer(player);
+                if(p != null) {
+                    Resident resident = townyAPI.getDataSource().getResident(p.getName());
+                    resident.setSurname(title);    
+                }
+            } catch (NotRegisteredException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
