@@ -54,6 +54,10 @@ public class SqlStorage implements StorageMethod {
     private static final String USER_DATA_DELETE_BY_USER = "DELETE FROM easyranking_user_score WHERE id_user = ?";
 
     private static final String BOARDS_CLEAR_DATA = "DELETE FROM easyranking_user_score";
+    private static final String UNCOLLECTED_REWARD_CLEAR_UUID = "DELETE FROM easyranking_uncollected_item_reward WHERE uuid = ?";
+    private static final String UNCOLLECTED_REWARD_SELECT = "SELECT * FROM easyranking_uncollected_item_reward WHERE collected = false";
+    private static final String UNCOLLECTED_REWARD_DELETE = "DELETE FROM easyranking_uncollected_item_reward";
+    private static final String UNCOLLECTED_REWARD_INSERT_OR_UPDATE = "INSERT INTO easyranking_uncollected_item_reward(`uuid`,`item_type`) VALUES (?,?)";
 
     private ConnectionFactory connectionFactory;
     private final Easyranking plugin;
@@ -314,6 +318,7 @@ public class SqlStorage implements StorageMethod {
 
         try (Connection c = getConnection()) {
             PreparedStatement deletePreviousItemsReward = c.prepareStatement(BOARD_ITEM_REWARD_DELETE);
+
             PreparedStatement insertItemReward = c.prepareStatement(BOARD_ITEM_REWARD_INSERT_OR_UPDATE);
 
             PreparedStatement insertMoneyReward = c.prepareStatement(BOARD_MONEY_REWARD_INSERT_OR_UPDATE);
@@ -360,6 +365,21 @@ public class SqlStorage implements StorageMethod {
             insertItemReward.close();
             insertMoneyReward.close();
             insertTitleReward.close();
+
+            PreparedStatement deletePreviousUncollectedItemsReward = c.prepareStatement(UNCOLLECTED_REWARD_DELETE);
+            deletePreviousUncollectedItemsReward.executeUpdate();
+            PreparedStatement insertUncollectedItemReward = c.prepareStatement(UNCOLLECTED_REWARD_INSERT_OR_UPDATE);
+            for(Map.Entry<UUID, List<ItemStack>> data : rewardService.getUncollectedRewards().entrySet()) {
+                UUID playerUUID = data.getKey();
+                List<ItemStack> uncollectedItems = data.getValue();
+                for(ItemStack item: uncollectedItems) {
+                    String itemType = SerializationUtil.toBase64(item);
+
+                    insertUncollectedItemReward.setString(1, playerUUID.toString());
+                    insertUncollectedItemReward.setString(2, itemType);
+                    insertUncollectedItemReward.executeUpdate();
+                }
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -409,6 +429,20 @@ public class SqlStorage implements StorageMethod {
 
                         Optional<Board> boardOptional = boardService.getBoardById(boardId);
                         boardOptional.ifPresent(board -> rewardService.newTitleReward(title, board, rankPosition));
+                    }
+                }
+            }
+
+            try (PreparedStatement ps = c.prepareStatement(UNCOLLECTED_REWARD_SELECT)) {
+                try (ResultSet rs = ps.executeQuery()) {
+                    while (rs.next()) {
+                        UUID uuid = UUID.fromString(rs.getString("uuid"));
+                        String itemType = rs.getString("item_type");
+
+                        /* Deserialize ItemStack */
+                        ItemStack itemStack = SerializationUtil.fromBase64(itemType);
+
+                        rewardService.addUncollectedItem(uuid, itemStack);
                     }
                 }
             }
@@ -473,5 +507,19 @@ public class SqlStorage implements StorageMethod {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public void clearUncollectedRewards(UUID uuid) {
+        try (Connection c = getConnection()) {
+            PreparedStatement clearUncollectedRewards = c.prepareStatement(UNCOLLECTED_REWARD_CLEAR_UUID);
+            clearUncollectedRewards.setString(1, uuid.toString());
+            clearUncollectedRewards.executeUpdate();
+            clearUncollectedRewards.close();
+            Bukkit.getConsoleSender().sendMessage(ChatFormatter.formatSuccessMessage("Cleared user uncollected rewards from database"));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 }

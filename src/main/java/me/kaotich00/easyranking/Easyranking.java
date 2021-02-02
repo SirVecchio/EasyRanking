@@ -5,6 +5,7 @@ import me.kaotich00.easyranking.command.ERCommandManager;
 import me.kaotich00.easyranking.listener.board.*;
 import me.kaotich00.easyranking.listener.gui.reward.GUIRewardListener;
 import me.kaotich00.easyranking.listener.gui.reward.TitleRewardListener;
+import me.kaotich00.easyranking.listener.player.PlayerJoinListener;
 import me.kaotich00.easyranking.reward.types.title.TitleExpansion;
 import me.kaotich00.easyranking.service.ERBoardService;
 import me.kaotich00.easyranking.service.ERRewardService;
@@ -86,6 +87,7 @@ public final class Easyranking extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new OresMinedListener(),this);
         getServer().getPluginManager().registerEvents(new WoodCutListener(),this);
         getServer().getPluginManager().registerEvents(new FarmingListener(),this);
+        getServer().getPluginManager().registerEvents(new PlayerJoinListener(),this);
 
         // If PlaceholderAPI is enable, easyranking will use it, otherwise
         // it will use a custom made chat listener

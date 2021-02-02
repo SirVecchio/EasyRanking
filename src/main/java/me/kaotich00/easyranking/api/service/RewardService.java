@@ -37,7 +37,15 @@ public interface RewardService {
 
     Optional<Reward> getTitleRewardByPosition(Board board, int position);
 
+    List<ItemStack> getUncollectedRewardForUser(UUID uuid);
+
     Map<Board, List<Reward>> getRewardsList();
+
+    Map<UUID, List<ItemStack>> getUncollectedRewards();
+
+    void removeUncollectedItemsForPlayer(UUID uuid);
+
+    void addUncollectedItem(UUID uuid, ItemStack itemStack);
 
     void addModifyingPlayer(UUID player, Board board);
 

@@ -68,3 +68,9 @@ CREATE TABLE IF NOT EXISTS `easyranking_title_reward` (
   KEY `easyranking_reward_fk_easyranking_board` (`id_board`),
   CONSTRAINT `easyranking_title_reward_fk_easyranking_board` FOREIGN KEY (`id_board`) REFERENCES `easyranking_board` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `easyranking_uncollected_item_reward` (
+  `uuid` varchar(36) NOT NULL,
+  `item_type` text,
+  `collected` BOOL NOT NULL DEFAULT false
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

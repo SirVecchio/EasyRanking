@@ -36,6 +36,7 @@ public class ERRewardService implements RewardService {
     private Map<UUID, String> activeTitles;
     private Map<UUID, Board> isModifyingBoard;
     private Map<UUID, Integer> isSelectingItems;
+    private Map<UUID, List<ItemStack>> uncollectedRewards;
 
     private ERRewardService() {
         if (rewardServiceInstance != null){
@@ -45,6 +46,7 @@ public class ERRewardService implements RewardService {
         this.isModifyingBoard = new HashMap<>();
         this.isSelectingItems = new HashMap<>();
         this.activeTitles = new HashMap<>();
+        this.uncollectedRewards = new HashMap<>();
     }
 
     public static ERRewardService getInstance() {
@@ -130,12 +132,12 @@ public class ERRewardService implements RewardService {
                 UUID playerUUID = userScores.get(i);
 
                 Player player = Bukkit.getPlayer(playerUUID);
+                OfflinePlayer offlinePlayer = null;
                 if( player == null ) {
-                    OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(playerUUID);
+                    offlinePlayer = Bukkit.getOfflinePlayer(playerUUID);
                     if( offlinePlayer != null ) {
                         Bukkit.getServer().broadcastMessage(ChatColor.YELLOW + String.valueOf(position) + "." + ChatColor.GOLD + " " + offlinePlayer.getName() + ChatColor.DARK_GRAY + " (" + ChatColor.GREEN + ChatFormatter.thousandSeparator(board.getUserScore(playerUUID).get().intValue()) + " " + board.getUserScoreName() + ChatColor.DARK_GRAY + ")");
                     }
-                    continue;
                 } else {
                     Bukkit.getServer().broadcastMessage(ChatColor.YELLOW + String.valueOf(position) + "." + ChatColor.GOLD + " " + player.getPlayerListName() + ChatColor.DARK_GRAY + " (" + ChatColor.GREEN + ChatFormatter.thousandSeparator(board.getUserScore(playerUUID).get().intValue()) + " " + board.getUserScoreName() + ChatColor.DARK_GRAY + ")");
                 }
@@ -148,13 +150,21 @@ public class ERRewardService implements RewardService {
                 for( Reward reward : rewardsList ) {
                     if (reward instanceof ERItemReward) {
                         ItemStack itemType = ((ERItemReward)reward).getReward();
-                        if(player.getInventory().addItem(itemType).size() != 0) {
-                            player.getWorld().dropItem(player.getLocation(), itemType);
+                        if(player == null) {
+                            addUncollectedItem(playerUUID, itemType);
+                        } else {
+                            if(player.getInventory().addItem(itemType).size() != 0) {
+                                player.getWorld().dropItem(player.getLocation(), itemType);
+                            }
                         }
                     }
                     if (reward instanceof ERMoneyReward) {
                         Double amount = ((ERMoneyReward)reward).getReward();
-                        Easyranking.getEconomy().depositPlayer(player,amount);
+                        if(player != null) {
+                            Easyranking.getEconomy().depositPlayer(player,amount);
+                        } else {
+                            Easyranking.getEconomy().depositPlayer(offlinePlayer,amount);
+                        }
                     }
                     if (reward instanceof ERTitleReward) {
                         String title = ((ERTitleReward)reward).getReward();
@@ -162,8 +172,10 @@ public class ERRewardService implements RewardService {
                     }
                 }
 
-                player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 10, 1);
-                scoreboardService.updateScoreBoard(player.getUniqueId());
+                if(player != null) {
+                    player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 10, 1);
+                    scoreboardService.updateScoreBoard(player.getUniqueId());
+                }
             }
             if( dataEmpty ) {
                 Bukkit.getServer().broadcastMessage(ChatColor.GRAY + "No data found");
@@ -216,8 +228,32 @@ public class ERRewardService implements RewardService {
     }
 
     @Override
+    public List<ItemStack> getUncollectedRewardForUser(UUID uuid) {
+        return this.uncollectedRewards.get(uuid);
+    }
+
+    @Override
     public Map<Board, List<Reward>> getRewardsList() {
         return this.rewardData;
+    }
+
+    @Override
+    public Map<UUID, List<ItemStack>> getUncollectedRewards() {
+        return this.uncollectedRewards;
+    }
+
+    @Override
+    public void removeUncollectedItemsForPlayer(UUID uuid) {
+        this.uncollectedRewards.remove(uuid);
+    }
+
+    @Override
+    public void addUncollectedItem(UUID uuid, ItemStack itemStack) {
+        if(this.uncollectedRewards.get(uuid) == null) {
+            this.uncollectedRewards.put(uuid, new ArrayList<>());
+        }
+
+        this.uncollectedRewards.get(uuid).add(itemStack);
     }
 
     @Override

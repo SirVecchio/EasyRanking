@@ -36,4 +36,6 @@ public interface StorageMethod {
 
     void clearBoardsData();
 
+    void clearUncollectedRewards(UUID uuid);
+
 }
