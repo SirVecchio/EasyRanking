@@ -93,10 +93,10 @@ public class TopCommand extends ERUserCommand {
             if( player == null ) {
                 OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(uuid);
                 if( offlinePlayer != null ) {
-                    sb.append("\n" + ChatColor.YELLOW + position + "." + ChatColor.GOLD + " " + offlinePlayer.getName() + ChatColor.DARK_GRAY + " (" + ChatColor.GREEN + ChatFormatter.thousandSeparator(board.getUserScore(uuid).get().intValue()) + " " + board.getUserScoreName() + ChatColor.DARK_GRAY + ")");
+                    sb.append("\n" + ChatColor.YELLOW + position + "." + ChatColor.GOLD + " " + offlinePlayer.getName() + ChatColor.DARK_GRAY + " (" + ChatColor.GREEN + ChatFormatter.thousandSeparator(board.getUserScore(uuid).get().longValue()) + " " + board.getUserScoreName() + ChatColor.DARK_GRAY + ")");
                 }
             } else {
-                sb.append("\n" + ChatColor.YELLOW + position + "." + ChatColor.GOLD + " " + player.getPlayerListName() + ChatColor.DARK_GRAY + " (" + ChatColor.GREEN + ChatFormatter.thousandSeparator(board.getUserScore(uuid).get().intValue()) + " " + board.getUserScoreName() + ChatColor.DARK_GRAY + ")");
+                sb.append("\n" + ChatColor.YELLOW + position + "." + ChatColor.GOLD + " " + player.getPlayerListName() + ChatColor.DARK_GRAY + " (" + ChatColor.GREEN + ChatFormatter.thousandSeparator(board.getUserScore(uuid).get().longValue()) + " " + board.getUserScoreName() + ChatColor.DARK_GRAY + ")");
             }
             position++;
         }

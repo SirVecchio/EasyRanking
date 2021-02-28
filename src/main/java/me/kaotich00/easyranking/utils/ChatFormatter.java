@@ -34,6 +34,10 @@ public class ChatFormatter {
         return message;
     }
 
+    public static String thousandSeparator(Long value) {
+        return NumberFormat.getNumberInstance(Locale.ITALY).format(value);
+    }
+
     public static String thousandSeparator(Integer value) {
         return NumberFormat.getNumberInstance(Locale.ITALY).format(value);
     }

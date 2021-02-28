@@ -86,7 +86,6 @@ public class ERCommandManager implements TabExecutor {
             suggestions.add("clear");
             suggestions.add("credits");
             /* User commands */
-            suggestions.add("help");
             suggestions.add("info");
             suggestions.add("top");
             suggestions.add("show");

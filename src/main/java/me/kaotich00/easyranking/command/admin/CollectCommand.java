@@ -20,7 +20,7 @@ public class CollectCommand extends ERAdminCommand {
     public void onCommand(CommandSender sender, String[] args) {
 
         if(!(sender instanceof ConsoleCommandSender)) {
-            sender.sendMessage(ChatFormatter.formatErrorMessage("This command can only be ran by console"));
+            sender.sendMessage(ChatFormatter.formatErrorMessage("This command can only be run by console"));
             return;
         }
 

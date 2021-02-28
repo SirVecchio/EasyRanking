@@ -1,5 +1,6 @@
 package me.kaotich00.easyranking.service;
 
+import fr.mrmicky.fastboard.FastBoard;
 import me.kaotich00.easyranking.api.board.Board;
 import me.kaotich00.easyranking.api.service.BoardService;
 import me.kaotich00.easyranking.api.service.ScoreboardService;
@@ -9,15 +10,12 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.*;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class ERScoreboardService implements ScoreboardService {
 
     private static ERScoreboardService taskService;
-    private Map<UUID, Scoreboard> scoreboards;
+    private Map<UUID, FastBoard> scoreboards;
 
     private ERScoreboardService() {
         if (taskService != null){
@@ -45,10 +43,12 @@ public class ERScoreboardService implements ScoreboardService {
 
     @Override
     public void removePlayerFromScoreboard(UUID playerUUID) {
-        Player player = Bukkit.getPlayer(playerUUID);
-        // Clear the scoreboard
-        player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
-        this.scoreboards.remove(playerUUID);
+        FastBoard scoreboard = this.scoreboards.get(playerUUID);
+
+        if(scoreboard != null) {
+            scoreboard.delete();
+            this.scoreboards.remove(playerUUID);
+        }
     }
 
     @Override
@@ -59,59 +59,43 @@ public class ERScoreboardService implements ScoreboardService {
         }
 
         BoardService boardService = ERBoardService.getInstance();
-        Scoreboard scoreboard = this.scoreboards.get(playerUUID);
-        Objective objective = scoreboard.getObjective("trackBoardsScore");
-
-        for (String s : scoreboard.getEntries()) {
-            scoreboard.resetScores(s);
-        }
-
-        int slot = 40;
-
-        Score score_header = objective.getScore(ChatColor.DARK_GREEN + String.join("", Collections.nCopies(27, "-")));
-        score_header.setScore(slot);
-        slot--;
+        FastBoard scoreboard = this.scoreboards.get(playerUUID);
 
         boolean hasValues = false;
-        for(Board board: boardService.getBoards()) {
-            if( board.getUserScore(playerUUID).isPresent() ) {
-                Float amount = board.getUserScore(playerUUID).get();
-                Score score_title = objective.getScore(ChatColor.DARK_GRAY + "[" + ChatColor.DARK_AQUA + board.getName() + ChatColor.DARK_GRAY + "]");
-                score_title.setScore(slot);
-                slot--;
-                Score score_value = objective.getScore(ChatColor.GOLD + ChatFormatter.thousandSeparator(amount.intValue()));
-                score_value.setScore(slot);
-                slot--;
-                Score score_filler = objective.getScore(String.join("", Collections.nCopies(slot, " ")));
-                score_filler.setScore(slot);
-                slot--;
 
-                hasValues = true;
+        List<String> lines = new ArrayList<>();
+
+        if(scoreboard != null) {
+            lines.add(ChatColor.DARK_GREEN + String.join("", Collections.nCopies(15, "-")));
+
+            for(Board board: boardService.getBoards()) {
+                if( board.getUserScore(playerUUID).isPresent() ) {
+                    Float amount = board.getUserScore(playerUUID).get();
+                    lines.add(ChatColor.DARK_GRAY + "[" + ChatColor.DARK_AQUA + board.getName() + ChatColor.DARK_GRAY + "]");
+                    lines.add(ChatColor.GOLD + ChatFormatter.thousandSeparator(amount.longValue()));
+                    lines.add("");
+                    hasValues = true;
+                }
             }
         }
 
         if(!hasValues) {
-            Score score_title = objective.getScore(ChatColor.DARK_GRAY + "No data found");
-            score_title.setScore(slot);
-            slot--;
+            lines.add(ChatColor.DARK_GRAY + "No data found");
         }
 
-        Score score_footer = objective.getScore(ChatColor.GREEN + String.join("", Collections.nCopies(27, "-")));
-        score_footer.setScore(slot);
+        lines.add(ChatColor.GREEN + String.join("", Collections.nCopies(15, "-")));
 
+        scoreboard.updateLines(lines);
     }
 
     @Override
     public void newScoreboard(UUID playerUUID) {
         Player player = Bukkit.getPlayer(playerUUID);
 
-        ScoreboardManager scoreboardManager = Bukkit.getScoreboardManager();
-        Scoreboard scoreboard = scoreboardManager.getNewScoreboard();
-        Objective objective = scoreboard.registerNewObjective("trackBoardsScore","dummy", ChatColor.DARK_GREEN + "" + ChatColor.BOLD + "Easy" + ChatColor.GREEN + ChatColor.BOLD + "Ranking");
-        objective.setDisplaySlot(DisplaySlot.SIDEBAR);
+        FastBoard board = new FastBoard(player);
+        board.updateTitle(ChatColor.DARK_GRAY + "[" + ChatColor.DARK_GREEN + "" + ChatColor.BOLD + "Easy" + ChatColor.GREEN + ChatColor.BOLD + "Ranking" + ChatColor.DARK_GRAY + "]");
 
-        player.setScoreboard(scoreboard);
-        this.scoreboards.put(playerUUID, scoreboard);
+        this.scoreboards.put(playerUUID, board);
 
         updateScoreBoard(playerUUID);
     }

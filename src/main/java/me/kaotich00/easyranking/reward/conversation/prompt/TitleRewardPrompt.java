@@ -25,7 +25,7 @@ public class TitleRewardPrompt extends StringPrompt {
 
     @Override
     public String getPromptText(ConversationContext context) {
-        return ChatFormatter.formatSuccessMessage(ChatColor.GRAY + "Please input a chat displayname title. Ex: &aPrince");
+        return ChatFormatter.formatSuccessMessage(ChatColor.GRAY + "Please input a chat displayname title. Ex: &aPrince. Or type 'reset' to reset the current title!");
     }
 
     @Override
@@ -34,6 +34,12 @@ public class TitleRewardPrompt extends StringPrompt {
         RewardService rewardService = ERRewardService.getInstance();
 
         rewardService.clearTitleReward(this.board, this.rankPosition);
+
+        if(input.equalsIgnoreCase("reset")) {
+            player.sendMessage(ChatFormatter.formatSuccessMessage(ChatColor.GRAY + "Successfully resetted title"));
+            return Prompt.END_OF_CONVERSATION;
+        }
+
         rewardService.newTitleReward(input, this.board, this.rankPosition);
 
         RewardGUI rewardSelectionGUI = new RewardGUI(player, this.board, this.rankPosition);

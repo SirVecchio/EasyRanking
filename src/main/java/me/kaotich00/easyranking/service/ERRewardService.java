@@ -136,10 +136,10 @@ public class ERRewardService implements RewardService {
                 if( player == null ) {
                     offlinePlayer = Bukkit.getOfflinePlayer(playerUUID);
                     if( offlinePlayer != null ) {
-                        Bukkit.getServer().broadcastMessage(ChatColor.YELLOW + String.valueOf(position) + "." + ChatColor.GOLD + " " + offlinePlayer.getName() + ChatColor.DARK_GRAY + " (" + ChatColor.GREEN + ChatFormatter.thousandSeparator(board.getUserScore(playerUUID).get().intValue()) + " " + board.getUserScoreName() + ChatColor.DARK_GRAY + ")");
+                        Bukkit.getServer().broadcastMessage(ChatColor.YELLOW + String.valueOf(position) + "." + ChatColor.GOLD + " " + offlinePlayer.getName() + ChatColor.DARK_GRAY + " (" + ChatColor.GREEN + ChatFormatter.thousandSeparator(board.getUserScore(playerUUID).get().longValue()) + " " + board.getUserScoreName() + ChatColor.DARK_GRAY + ")");
                     }
                 } else {
-                    Bukkit.getServer().broadcastMessage(ChatColor.YELLOW + String.valueOf(position) + "." + ChatColor.GOLD + " " + player.getPlayerListName() + ChatColor.DARK_GRAY + " (" + ChatColor.GREEN + ChatFormatter.thousandSeparator(board.getUserScore(playerUUID).get().intValue()) + " " + board.getUserScoreName() + ChatColor.DARK_GRAY + ")");
+                    Bukkit.getServer().broadcastMessage(ChatColor.YELLOW + String.valueOf(position) + "." + ChatColor.GOLD + " " + player.getPlayerListName() + ChatColor.DARK_GRAY + " (" + ChatColor.GREEN + ChatFormatter.thousandSeparator(board.getUserScore(playerUUID).get().longValue()) + " " + board.getUserScoreName() + ChatColor.DARK_GRAY + ")");
                 }
 
                 List<Reward> rewardsList = getRewardsByPosition(board, position);

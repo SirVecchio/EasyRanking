@@ -141,10 +141,10 @@ public class ERBoardService implements BoardService {
             player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(
                     (ChatFormatter.formatSuccessMessage(
                             ChatColor.DARK_GRAY + "[" + ChatColor.DARK_AQUA + board.getName() + ChatColor.DARK_GRAY + "] " +
-                                    ChatColor.GRAY + "(" + ChatColor.GREEN + "+" + ChatFormatter.thousandSeparator(score.intValue()) + " " + board.getUserScoreName() + ChatColor.GRAY + ")" +
+                                    ChatColor.GRAY + "(" + ChatColor.GREEN + "+" + ChatFormatter.thousandSeparator(score.longValue()) + " " + board.getUserScoreName() + ChatColor.GRAY + ")" +
                                     ChatColor.DARK_GRAY + " |" +
                                     ChatColor.GRAY + " New score: " +
-                                    ChatColor.GOLD + ChatFormatter.thousandSeparator(newScore.intValue()) + " " + board.getUserScoreName()
+                                    ChatColor.GOLD + ChatFormatter.thousandSeparator(newScore.longValue()) + " " + board.getUserScoreName()
                     ))
             ));
         }
@@ -175,10 +175,10 @@ public class ERBoardService implements BoardService {
                     (ChatFormatter.formatSuccessMessage(
                             ChatColor.DARK_GRAY +
                                     "[" + ChatColor.DARK_AQUA + board.getName() + ChatColor.DARK_GRAY + "] " +
-                                    ChatColor.GRAY + "(" + ChatColor.RED + "-" + ChatFormatter.thousandSeparator(score.intValue()) + " " + board.getUserScoreName() + ChatColor.GRAY + ")" +
+                                    ChatColor.GRAY + "(" + ChatColor.RED + "-" + ChatFormatter.thousandSeparator(score.longValue()) + " " + board.getUserScoreName() + ChatColor.GRAY + ")" +
                                     ChatColor.DARK_GRAY + " |" +
                                     ChatColor.GRAY + " New score: " +
-                                    ChatColor.GOLD + ChatFormatter.thousandSeparator(newScore.intValue()) + " " + board.getUserScoreName()
+                                    ChatColor.GOLD + ChatFormatter.thousandSeparator(newScore.longValue()) + " " + board.getUserScoreName()
                     ))
             ));
         }
@@ -208,10 +208,10 @@ public class ERBoardService implements BoardService {
                     (ChatFormatter.formatSuccessMessage(
                             ChatColor.DARK_GRAY +
                                     "[" + ChatColor.DARK_AQUA + board.getName() + ChatColor.DARK_GRAY + "] " +
-                                    ChatColor.GRAY + "(" + ChatColor.GREEN + "=" + ChatFormatter.thousandSeparator(score.intValue()) + " " + board.getUserScoreName() + ChatColor.GRAY + ")" +
+                                    ChatColor.GRAY + "(" + ChatColor.GREEN + "=" + ChatFormatter.thousandSeparator(score.longValue()) + " " + board.getUserScoreName() + ChatColor.GRAY + ")" +
                                     ChatColor.DARK_GRAY + " |" +
                                     ChatColor.GRAY + " New score: " +
-                                    ChatColor.GOLD + ChatFormatter.thousandSeparator(score.intValue()) + " " + board.getUserScoreName()
+                                    ChatColor.GOLD + ChatFormatter.thousandSeparator(score.longValue()) + " " + board.getUserScoreName()
                     ))
             ));
         }
