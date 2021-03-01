@@ -106,6 +106,14 @@ wood:
   # Define the amount of points given for each wood type
   values:
     BIRCH_WOOD: 10
+SPRUCE_WOOD: 10
+OAK_WOOD: 10
+JUNGLE_WOOD: 10
+ACACIA_WOOD: 10
+DARK_OAK_WOOD: 10
+CRIMSON_HYPHAE: 10
+WARPED_HYPHAE: 10
+
 
 # FARMING LEADERBOARD
 # Please never ever change the leaderboard node name,
