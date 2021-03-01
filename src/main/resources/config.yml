@@ -115,3 +115,19 @@ farming:
   # Define the amount of points given for each cultivation type
   values:
     WHEAT: 10
+BEETROOT: 10 
+CARROT: 10
+POTATO: 10
+MELON: 10
+PUMPKIN: 10
+COCOA_BEANS: 10
+BAMBOO: 10
+CACTUS: 10
+SUGAR_CANE: 5
+SWEET_BERRIES: 5
+MUSHROOM: 10
+KELP: 10
+SEA_PICKLE: 10
+NETHER_WART: 10
+CHORUS_FRUIT: 10
+FUNGUS: 10
